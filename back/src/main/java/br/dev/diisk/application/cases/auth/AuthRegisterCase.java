@@ -3,7 +3,6 @@ package br.dev.diisk.application.cases.auth;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.dtos.auth.RegisterRequest;
 import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.user.User;
@@ -21,18 +20,18 @@ public class AuthRegisterCase {
     private final IUserPerfilRepository userPerfilRepository;
 
     @Transactional
-    public User execute(RegisterRequest dto) {
-        User user = userRepository.findByEmail(dto.getEmail()).orElse(null);
+    public User execute(String name, String email, String password) {
+        User user = userRepository.findByEmail(email).orElse(null);
         if (user != null)
             throw new ValueAlreadyInDatabaseException(getClass(), "email");
 
-        UserPerfil defaultUserPerfil = userPerfilRepository.findByName("Default");
+        UserPerfil defaultUserPerfil = userPerfilRepository.findByName("DEFAULT");
         if (defaultUserPerfil == null)
             throw new DbValueNotFoundException(getClass(), "name");
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(dto.getPassword());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(password);
 
-        User newUser = new User(dto.getName(), dto.getEmail(), encryptedPassword, defaultUserPerfil);
+        User newUser = new User(name, email, encryptedPassword, defaultUserPerfil);
         userRepository.save(newUser);
         return newUser;
     }

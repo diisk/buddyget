@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import br.dev.diisk.application.interfaces.auth.ITokenService;
+import br.dev.diisk.application.services.ITokenService;
 import br.dev.diisk.domain.entities.user.User;
 
 public class AuthRenewCaseTest {

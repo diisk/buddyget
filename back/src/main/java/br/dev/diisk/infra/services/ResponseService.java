@@ -14,11 +14,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.dev.diisk.application.dtos.response.ErrorDetailsResponse;
 import br.dev.diisk.application.dtos.response.ErrorResponse;
 import br.dev.diisk.application.dtos.response.SuccessResponse;
-import br.dev.diisk.application.interfaces.IResponseService;
+import br.dev.diisk.application.services.IMessageService;
+import br.dev.diisk.application.services.IResponseService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ResponseService implements IResponseService {
+
+    private final IMessageService messageService;
 
     @Override
     public <T> ResponseEntity<SuccessResponse<T>> ok(T content) {
@@ -51,12 +56,32 @@ public class ResponseService implements IResponseService {
     }
 
     private ResponseEntity<ErrorResponse> errorResponse(ErrorDetailsResponse error, HttpStatus httpStatus) {
+        if (isMessagePath(error.getMessage()))
+            error.setMessage(getMessageFromPath(error.getMessage()));
         ErrorResponse errorObject = ErrorResponse.getErrorInstance(httpStatus.value(), error);
         return ResponseEntity.status(httpStatus).body(errorObject);
     }
 
+    private Boolean isMessagePath(String message) {
+        return message.startsWith("{") && message.endsWith("}");
+    }
+
+    private String getMessageFromPath(String messagePath) {
+        return messageService.getMessage(messagePath.substring(1, messagePath.length() - 1));
+    }
+
     private ResponseEntity<ErrorResponse> errorResponse(String message,
             Collection<? extends ErrorDetailsResponse> errors, HttpStatus httpStatus) {
+        if (isMessagePath(message))
+            message = getMessageFromPath(message);
+
+        errors = errors.stream().map((err) -> {
+            if (isMessagePath(err.getMessage()))
+                err.setMessage(getMessageFromPath(err.getMessage()));
+
+            return err;
+        }).toList();
+
         ErrorResponse errorObject = ErrorResponse.getErrorInstance(httpStatus.value(), message, errors);
         return ResponseEntity.status(httpStatus).body(errorObject);
     }

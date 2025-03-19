@@ -12,9 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import br.dev.diisk.web.middlewares.security.CustomAccessDeniedHandler;
-import br.dev.diisk.web.middlewares.security.CustomAuthenticationEntryPoint;
-import br.dev.diisk.web.middlewares.security.SecurityFilter;
+import br.dev.diisk.infra.security.CustomAccessDeniedHandler;
+import br.dev.diisk.infra.security.CustomAuthenticationEntryPoint;
+import br.dev.diisk.infra.security.SecurityFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -35,14 +35,6 @@ public class SecurityConfiguration {
                 })
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // .authorizeHttpRequests(
-                // auth -> auth
-                // // .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**")
-                // // .permitAll()
-                // // .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                // // .requestMatchers(HttpMethod.POST, "/auth/register")
-                // // .hasAuthority(UserPermission.ADD_USER.getAuthority())
-                // .anyRequest().denyAll())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -57,10 +49,5 @@ public class SecurityConfiguration {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // @Bean
-    // static GrantedAuthorityDefaults rolePrefix() {
-    // return new GrantedAuthorityDefaults("");
-    // }
 
 }

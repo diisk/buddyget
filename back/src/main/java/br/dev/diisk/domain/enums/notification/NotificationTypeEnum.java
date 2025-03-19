@@ -1,20 +1,21 @@
 package br.dev.diisk.domain.enums.notification;
 
-import br.dev.diisk.domain.MessageUtils;
+import br.dev.diisk.domain.interfaces.IBaseEnum;
 
-public enum NotificationTypeEnum {
+public enum NotificationTypeEnum implements IBaseEnum{
     BUDGET_EXCEEDED("enum.notification.budget-exceeded"),
 
     ;
 
-    private String title;
+    private String titlePath;
 
     NotificationTypeEnum(String title) {
-        this.title = title;
+        this.titlePath = title;
     }
 
-    public String getTitle() {
-        return MessageUtils.getMessage(title);
+    @Override
+    public String getTitlePath() {
+        return titlePath;
     }
 
 }

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 import java.util.Optional;
 
@@ -15,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import br.dev.diisk.application.dtos.auth.RegisterRequest;
 import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.user.User;
@@ -42,34 +40,40 @@ public class AuthRegisterCaseTest {
     @Test
     public void authRegisterCase_quandoUsuarioExiste_DeveLancarExcecao() {
         // Given
-        RegisterRequest request = new RegisterRequest("john@example.com", "John Doe", "password");
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+        String email = "john@example.com";
+        String name = "John Doe";
+        String password = "password";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
         // When & Then
         assertThrows(ValueAlreadyInDatabaseException.class, () -> {
-            authRegisterCase.execute(request);
+            authRegisterCase.execute(name, email, password);
         });
     }
 
     @Test
     public void authRegisterCase_quandoPerfilPadraoNaoEncontrado_DeveLancarExcecao() {
         // Given
-        RegisterRequest request = new RegisterRequest("john@example.com", "John Doe", "password");
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-        when(userPerfilRepository.findByName(anyString())).thenReturn(null);
+        String email = "john@example.com";
+        String name = "John Doe";
+        String password = "password";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(userPerfilRepository.findByName("DEFAULT")).thenReturn(null);
 
         // When & Then
         assertThrows(DbValueNotFoundException.class, () -> {
-            authRegisterCase.execute(request);
+            authRegisterCase.execute(email, name, password);
         });
     }
 
     @Test
     public void authRegisterCase_quandoDadosValidos_DeveRegistrarUsuario() {
         // Given
-        RegisterRequest request = new RegisterRequest("john@example.com", "John Doe", "password");
-        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
-        when(userPerfilRepository.findByName(anyString())).thenReturn(new UserPerfil());
+        String email = "john@example.com";
+        String name = "John Doe";
+        String password = "password";
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(userPerfilRepository.findByName("DEFAULT")).thenReturn(new UserPerfil());
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User user = invocation.getArgument(0);
             user.setId(1L);
@@ -77,10 +81,10 @@ public class AuthRegisterCaseTest {
         });
 
         // When
-        User result = authRegisterCase.execute(request);
+        User result = authRegisterCase.execute(name, email, password);
         
         // Then
         assertNotNull(result.getId());
-        assertEquals(request.getEmail(), result.getEmail());
+        assertEquals(email, result.getEmail());
     }
 }

@@ -4,7 +4,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import br.dev.diisk.application.interfaces.auth.IAuthService;
+
+import br.dev.diisk.application.services.IAuthService;
 import br.dev.diisk.domain.entities.user.User;
 import lombok.RequiredArgsConstructor;
 

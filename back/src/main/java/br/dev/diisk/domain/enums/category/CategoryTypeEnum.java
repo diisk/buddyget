@@ -1,21 +1,22 @@
 package br.dev.diisk.domain.enums.category;
 
-import br.dev.diisk.domain.MessageUtils;
+import br.dev.diisk.domain.interfaces.IBaseEnum;
 
-public enum CategoryTypeEnum {
+public enum CategoryTypeEnum implements IBaseEnum {
     INCOME("enum.category.income"),
     EXPENSE("enum.category.expense"),
 
     ;
 
-    private String title;
+    private String titlePath;
 
-    CategoryTypeEnum(String title) {
-        this.title = title;
+    CategoryTypeEnum(String titlePath) {
+        this.titlePath = titlePath;
     }
 
-    public String getTitle() {
-        return MessageUtils.getMessage(title);
+    @Override
+    public String getTitlePath() {
+        return titlePath;
     }
 
 }
