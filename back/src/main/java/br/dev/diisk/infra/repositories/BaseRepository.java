@@ -6,9 +6,11 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import br.dev.diisk.domain.entities.RastreableEntity;
 import br.dev.diisk.domain.repositories.IBaseRepository;
 
-public abstract class BaseRepository<J extends JpaRepository<E,T>,E,T> implements IBaseRepository<E,T> {
+public abstract class BaseRepository<J extends JpaRepository<E, Long>, E extends RastreableEntity>
+        implements IBaseRepository<E> {
 
     protected final J jpa;
 
@@ -18,17 +20,26 @@ public abstract class BaseRepository<J extends JpaRepository<E,T>,E,T> implement
 
     @Override
     public void delete(Collection<E> entities) {
-        jpa.deleteAll(entities);
+        List<E> entitiesList = entities.stream().map(e -> {
+            e.delete();
+            return e;
+        }).toList();
+        save(entitiesList);
     }
 
     @Override
     public void delete(E entity) {
-        jpa.delete(entity);
+        entity.delete();
+        save(entity);
     }
 
     @Override
-    public Optional<E> findById(T id) {
-        return jpa.findById(id);
+    public Optional<E> findById(Long id) {
+        Optional<E> entity = jpa.findById(id);
+        if (entity.isPresent() && entity.get().isDeleted())
+            return Optional.empty();
+
+        return entity;
     }
 
     @Override

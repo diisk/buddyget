@@ -9,7 +9,7 @@ import br.dev.diisk.infra.jpas.user.UserJPA;
 import br.dev.diisk.infra.repositories.BaseRepository;
 
 @Repository
-public class UserRepository extends BaseRepository<UserJPA, User, Long> implements IUserRepository {
+public class UserRepository extends BaseRepository<UserJPA, User> implements IUserRepository {
 
     public UserRepository(UserJPA jpa) {
         super(jpa);

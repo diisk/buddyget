@@ -4,12 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface IBaseRepository<E,T> {
+import br.dev.diisk.domain.entities.RastreableEntity;
+
+public interface IBaseRepository<E extends RastreableEntity> {
     E save(E entity);
 
     List<E> save(Collection<E> entities);
 
-    Optional<E> findById(T id);
+    Optional<E> findById(Long id);
 
     void delete(E entity);
 

@@ -30,7 +30,8 @@ public abstract class RastreableEntity {
     private LocalDateTime updatedAt;
 
     @Getter(value = AccessLevel.NONE)
-    private Boolean deleted;
+    @Column(nullable = false)
+    private Boolean deleted = false;
 
     @PrePersist
     private void prePersist() {

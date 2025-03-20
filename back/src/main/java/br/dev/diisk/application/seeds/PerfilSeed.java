@@ -44,14 +44,14 @@ public class PerfilSeed implements ApplicationRunner {
         UserPerfil clientePerfil = userPerfilRepository.findByName(perfilName);
 
         if (clientePerfil == null) {
-            userPerfilRepository.save(new UserPerfil(null, perfilName, level, permissions));
-        } else {
-            if (clientePerfil.getLevel() != level || !isEqualsPerfilPermissions(clientePerfil, permissions)) {
-                clientePerfil.setPermissions(permissions);
-                clientePerfil.setLevel(level);
-                userPerfilRepository.save(clientePerfil);
-            }
-
+            userPerfilRepository.save(new UserPerfil(perfilName, level, permissions));
+            return;
+        }
+        
+        if (clientePerfil.getLevel() != level || !isEqualsPerfilPermissions(clientePerfil, permissions)) {
+            clientePerfil.setPermissions(permissions);
+            clientePerfil.setLevel(level);
+            userPerfilRepository.save(clientePerfil);
         }
 
     }

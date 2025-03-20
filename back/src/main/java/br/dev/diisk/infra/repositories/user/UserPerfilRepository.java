@@ -8,7 +8,7 @@ import br.dev.diisk.infra.jpas.user.UserPerfilJPA;
 import br.dev.diisk.infra.repositories.BaseRepository;
 
 @Repository
-public class UserPerfilRepository extends BaseRepository<UserPerfilJPA, UserPerfil, Long>
+public class UserPerfilRepository extends BaseRepository<UserPerfilJPA, UserPerfil>
         implements IUserPerfilRepository {
 
     public UserPerfilRepository(UserPerfilJPA jpa) {

@@ -6,9 +6,12 @@ import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
+
+import br.dev.diisk.domain.interfaces.IBaseEnum;
 
 @Service
 public class UtilService {
@@ -47,6 +50,15 @@ public class UtilService {
 
     public Boolean equalsIgnoreCaseAndAccents(String str1, String str2) {
         return removeAccents(str1).equalsIgnoreCase(removeAccents(str2));
+    }
+
+    public <E extends Enum<E> & IBaseEnum> Optional<E> getEnumByName(Class<E> enumClass, String value) {
+        for (E enumConstant : enumClass.getEnumConstants()) {
+            if (enumConstant.name().equalsIgnoreCase(value)) {
+                return Optional.of(enumConstant);
+            }
+        }
+        return Optional.empty();
     }
 
 }

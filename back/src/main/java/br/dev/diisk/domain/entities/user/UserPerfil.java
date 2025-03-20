@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import br.dev.diisk.domain.entities.RastreableEntity;
 import br.dev.diisk.domain.enums.user.UserPermissionEnum;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -12,9 +13,6 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -28,11 +26,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "users_perfils")
-public class UserPerfil {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserPerfil extends RastreableEntity{
 
     @Column(nullable = false)
     private String name;
