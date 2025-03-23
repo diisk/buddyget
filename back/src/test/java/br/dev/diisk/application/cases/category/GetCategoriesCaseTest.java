@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import br.dev.diisk.application.UtilService;
-import br.dev.diisk.domain.entities.Category;
+import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
 
@@ -38,7 +38,7 @@ public class GetCategoriesCaseTest {
         // Given
         Long userId = 1L;
         CategoryTypeEnum type = CategoryTypeEnum.INCOME;
-        when(categoryRepository.findByUserAndType(userId, type)).thenReturn(Collections.emptyList());
+        when(categoryRepository.findAllBy(userId, type)).thenReturn(Collections.emptyList());
 
         // When
         List<Category> categories = getCategoriesCase.execute(userId, type);
@@ -53,7 +53,7 @@ public class GetCategoriesCaseTest {
         Long userId = 1L;
         CategoryTypeEnum type = CategoryTypeEnum.INCOME;
         Category category = new Category();
-        when(categoryRepository.findByUserAndType(userId, type)).thenReturn(List.of(category));
+        when(categoryRepository.findAllBy(userId, type)).thenReturn(List.of(category));
 
         // When
         List<Category> categories = getCategoriesCase.execute(userId, type);

@@ -2,9 +2,9 @@ package br.dev.diisk.domain.entities.expense;
 
 import java.math.BigDecimal;
 
-import br.dev.diisk.domain.entities.Category;
-import br.dev.diisk.domain.entities.CreditCard;
 import br.dev.diisk.domain.entities.UserRastrableEntity;
+import br.dev.diisk.domain.entities.category.Category;
+import br.dev.diisk.domain.entities.credit_card.CreditCard;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;

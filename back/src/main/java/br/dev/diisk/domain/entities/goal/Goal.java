@@ -1,8 +1,9 @@
-package br.dev.diisk.domain.entities;
+package br.dev.diisk.domain.entities.goal;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import br.dev.diisk.domain.entities.UserRastrableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

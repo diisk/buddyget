@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.dtos.category.UpdateCategoryDTO;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
-import br.dev.diisk.domain.entities.Category;
+import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +23,7 @@ public class UpdateCategoryCase {
         Category categoryExisting = categoryRepository
                 .findBy(userId, category.getType(), dto.getDescription()).orElse(null);
 
-        if (categoryExisting != null && !categoryExisting.getId().equals(category.getId()))
+        if (categoryExisting != null && categoryExisting.getId() != category.getId())
             throw new ValueAlreadyInDatabaseException(getClass(), "description");
 
         modelMapper.map(dto, category);

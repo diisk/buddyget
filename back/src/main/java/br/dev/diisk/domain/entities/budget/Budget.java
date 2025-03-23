@@ -1,11 +1,10 @@
-package br.dev.diisk.domain.entities;
+package br.dev.diisk.domain.entities.budget;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
+import br.dev.diisk.domain.entities.UserRastrableEntity;
+import br.dev.diisk.domain.entities.category.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,19 +16,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "incomes")
-public class Income extends UserRastrableEntity {
+@Table(name = "budget")
+public class Budget extends UserRastrableEntity {
 
     @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
-    private BigDecimal amount;
+    private Long limitValue;
 
     @Column(nullable = false)
-    private LocalDateTime receiptDate;
+    private Boolean active;
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Category category;
 
 }

@@ -14,7 +14,8 @@ import org.modelmapper.ModelMapper;
 
 import br.dev.diisk.application.dtos.category.UpdateCategoryDTO;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
-import br.dev.diisk.domain.entities.Category;
+import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
+import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
@@ -60,7 +61,8 @@ public class UpdateCategoryCaseTest {
         existingCategory.setId(2L);
 
         when(getCategoryCase.execute(userId, categoryId)).thenReturn(category);
-        when(categoryRepository.findBy(userId, category.getType(), dto.getDescription())).thenReturn(Optional.of(existingCategory));
+        when(categoryRepository.findBy(userId, category.getType(), dto.getDescription()))
+                .thenReturn(Optional.of(existingCategory));
 
         // When & Then
         assertThrows(ValueAlreadyInDatabaseException.class, () -> {
@@ -99,5 +101,22 @@ public class UpdateCategoryCaseTest {
         // Then
         assertEquals(dto.getDescription(), updatedCategory.getDescription());
         assertEquals(dto.getActive(), updatedCategory.getActive());
+    }
+
+    @Test
+    public void updateCategoryCase_quandoCategoriaNaoEncontrada_DeveLancarExcecao() {
+        // Given
+        Long userId = 1L;
+        Long categoryId = 1L;
+        UpdateCategoryDTO dto = new UpdateCategoryDTO();
+        dto.setDescription("Non-existent Category");
+
+        when(getCategoryCase.execute(userId, categoryId))
+                .thenThrow(new DbValueNotFoundException(GetCategoriesCase.class, "id"));
+
+        // When & Then
+        assertThrows(DbValueNotFoundException.class, () -> {
+            updateCategoryCase.execute(userId, categoryId, dto);
+        });
     }
 }

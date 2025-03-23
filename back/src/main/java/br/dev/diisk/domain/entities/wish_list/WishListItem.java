@@ -2,8 +2,8 @@ package br.dev.diisk.domain.entities.wish_list;
 
 import java.math.BigDecimal;
 
-import br.dev.diisk.domain.entities.Category;
 import br.dev.diisk.domain.entities.UserRastrableEntity;
+import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.expense.Expense;
 import br.dev.diisk.domain.enums.wish_list.WishListItemStatusEnum;
 import jakarta.persistence.Column;

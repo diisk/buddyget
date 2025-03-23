@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
-import br.dev.diisk.domain.entities.Category;
+import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
 

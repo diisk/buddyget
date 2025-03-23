@@ -1,5 +1,6 @@
-package br.dev.diisk.domain.entities;
+package br.dev.diisk.domain.entities.category;
 
+import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

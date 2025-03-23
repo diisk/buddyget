@@ -1,7 +1,10 @@
-package br.dev.diisk.domain.entities;
+package br.dev.diisk.domain.entities.income;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+import br.dev.diisk.domain.entities.UserRastrableEntity;
+import br.dev.diisk.domain.entities.category.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -17,19 +20,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "incomes")
-public class MonthlySummary extends UserRastrableEntity {
+public class Income extends UserRastrableEntity {
 
     @Column(nullable = false)
-    private Integer month;
-
-    @Column(nullable = false)
-    private Integer year;
+    private String description;
 
     @Column(nullable = false)
     private BigDecimal amount;
 
     @Column(nullable = false)
-    private Long budgetLimit;
+    private LocalDateTime receiptDate;
 
     @ManyToOne(optional = false)
     private Category category;

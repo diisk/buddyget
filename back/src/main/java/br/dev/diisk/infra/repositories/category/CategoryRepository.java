@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import br.dev.diisk.domain.entities.Category;
+import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
 import br.dev.diisk.infra.jpas.category.CategoryJPA;
@@ -24,7 +24,7 @@ public class CategoryRepository extends BaseRepository<CategoryJPA, Category> im
     }
 
     @Override
-    public List<Category> findByUserAndType(Long userId, CategoryTypeEnum type) {
+    public List<Category> findAllBy(Long userId, CategoryTypeEnum type) {
         return jpa.findByUser_IdAndTypeAndDeletedFalse(userId, type);
     }
 

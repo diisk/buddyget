@@ -18,13 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.dev.diisk.application.cases.category.AddCategoryCase;
 import br.dev.diisk.application.cases.category.DeleteCategoryCase;
 import br.dev.diisk.application.cases.category.GetCategoriesCase;
-import br.dev.diisk.application.cases.category.GetCategoryCase;
 import br.dev.diisk.application.cases.category.UpdateCategoryCase;
 import br.dev.diisk.application.dtos.category.UpdateCategoryDTO;
 import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.exceptions.EmptyListException;
 import br.dev.diisk.application.services.IResponseService;
-import br.dev.diisk.domain.entities.Category;
+import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
 import br.dev.diisk.presentation.dtos.category.AddCategoryRequest;
@@ -44,7 +43,6 @@ public class CategoryController {
     private final AddCategoryCase addCategoryCase;
     private final DeleteCategoryCase deleteCategoryCase;
     private final UpdateCategoryCase updateCategoryCase;
-    private final GetCategoryCase getCategoryCase;
     private final ModelMapper mapper;
     private final GetCategoriesCase getCategoriesCase;
     private final IResponseService responseService;
@@ -86,14 +84,6 @@ public class CategoryController {
                 .map(category -> mapper.map(category, CategoryResponse.class))
                 .toList();
 
-        return responseService.ok(response);
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<SuccessResponse<CategoryResponse>> getCategory(@PathVariable Long id,
-            @AuthenticationPrincipal User user) {
-        Category category = getCategoryCase.execute(user.getId(), id);
-        CategoryResponse response = mapper.map(category, CategoryResponse.class);
         return responseService.ok(response);
     }
 

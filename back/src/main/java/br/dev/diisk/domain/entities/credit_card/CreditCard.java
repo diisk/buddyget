@@ -1,7 +1,8 @@
-package br.dev.diisk.domain.entities;
+package br.dev.diisk.domain.entities.credit_card;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
+import br.dev.diisk.domain.entities.UserRastrableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -22,18 +23,18 @@ public class CreditCard extends UserRastrableEntity {
     private String name;
 
     @Column(nullable = false)
-    private Integer bestDay;
+    private Integer billDueDay;
 
     @Column(nullable = false)
-    private Long cardLimit;
+    private Integer billClosingDay;
 
     @Column(nullable = false)
-    private LocalDateTime billDueDate;// DATA DE VENCIMENTO DA FATURA
+    private BigDecimal cardLimit;
 
     @Column(nullable = false)
     private String color;
 
     @Column(nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
 }
