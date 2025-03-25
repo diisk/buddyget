@@ -3,7 +3,7 @@ package br.dev.diisk.application.cases.credit_card;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.dtos.credit_card.AddCreditCardDTO;
+import br.dev.diisk.application.dtos.credit_card.AddCreditCardDto;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.credit_card.CreditCard;
 import br.dev.diisk.domain.entities.user.User;
@@ -18,7 +18,7 @@ public class AddCreditCardCase {
     private final ICreditCardRepository creditCardRepository;
 
     
-    public CreditCard execute(User user, AddCreditCardDTO dto) {
+    public CreditCard execute(User user, AddCreditCardDto dto) {
 
         validateIfCreditCardExistsByName(user.getId(), dto.getName());
 

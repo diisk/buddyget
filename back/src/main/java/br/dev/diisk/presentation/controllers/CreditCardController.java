@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.dev.diisk.application.cases.credit_card.AddCreditCardCase;
 import br.dev.diisk.application.cases.credit_card.DeleteCreditCardCase;
-import br.dev.diisk.application.cases.credit_card.GetCreditCardsCase;
+import br.dev.diisk.application.cases.credit_card.ListCreditCardsCase;
 import br.dev.diisk.application.cases.credit_card.UpdateCreditCardCase;
-import br.dev.diisk.application.dtos.credit_card.AddCreditCardDTO;
-import br.dev.diisk.application.dtos.credit_card.UpdateCreditCardDTO;
+import br.dev.diisk.application.dtos.credit_card.AddCreditCardDto;
+import br.dev.diisk.application.dtos.credit_card.UpdateCreditCardDto;
 import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.exceptions.EmptyListException;
 import br.dev.diisk.application.services.IResponseService;
@@ -43,13 +43,13 @@ public class CreditCardController {
     private final DeleteCreditCardCase deleteCreditCardCase;
     private final UpdateCreditCardCase updateCreditCardCase;
     private final ModelMapper mapper;
-    private final GetCreditCardsCase getCreditCardsCase;
+    private final ListCreditCardsCase getCreditCardsCase;
     private final IResponseService responseService;
 
     @PostMapping
     public ResponseEntity<SuccessResponse<CreditCardResponse>> addCreditCard(@RequestBody @Valid AddCreditCardRequest dto,
             @AuthenticationPrincipal User user) {
-        CreditCard creditCard = addCreditCardCase.execute(user, mapper.map(dto, AddCreditCardDTO.class));
+        CreditCard creditCard = addCreditCardCase.execute(user, mapper.map(dto, AddCreditCardDto.class));
         CreditCardResponse response = mapper.map(creditCard, CreditCardResponse.class);
         return responseService.ok(response);
     }
@@ -58,7 +58,7 @@ public class CreditCardController {
     public ResponseEntity<SuccessResponse<CreditCardResponse>> updateCreditCard(@PathVariable Long id,
             @RequestBody @Valid UpdateCreditCardRequest dto,
             @AuthenticationPrincipal User user) {
-        CreditCard creditCard = updateCreditCardCase.execute(user.getId(), id, mapper.map(dto, UpdateCreditCardDTO.class));
+        CreditCard creditCard = updateCreditCardCase.execute(user, id, mapper.map(dto, UpdateCreditCardDto.class));
         CreditCardResponse response = mapper.map(creditCard, CreditCardResponse.class);
         return responseService.ok(response);
     }
@@ -66,17 +66,17 @@ public class CreditCardController {
     @DeleteMapping("{id}")
     public ResponseEntity<SuccessResponse<Boolean>> deleteCreditCard(@PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        deleteCreditCardCase.execute(user.getId(), id);
+        deleteCreditCardCase.execute(user, id);
         return responseService.ok(true);
     }
 
     @GetMapping
     public ResponseEntity<SuccessResponse<List<CreditCardResponse>>> getCreditCards(
             @AuthenticationPrincipal User user) {
-        List<CreditCard> creditCards = getCreditCardsCase.execute(user.getId());
+        List<CreditCard> creditCards = getCreditCardsCase.execute(user);
 
         if (creditCards.size() == 0)
-            throw new EmptyListException(getClass(), "Credit Cards");
+            throw new EmptyListException(getClass(), "credit-cards");
 
         List<CreditCardResponse> response = creditCards.stream()
                 .map(creditCard -> mapper.map(creditCard, CreditCardResponse.class))

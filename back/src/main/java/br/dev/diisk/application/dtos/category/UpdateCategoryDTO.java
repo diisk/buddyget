@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdateCategoryDTO {
+public class UpdateCategoryDto {
 
         private String description;
         private Boolean active;

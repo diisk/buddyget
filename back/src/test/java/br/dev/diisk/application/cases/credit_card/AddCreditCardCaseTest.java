@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import br.dev.diisk.application.dtos.credit_card.AddCreditCardDTO;
+import br.dev.diisk.application.dtos.credit_card.AddCreditCardDto;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.credit_card.CreditCard;
 import br.dev.diisk.domain.entities.user.User;
@@ -42,7 +42,7 @@ public class AddCreditCardCaseTest {
         // Given
         User user = new User();
         user.setId(1L);
-        AddCreditCardDTO dto = new AddCreditCardDTO();
+        AddCreditCardDto dto = new AddCreditCardDto();
         dto.setName("Test Card");
         dto.setBillDueDay(15);
         dto.setBillClosingDay(10);
@@ -64,7 +64,7 @@ public class AddCreditCardCaseTest {
         // Given
         User user = new User();
         user.setId(1L);
-        AddCreditCardDTO dto = new AddCreditCardDTO();
+        AddCreditCardDto dto = new AddCreditCardDto();
         dto.setName("Test Card");
         dto.setBillDueDay(15);
         dto.setBillClosingDay(10);

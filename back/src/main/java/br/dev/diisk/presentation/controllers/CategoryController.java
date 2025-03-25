@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import br.dev.diisk.application.cases.category.AddCategoryCase;
 import br.dev.diisk.application.cases.category.DeleteCategoryCase;
-import br.dev.diisk.application.cases.category.GetCategoriesCase;
+import br.dev.diisk.application.cases.category.ListCategoriesCase;
 import br.dev.diisk.application.cases.category.UpdateCategoryCase;
-import br.dev.diisk.application.dtos.category.UpdateCategoryDTO;
+import br.dev.diisk.application.dtos.category.UpdateCategoryDto;
 import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.exceptions.EmptyListException;
 import br.dev.diisk.application.services.IResponseService;
@@ -44,7 +44,7 @@ public class CategoryController {
     private final DeleteCategoryCase deleteCategoryCase;
     private final UpdateCategoryCase updateCategoryCase;
     private final ModelMapper mapper;
-    private final GetCategoriesCase getCategoriesCase;
+    private final ListCategoriesCase getCategoriesCase;
     private final IResponseService responseService;
 
     @PostMapping
@@ -59,7 +59,7 @@ public class CategoryController {
     public ResponseEntity<SuccessResponse<CategoryResponse>> updateCategory(@PathVariable Long id,
             @RequestBody @Valid UpdateCategoryRequest dto,
             @AuthenticationPrincipal User user) {
-        Category category = updateCategoryCase.execute(user.getId(), id, mapper.map(dto, UpdateCategoryDTO.class));
+        Category category = updateCategoryCase.execute(user, id, mapper.map(dto, UpdateCategoryDto.class));
         CategoryResponse response = mapper.map(category, CategoryResponse.class);
         return responseService.ok(response);
     }
@@ -67,7 +67,7 @@ public class CategoryController {
     @DeleteMapping("{id}")
     public ResponseEntity<SuccessResponse<Boolean>> deleteCategory(@PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        deleteCategoryCase.execute(user.getId(), id);
+        deleteCategoryCase.execute(user, id);
         return responseService.ok(true);
     }
 
@@ -75,7 +75,7 @@ public class CategoryController {
     public ResponseEntity<SuccessResponse<List<CategoryResponse>>> getCategories(
             @RequestParam CategoryTypeEnum categoryType,
             @AuthenticationPrincipal User user) {
-        List<Category> categories = getCategoriesCase.execute(user.getId(), categoryType);
+        List<Category> categories = getCategoriesCase.execute(user, categoryType);
 
         if (categories.size() == 0)
             throw new EmptyListException(getClass(), "Categories");

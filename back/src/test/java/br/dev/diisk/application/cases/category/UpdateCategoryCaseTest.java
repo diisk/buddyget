@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import br.dev.diisk.application.dtos.category.UpdateCategoryDTO;
+import br.dev.diisk.application.dtos.category.UpdateCategoryDto;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
 import br.dev.diisk.domain.entities.category.Category;
@@ -46,7 +46,7 @@ public class UpdateCategoryCaseTest {
         // Given
         Long userId = 1L;
         Long categoryId = 1L;
-        UpdateCategoryDTO dto = new UpdateCategoryDTO();
+        UpdateCategoryDto dto = new UpdateCategoryDto();
         dto.setDescription("New Description");
         dto.setActive(false);
 
@@ -60,13 +60,13 @@ public class UpdateCategoryCaseTest {
         Category existingCategory = new Category();
         existingCategory.setId(2L);
 
-        when(getCategoryCase.execute(userId, categoryId)).thenReturn(category);
+        when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(categoryRepository.findBy(userId, category.getType(), dto.getDescription()))
                 .thenReturn(Optional.of(existingCategory));
 
         // When & Then
         assertThrows(ValueAlreadyInDatabaseException.class, () -> {
-            updateCategoryCase.execute(userId, categoryId, dto);
+            updateCategoryCase.execute(user, categoryId, dto);
         });
     }
 
@@ -75,7 +75,7 @@ public class UpdateCategoryCaseTest {
         // Given
         Long userId = 1L;
         Long categoryId = 1L;
-        UpdateCategoryDTO dto = new UpdateCategoryDTO();
+        UpdateCategoryDto dto = new UpdateCategoryDto();
         dto.setDescription("New Description");
         dto.setActive(false);
 
@@ -86,7 +86,7 @@ public class UpdateCategoryCaseTest {
         category.setUser(user);
         category.setType(CategoryTypeEnum.INCOME);
 
-        when(getCategoryCase.execute(userId, categoryId)).thenReturn(category);
+        when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(categoryRepository.findBy(userId, category.getType(), dto.getDescription())).thenReturn(Optional.empty());
         doAnswer(invocation -> {
             Category c = invocation.getArgument(1);
@@ -96,27 +96,30 @@ public class UpdateCategoryCaseTest {
         }).when(mapper).map(dto, category);
 
         // When
-        Category updatedCategory = updateCategoryCase.execute(userId, categoryId, dto);
+        Category updatedCategory = updateCategoryCase.execute(user, categoryId, dto);
 
         // Then
         assertEquals(dto.getDescription(), updatedCategory.getDescription());
         assertEquals(dto.getActive(), updatedCategory.getActive());
-    }
+        }
 
-    @Test
-    public void updateCategoryCase_quandoCategoriaNaoEncontrada_DeveLancarExcecao() {
+        @Test
+        public void updateCategoryCase_quandoCategoriaNaoEncontrada_DeveLancarExcecao() {
         // Given
         Long userId = 1L;
         Long categoryId = 1L;
-        UpdateCategoryDTO dto = new UpdateCategoryDTO();
+        UpdateCategoryDto dto = new UpdateCategoryDto();
         dto.setDescription("Non-existent Category");
 
-        when(getCategoryCase.execute(userId, categoryId))
-                .thenThrow(new DbValueNotFoundException(GetCategoriesCase.class, "id"));
+        User user = new User();
+        user.setId(userId);
+
+        when(getCategoryCase.execute(user, categoryId))
+                .thenThrow(new DbValueNotFoundException(ListCategoriesCase.class, "id"));
 
         // When & Then
         assertThrows(DbValueNotFoundException.class, () -> {
-            updateCategoryCase.execute(userId, categoryId, dto);
+            updateCategoryCase.execute(user, categoryId, dto);
         });
     }
 }

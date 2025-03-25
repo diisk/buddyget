@@ -4,15 +4,15 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
+import br.dev.diisk.domain.entities.user.User;
 import jakarta.annotation.PostConstruct;
 
-public abstract class BaseMapper<S, T> implements Function<S, T> {
+public abstract class BaseMapper<S, T>{
 
     private Class<T> targetType;
     private Class<S> sourceType;
@@ -38,31 +38,30 @@ public abstract class BaseMapper<S, T> implements Function<S, T> {
 
     }
 
-    protected void doComplexMap(S source, T target) {
+    protected void doComplexMap(User user, S source, T target) {
 
     }
 
-    protected void doComplexUpdate(S source, T target) {
+    protected void doComplexUpdate(User user, S source, T target) {
 
     }
 
-    @Override
-    public T apply(S source) {
+    public T apply(User user, S source) {
         T target = mapper.map(source, targetType);
-        doComplexMap(source, target);
+        doComplexMap(user, source, target);
         return target;
     }
 
-    public void update(S source, T target) {
+    public void update(User user, S source, T target) {
         mapper.map(source, target);
-        doComplexUpdate(source, target);
+        doComplexUpdate(user, source, target);
     }
 
-    public List<T> mapList(Collection<S> source) {
-        return source.stream().map(this).collect(Collectors.toList());
+    public List<T> mapList(User user, Collection<S> source) {
+        return source.stream().map(obj->apply(user, obj)).collect(Collectors.toList());
     }
 
-    public Set<T> mapSet(Collection<S> source) {
-        return source.stream().map(this).collect(Collectors.toSet());
+    public Set<T> mapSet(User user, Collection<S> source) {
+        return source.stream().map(obj->apply(user, obj)).collect(Collectors.toSet());
     }
 }

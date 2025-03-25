@@ -35,11 +35,13 @@ public class GetCategoryCaseTest {
         // Given
         Long userId = 1L;
         Long categoryId = 1L;
+        User user = new User();
+        user.setId(userId);
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(DbValueNotFoundException.class, () -> {
-            getCategoryCase.execute(userId, categoryId);
+            getCategoryCase.execute(user, categoryId);
         });
     }
 
@@ -48,6 +50,8 @@ public class GetCategoryCaseTest {
         // Given
         Long userId = 1L;
         Long categoryId = 1L;
+        User user = new User();
+        user.setId(userId);
         User anotherUser = new User();
         anotherUser.setId(2L);
         Category category = new Category();
@@ -57,7 +61,7 @@ public class GetCategoryCaseTest {
 
         // When & Then
         assertThrows(DbValueNotFoundException.class, () -> {
-            getCategoryCase.execute(userId, categoryId);
+            getCategoryCase.execute(user, categoryId);
         });
     }
 
@@ -74,7 +78,7 @@ public class GetCategoryCaseTest {
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
 
         // When
-        Category result = getCategoryCase.execute(userId, categoryId);
+        Category result = getCategoryCase.execute(user, categoryId);
 
         // Then
         assertEquals(category, result);

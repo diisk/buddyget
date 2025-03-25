@@ -34,12 +34,14 @@ public class GetCreditCardCaseTest {
     public void getCreditCardCase_quandoCartaoNaoExiste_DeveLancarExcecao() {
         // Given
         Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
         Long cardId = 1L;
         when(creditCardRepository.findById(cardId)).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(DbValueNotFoundException.class, () -> {
-            getCreditCardCase.execute(userId, cardId);
+            getCreditCardCase.execute(user, cardId);
         });
     }
 
@@ -47,6 +49,8 @@ public class GetCreditCardCaseTest {
     public void getCreditCardCase_quandoCartaoNaoPertenceAoUsuario_DeveLancarExcecao() {
         // Given
         Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
         Long cardId = 1L;
         User anotherUser = new User();
         anotherUser.setId(2L);
@@ -58,7 +62,7 @@ public class GetCreditCardCaseTest {
 
         // When & Then
         assertThrows(DbValueNotFoundException.class, () -> {
-            getCreditCardCase.execute(userId, cardId);
+            getCreditCardCase.execute(user, cardId);
         });
     }
 
@@ -76,7 +80,7 @@ public class GetCreditCardCaseTest {
         when(creditCardRepository.findById(cardId)).thenReturn(Optional.of(creditCard));
 
         // When
-        CreditCard result = getCreditCardCase.execute(userId, cardId);
+        CreditCard result = getCreditCardCase.execute(user, cardId);
 
         // Then
         assertEquals(cardId, result.getId());

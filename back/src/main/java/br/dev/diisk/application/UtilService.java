@@ -24,6 +24,9 @@ public class UtilService {
     }
 
     public LocalDateTime toReference(LocalDateTime dateTime) {
+        if(dateTime == null) 
+            return null;
+        
         return LocalDateTime.of(dateTime.getYear(), dateTime.getMonthValue(), 1, 0, 0);
     }
 

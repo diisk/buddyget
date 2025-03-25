@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import br.dev.diisk.application.dtos.credit_card.UpdateCreditCardDTO;
+import br.dev.diisk.application.dtos.credit_card.UpdateCreditCardDto;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
 import br.dev.diisk.domain.entities.credit_card.CreditCard;
@@ -44,8 +44,10 @@ public class UpdateCreditCardCaseTest {
     public void updateCreditCardCase_quandoCartaoJaExiste_DeveLancarExcecao() {
         // Given
         Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
         Long creditCardId = 1L;
-        UpdateCreditCardDTO dto = new UpdateCreditCardDTO();
+        UpdateCreditCardDto dto = new UpdateCreditCardDto();
         dto.setName("Existing Card");
 
         CreditCard existingCreditCard = new CreditCard();
@@ -54,12 +56,12 @@ public class UpdateCreditCardCaseTest {
         CreditCard creditCard = new CreditCard();
         creditCard.setId(creditCardId);
 
-        when(getCreditCardCase.execute(userId, creditCardId)).thenReturn(creditCard);
+        when(getCreditCardCase.execute(user, creditCardId)).thenReturn(creditCard);
         when(creditCardRepository.findBy(userId, dto.getName())).thenReturn(Optional.of(existingCreditCard));
 
         // When & Then
         assertThrows(ValueAlreadyInDatabaseException.class, () -> {
-            updateCreditCardCase.execute(userId, creditCardId, dto);
+            updateCreditCardCase.execute(user, creditCardId, dto);
         });
     }
 
@@ -68,7 +70,7 @@ public class UpdateCreditCardCaseTest {
         // Given
         Long userId = 1L;
         Long creditCardId = 1L;
-        UpdateCreditCardDTO dto = new UpdateCreditCardDTO();
+        UpdateCreditCardDto dto = new UpdateCreditCardDto();
         dto.setName("Updated Card");
 
         User user = new User();
@@ -77,7 +79,7 @@ public class UpdateCreditCardCaseTest {
         creditCard.setId(creditCardId);
         creditCard.setUser(user);
 
-        when(getCreditCardCase.execute(userId, creditCardId)).thenReturn(creditCard);
+        when(getCreditCardCase.execute(user, creditCardId)).thenReturn(creditCard);
         when(creditCardRepository.findBy(userId, dto.getName())).thenReturn(Optional.empty());
         doAnswer(invocation -> {
             CreditCard c = invocation.getArgument(1);
@@ -86,7 +88,7 @@ public class UpdateCreditCardCaseTest {
         }).when(modelMapper).map(dto, creditCard);
 
         // When
-        CreditCard updatedCreditCard = updateCreditCardCase.execute(userId, creditCardId, dto);
+        CreditCard updatedCreditCard = updateCreditCardCase.execute(user, creditCardId, dto);
 
         // Then
         assertEquals(dto.getName(), updatedCreditCard.getName());
@@ -96,15 +98,17 @@ public class UpdateCreditCardCaseTest {
     public void updateCreditCardCase_quandoCartaoNaoEncontrado_DeveLancarExcecao() {
         // Given
         Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
         Long creditCardId = 1L;
-        UpdateCreditCardDTO dto = new UpdateCreditCardDTO();
+        UpdateCreditCardDto dto = new UpdateCreditCardDto();
         dto.setName("Non-existent Card");
 
-        when(getCreditCardCase.execute(userId, creditCardId)).thenThrow(new DbValueNotFoundException(GetCreditCardCase.class,"id"));
+        when(getCreditCardCase.execute(user, creditCardId)).thenThrow(new DbValueNotFoundException(GetCreditCardCase.class,"id"));
 
         // When & Then
         assertThrows(DbValueNotFoundException.class, () -> {
-            updateCreditCardCase.execute(userId, creditCardId, dto);
+            updateCreditCardCase.execute(user, creditCardId, dto);
         });
     }
 }

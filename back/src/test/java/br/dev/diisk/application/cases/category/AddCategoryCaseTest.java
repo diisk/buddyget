@@ -2,6 +2,7 @@ package br.dev.diisk.application.cases.category;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +41,7 @@ public class AddCategoryCaseTest {
     public void addCategoryCase_quandoCategoriaJaExiste_DeveLancarExcecao() {
         // Given
         User user = new User();
+        user.setId(1L);
         String description = "Test Category";
         CategoryTypeEnum type = CategoryTypeEnum.INCOME;
         Category existingCategory = new Category();
@@ -57,17 +59,21 @@ public class AddCategoryCaseTest {
     public void addCategoryCase_quandoDadosValidos_DeveAdicionarCategoria() {
         // Given
         User user = new User();
+        user.setId(1L);
         String description = "Test Category";
         CategoryTypeEnum type = CategoryTypeEnum.INCOME;
         Category newCategory = new Category();
+        newCategory.setDescription(description);
+        newCategory.setType(type);
+        newCategory.setUser(user);
 
-        when(categoryRepository.findBy(user.getId(), type, description)).thenReturn(Optional.of(newCategory));
+        when(categoryRepository.findBy(user.getId(), type, description)).thenReturn(Optional.empty());
 
-        doAnswer(invocation->{
+        doAnswer(invocation -> {
             Category category = invocation.getArgument(0);
             category.setId(1L);
-            return category;
-        }).when(categoryRepository).save(newCategory);
+            return null;
+        }).when(categoryRepository).save(any(Category.class));
 
         // When
         Category category = addCategoryCase.execute(user, description, type);

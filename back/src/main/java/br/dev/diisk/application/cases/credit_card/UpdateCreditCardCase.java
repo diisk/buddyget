@@ -3,9 +3,10 @@ package br.dev.diisk.application.cases.credit_card;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.dtos.credit_card.UpdateCreditCardDTO;
+import br.dev.diisk.application.dtos.credit_card.UpdateCreditCardDto;
 import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.credit_card.CreditCard;
+import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.repositories.credit_card.ICreditCardRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -18,11 +19,11 @@ public class UpdateCreditCardCase {
     private final GetCreditCardCase getCreditCardCase;
 
 
-    public CreditCard execute(Long userId, Long creditCardId, UpdateCreditCardDTO dto) {
+    public CreditCard execute(User user, Long creditCardId, UpdateCreditCardDto dto) {
 
-        validateIfCreditCardExistsByName(userId,creditCardId,dto.getName());
+        validateIfCreditCardExistsByName(user.getId(),creditCardId,dto.getName());
 
-        CreditCard creditCard = getCreditCardCase.execute(userId, creditCardId);
+        CreditCard creditCard = getCreditCardCase.execute(user, creditCardId);
 
         modelMapper.map(dto, creditCard);
 

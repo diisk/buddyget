@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "incomes")
+@Table(name = "monthly_summary")
 public class MonthlySummary extends UserRastrableEntity {
 
     @Column(nullable = false)

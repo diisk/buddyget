@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AddCreditCardDTO {
+public class AddCreditCardDto {
 
         private String name;
 
