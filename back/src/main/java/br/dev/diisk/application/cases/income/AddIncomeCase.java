@@ -32,8 +32,7 @@ public class AddIncomeCase {
     }
 
     private void validateIfCategoryIsValid(User user, Income income) {
-        if (income.getCategory().getUser().getId() != user.getId()
-                || income.getCategory().getType() != CategoryTypeEnum.INCOME)
+        if (income.getCategory().getType() != CategoryTypeEnum.INCOME)
             throw new DbValueNotFoundException(getClass(), "categoryId");
 
     }

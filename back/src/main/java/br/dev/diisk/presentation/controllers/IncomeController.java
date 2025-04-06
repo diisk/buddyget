@@ -27,12 +27,11 @@ import br.dev.diisk.application.dtos.income.AddIncomeDto;
 import br.dev.diisk.application.dtos.income.UpdateIncomeDto;
 import br.dev.diisk.application.dtos.response.PageResponse;
 import br.dev.diisk.application.dtos.response.SuccessResponse;
-import br.dev.diisk.application.exceptions.EmptyListException;
 import br.dev.diisk.application.mappers.income.IncomeToIncomeResponseMapper;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.domain.entities.income.Income;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.filters.incomes.ListIncomesFilter;
+import br.dev.diisk.domain.filters.income.ListIncomesFilter;
 import br.dev.diisk.presentation.dtos.income.AddIncomeRequest;
 import br.dev.diisk.presentation.dtos.income.IncomeResponse;
 import br.dev.diisk.presentation.dtos.income.UpdateIncomeRequest;
@@ -65,7 +64,7 @@ public class IncomeController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<SuccessResponse<IncomeResponse>> updateCreditCard(@PathVariable Long id,
+    public ResponseEntity<SuccessResponse<IncomeResponse>> updateIncome(@PathVariable Long id,
             @RequestBody @Valid UpdateIncomeRequest dto,
             @AuthenticationPrincipal User user) {
         Income income = updateIncomeCase.execute(user, id, mapper.map(dto, UpdateIncomeDto.class));
@@ -74,7 +73,7 @@ public class IncomeController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<SuccessResponse<Boolean>> deleteCreditCard(@PathVariable Long id,
+    public ResponseEntity<SuccessResponse<Boolean>> deleteIncome(@PathVariable Long id,
             @AuthenticationPrincipal User user) {
         deleteIncomeCase.execute(user, id);
         return responseService.ok(true);
@@ -91,20 +90,14 @@ public class IncomeController {
 
         ListIncomesFilter filter = new ListIncomesFilter();
         filter.setStartReferenceDate(utilService.toReference(startReferenceDate));
-        filter.setEndReferenceDate(utilService.toReference(endReferenceDate));
+        filter.setEndReferenceDate(utilService.toReference(endReferenceDate, true));
         filter.setCategoryId(categoryId);
         filter.setOnlyPending(onlyPending);
 
         Page<Income> incomes = listIncomesCase.execute(user, filter, pageable);
 
-        if (incomes.getContent().size() == 0)
-            throw new EmptyListException(getClass(), "incomes");
-
-        PageResponse<IncomeResponse> response = new PageResponse<IncomeResponse>(
-                incomes.getContent().stream()
-                        .map(income -> incomeToIncomeResponseMapper.apply(user, income))
-                        .toList(),
-                incomes.getTotalPages());
+        PageResponse<IncomeResponse> response = responseService.getPageResponse(
+                user, incomes, incomeToIncomeResponseMapper, "incomes");
 
         return responseService.ok(response);
     }

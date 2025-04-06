@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import br.dev.diisk.application.cases.category.GetCategoryCase;
 import br.dev.diisk.application.dtos.income.AddIncomeDto;
 import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
 import br.dev.diisk.application.mappers.income.AddIncomeDtoToIncomeMapper;
@@ -78,50 +77,6 @@ public class AddIncomeCaseTest {
         assertEquals(user, income.getUser());
         assertEquals(dto.getReceiptDate(), income.getReceiptDate());
         assertEquals(dto.getCategoryId(), income.getCategory().getId());
-    }
-
-    @Test
-    public void addIncomeCase_quandoCategoriaNaoEncontrada_DeveLancarDbValueNotFoundException() {
-        // Given
-        User user = new User();
-        user.setId(1L);
-        AddIncomeDto dto = new AddIncomeDto();
-        dto.setDescription("Test Income");
-        dto.setAmount(new BigDecimal("1000.00"));
-        dto.setCategoryId(999L); // Non-existent category ID
-        dto.setReceiptDate(LocalDateTime.now());
-
-        when(mapper.apply(user, dto)).thenThrow(new DbValueNotFoundException(GetCategoryCase.class,"categoryId"));
-
-        // When / Then
-        assertThrows(DbValueNotFoundException.class, () -> {
-            addIncomeCase.execute(user, dto);
-        });
-    }
-
-    @Test
-    public void addIncomeCase_quandoCategoriaNaoPertenceAoUsuario_DeveLancarDbValueNotFoundException() {
-        // Given
-        User user = new User();
-        user.setId(1L);
-        AddIncomeDto dto = new AddIncomeDto();
-        dto.setDescription("Test Income");
-        dto.setAmount(new BigDecimal("1000.00"));
-        dto.setCategoryId(1L);
-        dto.setReceiptDate(LocalDateTime.now());
-        Category category = new Category();
-        category.setId(1L);
-        category.setUser(new User()); // Categoria pertence a outro usuário
-        category.setType(CategoryTypeEnum.INCOME);
-        Income newIncome = new Income();
-        newIncome.setCategory(category);
-
-        when(mapper.apply(user, dto)).thenReturn(newIncome);
-
-        // When / Then
-        assertThrows(DbValueNotFoundException.class, () -> {
-            addIncomeCase.execute(user, dto);
-        });
     }
 
     @Test

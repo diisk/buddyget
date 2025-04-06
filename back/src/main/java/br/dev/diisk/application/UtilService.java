@@ -24,10 +24,27 @@ public class UtilService {
     }
 
     public LocalDateTime toReference(LocalDateTime dateTime) {
-        if(dateTime == null) 
+        return toReference(dateTime, false);
+    }
+
+    public LocalDateTime toReference(LocalDateTime dateTime, Boolean endOfMonth) {
+        if (dateTime == null)
             return null;
-        
-        return LocalDateTime.of(dateTime.getYear(), dateTime.getMonthValue(), 1, 0, 0);
+
+        LocalDateTime startOfMonth = LocalDateTime
+                .of(
+                        dateTime.getYear(),
+                        dateTime.getMonthValue(),
+                        1,
+                        0,
+                        0,
+                        0,
+                        0);
+
+        if (endOfMonth)
+            return startOfMonth.plusMonths(1).minusNanos(1);
+
+        return startOfMonth;
     }
 
     public String getMonthName(LocalDateTime dateTime) {
@@ -40,8 +57,8 @@ public class UtilService {
         return result;
     }
 
-    public BigDecimal divide(BigDecimal bigDecimal1, BigDecimal bigdeDecimal2){
-        return bigDecimal1.divide(bigdeDecimal2,2,RoundingMode.HALF_EVEN);
+    public BigDecimal divide(BigDecimal bigDecimal1, BigDecimal bigdeDecimal2) {
+        return bigDecimal1.divide(bigdeDecimal2, 2, RoundingMode.HALF_EVEN);
     }
 
     public String removeAccents(String input) {
@@ -49,6 +66,11 @@ public class UtilService {
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         String result = pattern.matcher(normalized).replaceAll("");
         return result;
+    }
+
+    public Integer getMonthsBetweenReferences(LocalDateTime startReference, LocalDateTime endReference) {
+        return (endReference.getYear() - startReference.getYear()) * 12 + endReference.getMonthValue()
+                - startReference.getMonthValue();
     }
 
     public Boolean equalsIgnoreCaseAndAccents(String str1, String str2) {
@@ -63,5 +85,4 @@ public class UtilService {
         }
         return Optional.empty();
     }
-
 }

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import br.dev.diisk.domain.entities.income.Income;
-import br.dev.diisk.domain.filters.incomes.ListIncomesFilter;
+import br.dev.diisk.domain.filters.income.ListIncomesFilter;
 import br.dev.diisk.domain.repositories.income.IIncomeRepository;
 import br.dev.diisk.infra.jpas.income.IncomeJPA;
 import br.dev.diisk.infra.repositories.BaseRepository;

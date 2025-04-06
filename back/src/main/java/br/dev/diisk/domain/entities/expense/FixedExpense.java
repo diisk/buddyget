@@ -1,7 +1,9 @@
 package br.dev.diisk.domain.entities.expense;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import br.dev.diisk.domain.enums.expense.FixedExpenseTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,13 +20,22 @@ import lombok.Setter;
 @Table(name = "fixed_expenses")
 public class FixedExpense extends GenericExpense {
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer dueDay;
 
     @Column(nullable = true)
-    private LocalDateTime endDate;
+    private LocalDateTime endReference;
+
+    @Column(nullable = true)
+    private Integer totalInstallments;
 
     @Column(nullable = false)
-    private LocalDateTime startDate;
+    private LocalDateTime startReference;
+
+    @Column(nullable = false)
+    private FixedExpenseTypeEnum type;
+
+    @Column(nullable = true)
+    private BigDecimal totalAmount;
 
 }

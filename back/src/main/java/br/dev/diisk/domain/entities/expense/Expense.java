@@ -20,16 +20,10 @@ import lombok.Setter;
 public class Expense extends GenericExpense {
 
     @Column(nullable = false)
-    private Integer dueDay;
-
-    @Column(nullable = false)
-    private Integer totalInstallments;
-
-    @Column(nullable = true)
-    private LocalDateTime startDate;
+    private LocalDateTime dueDate;
  
     @Column(nullable = false)
-    private Integer currentInstallment;
+    private Integer installmentReference;
 
     @Column(nullable = true)
     private LocalDateTime paymentDate;

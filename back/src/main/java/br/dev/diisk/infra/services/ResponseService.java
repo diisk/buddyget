@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.dev.diisk.application.dtos.response.ErrorDetailsResponse;
 import br.dev.diisk.application.dtos.response.ErrorResponse;
+import br.dev.diisk.application.dtos.response.PageResponse;
 import br.dev.diisk.application.dtos.response.SuccessResponse;
+import br.dev.diisk.application.exceptions.EmptyListException;
+import br.dev.diisk.application.mappers.BaseMapper;
 import br.dev.diisk.application.services.IMessageService;
 import br.dev.diisk.application.services.IResponseService;
+import br.dev.diisk.domain.entities.user.User;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -127,6 +132,20 @@ public class ResponseService implements IResponseService {
         response.setContentType("application/json");
         response.setStatus(statusCode);
         response.getWriter().write(new ObjectMapper().writeValueAsString(responseObject));
+    }
+
+    @Override
+    public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, BaseMapper<S, T> mapper, String objectName) {
+        if (page.getContent().size() == 0)
+            throw new EmptyListException(getClass(), objectName);
+
+        PageResponse<T> response = new PageResponse<T>(
+                page.getContent().stream()
+                        .map(fe -> mapper.apply(user, fe))
+                        .toList(),
+                page.getTotalPages());
+
+        return response;
     }
 
 }

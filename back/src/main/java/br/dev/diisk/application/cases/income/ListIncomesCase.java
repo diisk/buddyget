@@ -9,7 +9,7 @@ import br.dev.diisk.application.UtilService;
 import br.dev.diisk.application.exceptions.date.PeriodOrderException;
 import br.dev.diisk.domain.entities.income.Income;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.filters.incomes.ListIncomesFilter;
+import br.dev.diisk.domain.filters.income.ListIncomesFilter;
 import br.dev.diisk.domain.repositories.income.IIncomeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -34,11 +34,9 @@ public class ListIncomesCase {
             dto.setOnlyPending(false);
 
         if (!dto.getOnlyPending()) {
+            LocalDateTime now = LocalDateTime.now();
             if (dto.getStartReferenceDate() == null)
-                dto.setStartReferenceDate(utilService.toReference(LocalDateTime.now().minusMonths(1)));
-
-            if (dto.getEndReferenceDate() == null)
-                dto.setEndReferenceDate(utilService.toReference(dto.getStartReferenceDate().plusMonths(2)));
+                dto.setStartReferenceDate(utilService.toReference(now.minusMonths(1)));
         }
 
     }

@@ -1,4 +1,4 @@
-package br.dev.diisk.domain.filters.incomes;
+package br.dev.diisk.domain.filters.income;
 
 import java.time.LocalDateTime;
 

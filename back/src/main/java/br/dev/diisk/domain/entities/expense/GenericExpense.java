@@ -23,16 +23,14 @@ public abstract class GenericExpense extends UserRastrableEntity {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private String groupKey; //CHAVE PRA ENCONTRAR DESPESAS QUE PODEM SER AGRUPADAS
-
-    @Column(nullable = false)
-    private BigDecimal amount;
-
     @ManyToOne(optional = false)
     private Category category;
 
     @ManyToOne(optional = true)
     private CreditCard creditCard;
+
+    @Column(nullable = false)
+    private BigDecimal amount;
+    
 
 }
