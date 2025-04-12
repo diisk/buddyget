@@ -19,11 +19,8 @@ import lombok.Setter;
 @Table(name = "expenses")
 public class Expense extends GenericExpense {
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime dueDate;
- 
-    @Column(nullable = false)
-    private Integer installmentReference;
 
     @Column(nullable = true)
     private LocalDateTime paymentDate;
