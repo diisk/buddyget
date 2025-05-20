@@ -16,11 +16,11 @@ import br.dev.diisk.application.dtos.response.ErrorDetailsResponse;
 import br.dev.diisk.application.dtos.response.ErrorResponse;
 import br.dev.diisk.application.dtos.response.PageResponse;
 import br.dev.diisk.application.dtos.response.SuccessResponse;
-import br.dev.diisk.application.exceptions.EmptyListException;
 import br.dev.diisk.application.mappers.BaseMapper;
 import br.dev.diisk.application.services.IMessageService;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.exceptions.EmptyListException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 

@@ -4,9 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.dtos.credit_card.UpdateCreditCardDto;
-import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.credit_card.CreditCard;
 import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.repositories.credit_card.ICreditCardRepository;
 import lombok.RequiredArgsConstructor;
 

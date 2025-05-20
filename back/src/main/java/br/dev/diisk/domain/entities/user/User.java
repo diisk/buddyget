@@ -6,7 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.dev.diisk.domain.entities.RastreableEntity;
+import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.value_objects.Email;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,25 +24,45 @@ import lombok.Setter;
 @Table(name = "users")
 @NoArgsConstructor
 public class User extends RastreableEntity implements UserDetails {
-    
+
     @Column(nullable = false)
     private String name;
-    
-    @Column(unique = true)
-    private String email;
-    
+
+    @Embedded
+    private Email email;
+
     @Column(nullable = false)
-    private String password;
+    private String encryptedPassword;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "perfil_id")
     private UserPerfil perfil;
 
-    public User(String name, String email, String password, UserPerfil perfil) {
+    public User(String name, Email email, String encryptedPassword, UserPerfil perfil) {
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.encryptedPassword = encryptedPassword;
         this.perfil = perfil;
+        validate();
+    }
+
+    public String getEmail(){
+        return email.getValue();
+    }
+
+    private void validate(){
+        validateName();
+        validateEncryptedPassword();
+    }
+
+    private void validateEncryptedPassword() {
+        if (encryptedPassword == null || encryptedPassword.isBlank())
+            throw new BadRequestValueCustomRuntimeException(getClass(), "Unexpected error: encryptedPassword is null or blank",encryptedPassword);
+    }
+
+    private void validateName() {
+        if (name == null || name.isBlank())
+            throw new BadRequestValueCustomRuntimeException(getClass(), "Unexpected error: name is null or blank",name);
     }
 
     @Override
@@ -49,6 +72,11 @@ public class User extends RastreableEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return email.getValue();
+    }
+
+    @Override
+    public String getPassword() {
+        return encryptedPassword;
     }
 }

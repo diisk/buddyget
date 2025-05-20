@@ -3,10 +3,10 @@ package br.dev.diisk.application.cases.auth;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
-import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.entities.user.UserPerfil;
+import br.dev.diisk.domain.exceptions.persistence.DbValueNotFoundException;
+import br.dev.diisk.domain.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.repositories.user.IUserPerfilRepository;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
 import jakarta.transaction.Transactional;

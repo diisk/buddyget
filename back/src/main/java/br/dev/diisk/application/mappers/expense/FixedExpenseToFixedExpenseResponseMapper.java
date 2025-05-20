@@ -7,7 +7,7 @@ import br.dev.diisk.application.mappers.BaseMapper;
 import br.dev.diisk.domain.entities.expense.FixedExpense;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.infra.services.MessageService;
-import br.dev.diisk.presentation.dtos.expense.FixedExpenseResponse;
+import br.dev.diisk.presentation.dtos_OLDS.expense.FixedExpenseResponse;
 
 @Component
 public class FixedExpenseToFixedExpenseResponseMapper extends BaseMapper<FixedExpense, FixedExpenseResponse> {

@@ -3,7 +3,7 @@ package br.dev.diisk.domain.enums.notification;
 import br.dev.diisk.domain.interfaces.IBaseEnum;
 
 public enum NotificationTypeEnum implements IBaseEnum{
-    BUDGET_EXCEEDED("enum.notification.budget-exceeded"),
+    BUDGET_EXCEEDED("Orçamento Excedido"),
 
     ;
 

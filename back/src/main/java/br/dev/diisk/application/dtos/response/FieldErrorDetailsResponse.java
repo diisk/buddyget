@@ -2,7 +2,7 @@ package br.dev.diisk.application.dtos.response;
 
 import org.springframework.validation.FieldError;
 
-import br.dev.diisk.application.exceptions.FieldCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.FieldCustomRuntimeException;
 import lombok.Getter;
 
 @Getter

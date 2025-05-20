@@ -20,6 +20,8 @@ public class AddExpenseDto {
 
         private Long creditCardId;
 
+        private Long wishItemId;TODO E TAMBÉM ADAPTAR TODOS OS DELETES COM FORCE E HIERARQUIA
+
         private LocalDateTime dueDate;
 
         private LocalDateTime paymentDate;

@@ -1,6 +1,6 @@
 package br.dev.diisk.application.dtos.response;
 
-import br.dev.diisk.application.exceptions.ValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.ValueCustomRuntimeException;
 import lombok.Getter;
 
 @Getter

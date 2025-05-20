@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.dev.diisk.application.dtos.response.ErrorDetailsResponse;
-import br.dev.diisk.application.exceptions.authentication.InvalidUserException;
 import br.dev.diisk.application.services.IResponseService;
+import br.dev.diisk.domain.exceptions.authentication.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 
 @RestControllerAdvice

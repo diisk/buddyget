@@ -2,10 +2,10 @@ package br.dev.diisk.application.cases.auth;
 
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.exceptions.authentication.InvalidUserException;
 import br.dev.diisk.application.services.IAuthService;
 import br.dev.diisk.application.services.ITokenService;
 import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.exceptions.authentication.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 
 @Service

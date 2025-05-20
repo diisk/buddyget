@@ -2,9 +2,9 @@ package br.dev.diisk.application.cases.category;
 
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.exceptions.persistence.DbValueNotFoundException;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.exceptions.persistence.DbValueNotFoundException;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
 import lombok.RequiredArgsConstructor;
 

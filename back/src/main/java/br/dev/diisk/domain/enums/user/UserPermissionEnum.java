@@ -3,7 +3,7 @@ package br.dev.diisk.domain.enums.user;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum UserPermissionEnum implements GrantedAuthority {
-    DEFAULT("enum.user-permission.default"),
+    DEFAULT("Padrão"),
 
     ;
 

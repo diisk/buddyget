@@ -4,9 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.dtos.category.UpdateCategoryDto;
-import br.dev.diisk.application.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.exceptions.persistence.ValueAlreadyInDatabaseException;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
 import lombok.RequiredArgsConstructor;
 

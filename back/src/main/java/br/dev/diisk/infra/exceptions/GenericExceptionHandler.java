@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import br.dev.diisk.application.dtos.response.ErrorDetailsResponse;
 import br.dev.diisk.application.dtos.response.FieldErrorDetailsResponse;
 import br.dev.diisk.application.dtos.response.ValueErrorDetailsResponse;
-import br.dev.diisk.application.exceptions.BadRequestFieldCustomRuntimeException;
-import br.dev.diisk.application.exceptions.BadRequestValueCustomRuntimeException;
-import br.dev.diisk.application.exceptions.CustomRuntimeException;
-import br.dev.diisk.application.exceptions.NotFoundFieldCustomRuntimeException;
-import br.dev.diisk.application.exceptions.NotFoundValueCustomRuntimeException;
 import br.dev.diisk.application.services.IResponseService;
+import br.dev.diisk.domain.exceptions.BadRequestFieldCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.CustomRuntimeException;
+import br.dev.diisk.domain.exceptions.NotFoundFieldCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.NotFoundValueCustomRuntimeException;
 import lombok.RequiredArgsConstructor;
 
 @RestControllerAdvice
