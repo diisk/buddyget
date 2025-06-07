@@ -1,17 +1,13 @@
 package br.dev.diisk.application.services;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.Collection;
-
+import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import br.dev.diisk.application.mappers.BaseMapper;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.presentation.dtos.response.ErrorDetailsResponse;
+import br.dev.diisk.domain.enums.ErrorTypeEnum;
 import br.dev.diisk.presentation.dtos.response.ErrorResponse;
 import br.dev.diisk.presentation.dtos.response.PageResponse;
 import br.dev.diisk.presentation.dtos.response.SuccessResponse;
@@ -23,29 +19,17 @@ public interface IResponseService {
 
     public <T> ResponseEntity<SuccessResponse<T>> ok();
 
-    public <T> ResponseEntity<SuccessResponse<T>> created(T content);
+    public ResponseEntity<ErrorResponse> error(ErrorTypeEnum type, String message, Map<String, String> details);
 
-    public <T> ResponseEntity<SuccessResponse<T>> created(URI uri, T content);
-
-    public <T> ResponseEntity<SuccessResponse<T>> created(URI uri);
-
-    public ResponseEntity<ErrorResponse> badRequest(ErrorDetailsResponse error);
-
-    public ResponseEntity<ErrorResponse> badRequest(String message, Collection<? extends ErrorDetailsResponse> errors);
-
-    public ResponseEntity<ErrorResponse> notFound(ErrorDetailsResponse error);
-
-    public ResponseEntity<ErrorResponse> notFound(String message, Collection<? extends ErrorDetailsResponse> errors);
-
-    public ResponseEntity<ErrorResponse> unauthorized(ErrorDetailsResponse error);
-
-    public ResponseEntity<ErrorResponse> forbidden(ErrorDetailsResponse error);
-
-    public ResponseEntity<ErrorResponse> internal(ErrorDetailsResponse error);
+    public ResponseEntity<ErrorResponse> error(ErrorTypeEnum type, String message);
 
     public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, BaseMapper<S, T> mapper, String objectName);
 
-    public void writeResponseObject(HttpServletResponse response, Integer statusCode, Object responseObject)
+    public void writeResponseObject(HttpServletResponse response, ErrorTypeEnum type, String message,
+            Map<String, String> details)
+            throws JsonProcessingException, IOException;
+
+    public void writeResponseObject(HttpServletResponse response, ErrorTypeEnum type, String message)
             throws JsonProcessingException, IOException;
 
 }

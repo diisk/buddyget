@@ -3,16 +3,12 @@ package br.dev.diisk.presentation.dtos.wishlist;
 import java.math.BigDecimal;
 
 import br.dev.diisk.domain.enums.wish_list.WishItemPriorityEnum;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public class UpdateWishListItemRequest {
-    private String name;
-    private BigDecimal estimatedValue;
-    private WishItemPriorityEnum priority;
-    private String storeOrBrand;
-    private String link;
-    private String observation;
-}
+public record UpdateWishListItemRequest(
+    String name,
+    BigDecimal estimatedValue,
+    WishItemPriorityEnum priority,
+    String storeOrBrand,
+    String link,
+    String observation
+) {}

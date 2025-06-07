@@ -9,13 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class Metadata {
 
     @Column(name = "metadata", nullable = true, unique = false)
-    private final String value;
+    private String value;
 
     public Metadata(HashMap<String, String> data) {
         ObjectMapper objectMapper = new ObjectMapper();

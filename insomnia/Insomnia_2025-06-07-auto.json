@@ -1,0 +1,1054 @@
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2025-06-07T00:00:00.000Z",
+    "__export_source": "insomnia.desktop.app:v2022.7.5",
+    "resources": [
+        {
+            "_id": "fld_wishlist",
+            "parentId": null,
+            "name": "WishList",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_wishlist_list",
+            "parentId": "fld_wishlist",
+            "name": "List WishList Items",
+            "url": "{{ _.host }}:{{ _.port }}/api/wishlist",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_wishlist_create",
+            "parentId": "fld_wishlist",
+            "name": "Create WishList Item",
+            "url": "{{ _.host }}:{{ _.port }}/api/wishlist",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"string\",\n  \"estimatedValue\": 100.0,\n  \"priority\": \"HIGH\",\n  \"storeOrBrand\": \"string\",\n  \"link\": \"string\",\n  \"observation\": \"string\",\n  \"categoryId\": 1\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_wishlist_update",
+            "parentId": "fld_wishlist",
+            "name": "Update WishList Item",
+            "url": "{{ _.host }}:{{ _.port }}/api/wishlist/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"string\",\n  \"estimatedValue\": 100.0,\n  \"priority\": \"HIGH\",\n  \"storeOrBrand\": \"string\",\n  \"link\": \"string\",\n  \"observation\": \"string\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_wishlist_delete",
+            "parentId": "fld_wishlist",
+            "name": "Delete WishList Item",
+            "url": "{{ _.host }}:{{ _.port }}/api/wishlist/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_wishlist_purchase",
+            "parentId": "fld_wishlist",
+            "name": "Purchase WishList Item",
+            "url": "{{ _.host }}:{{ _.port }}/api/wishlist/1/purchase",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"isRecurring\": false,\n  \"value\": 100.0,\n  \"creditCardId\": 1,\n  \"startDate\": \"2025-06-07\",\n  \"totalValue\": 100.0,\n  \"installmentsCount\": 1,\n  \"endDate\": \"2025-07-07\",\n  \"dueDay\": \"10\",\n  \"recurringDay\": \"10\",\n  \"paymentDate\": \"2025-06-07\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_notifications",
+            "parentId": null,
+            "name": "Notifications",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_notifications_list",
+            "parentId": "fld_notifications",
+            "name": "List Notifications",
+            "url": "{{ _.host }}:{{ _.port }}/api/notifications",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_notifications_read",
+            "parentId": "fld_notifications",
+            "name": "Mark Notification As Read",
+            "url": "{{ _.host }}:{{ _.port }}/api/notifications/1/read",
+            "method": "PATCH",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_incomes",
+            "parentId": null,
+            "name": "Incomes",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_incomes_list",
+            "parentId": "fld_incomes",
+            "name": "List Incomes",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_get",
+            "parentId": "fld_incomes",
+            "name": "Get Income",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes/1",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_create",
+            "parentId": "fld_incomes",
+            "name": "Create Income",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"value\": 100.0,\n  \"receiptDate\": \"2025-06-07\",\n  \"categoryId\": 1\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_update",
+            "parentId": "fld_incomes",
+            "name": "Update Income",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"receiptDate\": \"2025-06-07\",\n  \"description\": \"string\",\n  \"value\": 100.0\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_delete",
+            "parentId": "fld_incomes",
+            "name": "Delete Income",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_list_recurring",
+            "parentId": "fld_incomes",
+            "name": "List Recurring Incomes",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes/recurring",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_create_recurring",
+            "parentId": "fld_incomes",
+            "name": "Create Recurring Income",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes/recurring",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"startDate\": \"2025-06-07\",\n  \"value\": 100.0,\n  \"endDate\": \"2025-07-07\",\n  \"recurringDay\": \"10\",\n  \"categoryId\": 1\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_update_recurring",
+            "parentId": "fld_incomes",
+            "name": "Update Recurring Income",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes/recurring/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"recurringDay\": \"10\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_incomes_delete_recurring",
+            "parentId": "fld_incomes",
+            "name": "Delete Recurring Income",
+            "url": "{{ _.host }}:{{ _.port }}/api/incomes/recurring/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_goals",
+            "parentId": null,
+            "name": "Goals",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_goals_list",
+            "parentId": "fld_goals",
+            "name": "List Goals",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_goals_get",
+            "parentId": "fld_goals",
+            "name": "Get Goal",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals/1",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_goals_create",
+            "parentId": "fld_goals",
+            "name": "Create Goal",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"amount\": 100\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_goals_update",
+            "parentId": "fld_goals",
+            "name": "Update Goal",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_goals_delete",
+            "parentId": "fld_goals",
+            "name": "Delete Goal",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_goals_deposit",
+            "parentId": "fld_goals",
+            "name": "Deposit To Goal",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals/1/deposit",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"amount\": 100\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_goals_withdraw",
+            "parentId": "fld_goals",
+            "name": "Withdraw From Goal",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals/1/withdraw",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"amount\": 100\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_goals_complete",
+            "parentId": "fld_goals",
+            "name": "Complete Goal",
+            "url": "{{ _.host }}:{{ _.port }}/api/goals/1/complete",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"completed\": true\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_expenses",
+            "parentId": null,
+            "name": "Expenses",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_expenses_list",
+            "parentId": "fld_expenses",
+            "name": "List Expenses",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_expenses_get",
+            "parentId": "fld_expenses",
+            "name": "Get Expense",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses/1",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_expenses_create",
+            "parentId": "fld_expenses",
+            "name": "Create Expense",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"value\": 100.0,\n  \"paymentDate\": \"2025-06-07\",\n  \"dueDate\": \"2025-07-07\",\n  \"categoryId\": 1,\n  \"creditCardId\": 1\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_expenses_update",
+            "parentId": "fld_expenses",
+            "name": "Update Expense",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"value\": 100.0,\n  \"paymentDate\": \"2025-06-07\",\n  \"dueDate\": \"2025-07-07\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_expenses_delete",
+            "parentId": "fld_expenses",
+            "name": "Delete Expense",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_expenses_list_recurring",
+            "parentId": "fld_expenses",
+            "name": "List Recurring Expenses",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses/recurring",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_expenses_create_recurring",
+            "parentId": "fld_expenses",
+            "name": "Create Recurring Expense",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses/recurring",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"startDate\": \"2025-06-07\",\n  \"value\": 100.0,\n  \"totalValue\": 100.0,\n  \"installmentsCount\": 1,\n  \"endDate\": \"2025-07-07\",\n  \"dueDay\": \"10\",\n  \"recurringDay\": \"10\",\n  \"categoryId\": 1,\n  \"creditCardId\": 1\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_expenses_update_recurring",
+            "parentId": "fld_expenses",
+            "name": "Update Recurring Expense",
+            "url": "{{ _.host }}:{{ _.port }}/api/expenses/recurring/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"dueDay\": \"10\",\n  \"recurringDay\": \"10\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_dashboard",
+            "parentId": null,
+            "name": "Dashboard",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_dashboard_resume",
+            "parentId": "fld_dashboard",
+            "name": "Get Dashboard Resume",
+            "url": "{{ _.host }}:{{ _.port }}/api/dashboard/resume",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_creditcards",
+            "parentId": null,
+            "name": "Credit Cards",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_creditcards_list",
+            "parentId": "fld_creditcards",
+            "name": "List Credit Cards",
+            "url": "{{ _.host }}:{{ _.port }}/api/credit-cards",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_creditcards_create",
+            "parentId": "fld_creditcards",
+            "name": "Create Credit Card",
+            "url": "{{ _.host }}:{{ _.port }}/api/credit-cards",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"string\",\n  \"billDueDay\": 1,\n  \"billClosingDay\": 1,\n  \"cardLimit\": 1000,\n  \"color\": \"#000000\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_creditcards_update",
+            "parentId": "fld_creditcards",
+            "name": "Update Credit Card",
+            "url": "{{ _.host }}:{{ _.port }}/api/credit-cards/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"name\": \"string\",\n  \"billDueDay\": 10,\n  \"billClosingDay\": 5,\n  \"cardLimit\": 2000,\n  \"color\": \"#000000\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_creditcards_delete",
+            "parentId": "fld_creditcards",
+            "name": "Delete Credit Card",
+            "url": "{{ _.host }}:{{ _.port }}/api/credit-cards/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_creditcardbills",
+            "parentId": null,
+            "name": "Credit Card Bills",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_creditcardbills_list",
+            "parentId": "fld_creditcardbills",
+            "name": "List Credit Card Bills",
+            "url": "{{ _.host }}:{{ _.port }}/api/credit-cards-bills",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_creditcardbills_pay",
+            "parentId": "fld_creditcardbills",
+            "name": "Pay Credit Card Bill",
+            "url": "{{ _.host }}:{{ _.port }}/api/credit-cards-bills/1/pay",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"amount\": 100\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_categories",
+            "parentId": null,
+            "name": "Categories",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_categories_list",
+            "parentId": "fld_categories",
+            "name": "List Categories",
+            "url": "{{ _.host }}:{{ _.port }}/api/categories",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_categories_create",
+            "parentId": "fld_categories",
+            "name": "Create Category",
+            "url": "{{ _.host }}:{{ _.port }}/api/categories",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"type\": \"EXPENSE\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_categories_update",
+            "parentId": "fld_categories",
+            "name": "Update Category",
+            "url": "{{ _.host }}:{{ _.port }}/api/categories/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_categories_delete",
+            "parentId": "fld_categories",
+            "name": "Delete Category",
+            "url": "{{ _.host }}:{{ _.port }}/api/categories/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_budgets",
+            "parentId": null,
+            "name": "Budgets",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_budgets_list",
+            "parentId": "fld_budgets",
+            "name": "List Budgets",
+            "url": "{{ _.host }}:{{ _.port }}/api/budgets",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_budgets_create",
+            "parentId": "fld_budgets",
+            "name": "Create Budget",
+            "url": "{{ _.host }}:{{ _.port }}/api/budgets",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\",\n  \"amount\": 1000\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_budgets_update",
+            "parentId": "fld_budgets",
+            "name": "Update Budget",
+            "url": "{{ _.host }}:{{ _.port }}/api/budgets/1",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"description\": \"string\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_budgets_delete",
+            "parentId": "fld_budgets",
+            "name": "Delete Budget",
+            "url": "{{ _.host }}:{{ _.port }}/api/budgets/1",
+            "method": "DELETE",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "req_budgets_performance",
+            "parentId": "fld_budgets",
+            "name": "Get Budget Performance",
+            "url": "{{ _.host }}:{{ _.port }}/api/budgets/performance",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": false
+            },
+            "_type": "request"
+        },
+        {
+            "_id": "fld_auth",
+            "parentId": null,
+            "name": "Auth",
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_auth_register",
+            "parentId": "fld_auth",
+            "name": "Register",
+            "url": "{{ _.host }}:{{ _.port }}/api/auth/register",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"admin@me.com\",\n  \"name\": \"string\",\n  \"password\": \"string\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {},
+            "_type": "request"
+        },
+        {
+            "_id": "req_auth_login",
+            "parentId": "fld_auth",
+            "name": "Login",
+            "url": "{{ _.host }}:{{ _.port }}/api/auth/login",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n  \"email\": \"admin@me.com\",\n  \"password\": \"string\"\n}"
+            },
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {},
+            "_type": "request"
+        },
+        {
+            "_id": "req_auth_renew",
+            "parentId": "fld_auth",
+            "name": "Renew Token",
+            "url": "{{ _.host }}:{{ _.port }}/api/auth/renew",
+            "method": "GET",
+            "headers": [],
+            "authentication": {
+                "type": "bearer",
+                "prefix": "Bearer",
+                "token": "{{ _.token }}",
+                "disabled": true
+            },
+            "_type": "request"
+        }
+    ]
+}

@@ -17,7 +17,7 @@ public class UserRepository extends BaseRepository<UserJPA, User> implements IUs
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return jpa.findByEmail(email);
+        return jpa.findByEmail_Value(email);
     }
 
 }

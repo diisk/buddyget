@@ -7,13 +7,15 @@ import br.dev.diisk.domain.exceptions.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class DayOfMonth {
 
     @Column(name = "day_of_month", nullable = true)
-    private final Integer value;
+    private Integer value;
 
     public DayOfMonth(Integer value) {
         this.value = value;

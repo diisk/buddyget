@@ -8,15 +8,17 @@ import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class DataRange {
 
     @Column(name = "start_date", nullable = false)
-    private final LocalDateTime startDate;
+    private LocalDateTime startDate;
     @Column(name = "end_date", nullable = true)
-    private final LocalDateTime endDate;
+    private LocalDateTime endDate;
 
     public DataRange(LocalDateTime startDate, LocalDateTime endDate) {
         this.startDate = startDate;

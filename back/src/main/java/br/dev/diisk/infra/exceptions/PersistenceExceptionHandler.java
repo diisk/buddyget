@@ -4,9 +4,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import br.dev.diisk.application.services.IResponseService;
-import br.dev.diisk.presentation.dtos.response.ErrorDetailsResponse;
+import br.dev.diisk.domain.enums.ErrorTypeEnum;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +18,7 @@ public class PersistenceExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex) {
-        return responseService.notFound(new ErrorDetailsResponse(ex.getMessage(), null));
+        return responseService.error(ErrorTypeEnum.NOT_FOUND, ex.getMessage());
     }
 
 }

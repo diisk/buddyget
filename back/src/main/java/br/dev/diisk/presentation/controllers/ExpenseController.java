@@ -39,7 +39,7 @@ public class ExpenseController {
     @PostMapping
     public ResponseEntity<SuccessResponse<ExpenseResponse>> createExpense(
             @RequestBody @Valid CreateExpenseRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/{id}")
@@ -64,7 +64,7 @@ public class ExpenseController {
     @PostMapping("/recurring")
     public ResponseEntity<SuccessResponse<ExpenseRecurringResponse>> createExpenseRecurring(
             @RequestBody @Valid CreateExpenseRecurringRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/recurring/{id}")

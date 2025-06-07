@@ -6,13 +6,15 @@ import br.dev.diisk.domain.exceptions.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class Password {
 
     @Column(name = "password", nullable = false, unique = false)
-    private final String value;
+    private String value;
 
     public Password(String value) {
         this.value = value;
@@ -20,9 +22,19 @@ public class Password {
     }
 
     private void validate() {
-        if (!value.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$")) {
+        String minLengthRegex = ".{8,}";
+        String upperCaseRegex = ".*[A-Z].*";
+        String lowerCaseRegex = ".*[a-z].*";
+        String digitRegex = ".*\\d.*";
+        String specialCharRegex = ".*[!@#$%^&*()_+=\\[\\]{};':\"\\\\|,.<>/?-].*";
+
+        if (!value.matches(minLengthRegex)
+                || !value.matches(upperCaseRegex)
+                || !value.matches(lowerCaseRegex)
+                || !value.matches(digitRegex)
+                || !value.matches(specialCharRegex)) {
             throw new BusinessException(getClass(),
-                    "Senha inválida. Deve ter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula e um dígito.",
+                    "Senha inválida. Deve ter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um dígito e um caractere especial.",
                     Map.of("senha", value));
         }
 

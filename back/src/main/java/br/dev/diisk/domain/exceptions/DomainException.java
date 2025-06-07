@@ -2,17 +2,17 @@ package br.dev.diisk.domain.exceptions;
 
 import java.util.Map;
 
-import br.dev.diisk.domain.enums.ExceptionTypeEnum;
+import br.dev.diisk.domain.enums.ErrorTypeEnum;
 import lombok.Getter;
 
 @Getter
 public abstract class DomainException extends RuntimeException {
 
     private final Class<?> classObject;
-    private final ExceptionTypeEnum type;
+    private final ErrorTypeEnum type;
     private final Map<String, String> details;
 
-    protected DomainException(Class<?> classObject, ExceptionTypeEnum type, String message,
+    protected DomainException(Class<?> classObject, ErrorTypeEnum type, String message,
             Map<String, String> details) {
         super(message);
         this.type = type;

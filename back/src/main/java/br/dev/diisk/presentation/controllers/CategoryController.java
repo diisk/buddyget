@@ -34,7 +34,7 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<SuccessResponse<CategoryResponse>> createCategory(
             @RequestBody @Valid CreateCategoryRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/{id}")

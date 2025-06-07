@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.dev.diisk.application.services.IResponseService;
-import br.dev.diisk.presentation.dtos.response.ErrorDetailsResponse;
+import br.dev.diisk.domain.enums.ErrorTypeEnum;
+import br.dev.diisk.domain.exceptions.DomainException;
 import lombok.RequiredArgsConstructor;
 
 @RestControllerAdvice
@@ -19,12 +20,19 @@ public class GenericExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
-        return responseService.internal(new ErrorDetailsResponse(ex.getMessage(), null));
+        // TODO: SALVAR LOG DO ERRO AQUI
+        return responseService.error(null, ex.getMessage());
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<?> handleException(AuthorizationDeniedException ex) {
-        return responseService.unauthorized(new ErrorDetailsResponse("{exception.access.denied}", null));
+        return responseService.error(ErrorTypeEnum.UNAUTHORIZED,
+                "Não autorizado. Você precisa estar autenticado para acessar este recurso.");
+    }
+
+    @ExceptionHandler(DomainException.class)
+    public ResponseEntity<?> handleException(DomainException ex) {
+        return responseService.error(ex.getType(), ex.getMessage(), ex.getDetails());
     }
 
 }

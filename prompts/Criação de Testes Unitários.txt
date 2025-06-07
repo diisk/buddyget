@@ -27,6 +27,10 @@ Crie testes unitários em Java (com Spring Boot e JUnit 5) para o use case chama
 
 7. **Não inclua testes de integração** ou que dependam de banco de dados real.
 
+8. Os testes devem ser criados no diretório correto de testes.
+
+9. Na hora de criar os testes leve em consideração as regras dos objetos de valores relacionados se houver.
+
 ---
 
 ### Exemplo de entrada para a IA:

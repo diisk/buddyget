@@ -30,7 +30,7 @@ public class WishListItemController {
     @PostMapping
     public ResponseEntity<SuccessResponse<WishListItemResponse>> createWishListItem(
             @RequestBody @Valid CreateWishListItemRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/{id}")
@@ -47,6 +47,6 @@ public class WishListItemController {
     @PostMapping("/{id}/purchase")
     public ResponseEntity<SuccessResponse<WishListItemResponse>> purchaseWishListItem(
             @PathVariable Long id, @RequestBody @Valid WishListItemPurchaseRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 }

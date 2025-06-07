@@ -2,16 +2,16 @@ package br.dev.diisk.domain.exceptions;
 
 import java.util.Map;
 
-import br.dev.diisk.domain.enums.ExceptionTypeEnum;
+import br.dev.diisk.domain.enums.ErrorTypeEnum;
 
 public class NullOrEmptyException extends DomainException {
 
     public NullOrEmptyException(String message, Class<?> classObject) {
-        super(classObject, ExceptionTypeEnum.NULL_VALUE, message, null);
+        super(classObject, ErrorTypeEnum.DOMAIN_BUSINESS, message, null);
     }
 
     public NullOrEmptyException(Class<?> classObject, String fieldName) {
-        super(classObject, ExceptionTypeEnum.NULL_VALUE, "O campo não pode ser nulo ou vazio.",
+        super(classObject, ErrorTypeEnum.DOMAIN_BUSINESS, "O campo não pode ser nulo ou vazio.",
                 Map.of("campo", fieldName));
     }
 

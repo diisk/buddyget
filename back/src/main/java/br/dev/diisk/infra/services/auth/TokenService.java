@@ -9,7 +9,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import br.dev.diisk.application.services.ITokenService;
-import br.dev.diisk.domain.entities.user.User;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,10 +21,10 @@ public class TokenService implements ITokenService {
     private final Algorithm algorithm;
 
     @Override
-    public String generateToken(User user) {
+    public String generateToken(String subject) {
         String token = JWT.create()
                 .withIssuer(appName)
-                .withSubject(user.getEmail())
+                .withSubject(subject)
                 .withExpiresAt(getExpirationDate())
                 .sign(algorithm);
         return token;
@@ -36,7 +35,7 @@ public class TokenService implements ITokenService {
     }
 
     @Override
-    public String validateToken(String token) {
+    public String getSubject(String token) {
         return JWT.require(algorithm)
                 .withIssuer(appName)
                 .build().verify(token)

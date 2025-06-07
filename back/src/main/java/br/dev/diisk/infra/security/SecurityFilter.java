@@ -10,12 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-
-import br.dev.diisk.application.services.IMessageService;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.application.services.ITokenService;
+import br.dev.diisk.domain.enums.ErrorTypeEnum;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
-import br.dev.diisk.presentation.dtos.response.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +27,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     private final ITokenService tokenService;
     private final IUserRepository userRepository;
     private final IResponseService responseService;
-    private final IMessageService messageService;
 
     @Override
     protected void doFilterInternal(
@@ -40,14 +37,12 @@ public class SecurityFilter extends OncePerRequestFilter {
         String token = recoverToken(request);
         if (token != null) {
             try {
-                String subject = tokenService.validateToken(token);
-                UserDetails user = userRepository.findByEmail(subject).orElse(null);
+                String subject = tokenService.getSubject(token);
+                UserDetails user = userRepository.findById(Long.valueOf(subject)).orElse(null);
 
                 if (user == null) {
-                    Integer statusCode = HttpServletResponse.SC_BAD_REQUEST;
-                    ErrorResponse responseObject = ErrorResponse.getErrorInstance(statusCode,
-                            messageService.getMessage("exception.invalid.token"));
-                    responseService.writeResponseObject(response, statusCode, responseObject);
+                    responseService.writeResponseObject(response, ErrorTypeEnum.DOMAIN_BUSINESS,
+                            "Usuário não encontrado, verifique o token de autenticação.");
                     return;
                 }
 

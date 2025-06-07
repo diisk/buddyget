@@ -33,7 +33,7 @@ public class BudgetController {
     @PostMapping
     public ResponseEntity<SuccessResponse<BudgetResponse>> createBudget(
             @RequestBody @Valid CreateBudgetRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/{id}")
@@ -47,7 +47,7 @@ public class BudgetController {
         return responseService.ok(true);
     }
 
-    @GetMapping("/performance")//VERIFICAR SE JÁ EXISTE NO DASHBOARD
+    @GetMapping("/performance") // VERIFICAR SE JÁ EXISTE NO DASHBOARD
     public ResponseEntity<SuccessResponse<BudgetPerformanceResponse>> getBudgetPerformance(
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate) {

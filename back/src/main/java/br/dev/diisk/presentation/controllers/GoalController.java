@@ -32,7 +32,7 @@ public class GoalController {
     @PostMapping
     public ResponseEntity<SuccessResponse<GoalResponse>> createGoal(
             @RequestBody @Valid CreateGoalRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/{id}")
@@ -49,18 +49,18 @@ public class GoalController {
     @PostMapping("/{id}/deposit")
     public ResponseEntity<SuccessResponse<GoalDepositResponse>> depositToGoal(
             @PathVariable Long id, @RequestBody @Valid GoalTransactionRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PostMapping("/{id}/withdraw")
     public ResponseEntity<SuccessResponse<GoalWithdrawResponse>> withdrawFromGoal(
             @PathVariable Long id, @RequestBody @Valid GoalTransactionRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PostMapping("/{id}/complete")
     public ResponseEntity<SuccessResponse<GoalDetailedResponse>> complete(
             @PathVariable Long id, @RequestBody @Valid GoalCompleteRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 }

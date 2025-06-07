@@ -6,13 +6,15 @@ import br.dev.diisk.domain.exceptions.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 public class Email {
 
     @Column(name = "email", nullable = false, unique = true)
-    private final String value;
+    private String value;
 
     public Email(String value) {
         this.value = value;

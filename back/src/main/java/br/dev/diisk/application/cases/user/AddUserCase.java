@@ -1,8 +1,8 @@
 package br.dev.diisk.application.cases.user;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.dev.diisk.application.services.ISecurityService;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.entities.user.UserPerfil;
 import br.dev.diisk.domain.enums.user.UserPerfilEnum;
@@ -11,6 +11,7 @@ import br.dev.diisk.domain.exceptions.DatabaseValueNotFoundException;
 import br.dev.diisk.domain.repositories.user.IUserPerfilRepository;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
 import br.dev.diisk.domain.value_objects.Email;
+import br.dev.diisk.domain.value_objects.Password;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,7 @@ public class AddUserCase {
 
     private final IUserRepository userRepository;
     private final IUserPerfilRepository userPerfilRepository;
+    private final ISecurityService securityService;
 
     @Transactional
     public User execute(String name, String email, String password) {
@@ -32,7 +34,7 @@ public class AddUserCase {
         if (defaultUserPerfil == null)
             throw new DatabaseValueNotFoundException(getClass(), perfilName);
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(password);
+        String encryptedPassword = securityService.encryptPassword(new Password(password));
 
         User newUser = new User(name, new Email(email), encryptedPassword, defaultUserPerfil);
         userRepository.save(newUser);

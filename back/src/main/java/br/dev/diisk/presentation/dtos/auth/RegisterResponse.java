@@ -1,13 +1,9 @@
 package br.dev.diisk.presentation.dtos.auth;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import br.dev.diisk.domain.entities.user.User;
 
-@NoArgsConstructor
-@Getter
-@Setter
-public class RegisterResponse {
-        private Long id;
-        private String email;
+public record RegisterResponse(Long id, String email) {
+        public RegisterResponse(User user) {
+                this(user.getId(), user.getEmail());
+        }
 }

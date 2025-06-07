@@ -44,7 +44,7 @@ public class IncomeController {
     @PostMapping
     public ResponseEntity<SuccessResponse<IncomeResponse>> createIncome(
             @RequestBody @Valid CreateIncomeRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/{id}")
@@ -69,7 +69,7 @@ public class IncomeController {
     @PostMapping("/recurring")
     public ResponseEntity<SuccessResponse<IncomeRecurringResponse>> createRecurringIncome(
             @RequestBody @Valid CreateIncomeRecurringRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/recurring/{id}")

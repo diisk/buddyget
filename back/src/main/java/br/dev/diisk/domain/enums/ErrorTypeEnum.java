@@ -4,15 +4,16 @@ import br.dev.diisk.domain.interfaces.IBaseEnum;
 import lombok.Getter;
 
 @Getter
-public enum ExceptionTypeEnum implements IBaseEnum {
+public enum ErrorTypeEnum implements IBaseEnum {
     DOMAIN_BUSINESS("Erro de negócio"),
-    NULL_VALUE("Valor nulo"),
     CONFLICT("Conflito"),
-    VALUE_NOT_FOUND("Valor não encontrado");
+    ACCESS_DENIED("Acesso negado"),
+    UNAUTHORIZED("Sem autorização"),
+    NOT_FOUND("Valor não encontrado");
 
     private final String description;
 
-    ExceptionTypeEnum(String description) {
+    ErrorTypeEnum(String description) {
         this.description = description;
     }
 

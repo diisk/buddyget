@@ -1,5 +1,6 @@
 package br.dev.diisk.application.cases.user;
 
+import br.dev.diisk.application.services.ISecurityService;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.entities.user.UserPerfil;
 import br.dev.diisk.domain.enums.user.UserPerfilEnum;
@@ -7,6 +8,8 @@ import br.dev.diisk.domain.exceptions.DatabaseValueConflictException;
 import br.dev.diisk.domain.exceptions.DatabaseValueNotFoundException;
 import br.dev.diisk.domain.repositories.user.IUserPerfilRepository;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
+import br.dev.diisk.domain.value_objects.Password;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -27,20 +30,24 @@ class AddUserCaseTest {
     @Mock
     IUserPerfilRepository userPerfilRepository;
 
+    @Mock
+    ISecurityService securityService;
+
     @InjectMocks
     AddUserCase addUserCase;
 
     // Cenário: Deve criar usuário com sucesso quando e-mail não existe e perfil
     // padrão está presente
     @Test
-    void execute_deveCriarUsuario_quandoEmailNaoExisteEPerfilPadraoPresente() {
+    void addUser_deveCriarUsuario_quandoEmailNaoExisteEPerfilPadraoPresente() {
         // Given: Usuário não existe e perfil padrão existe
         String name = "João";
         String email = "joao@email.com";
-        String password = "senha123";
+        String password = "Test@123";
         UserPerfil perfil = new UserPerfil(); // pode ser mockado se necessário
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(securityService.encryptPassword(new Password(password))).thenReturn(password);
         when(userPerfilRepository.findByName(UserPerfilEnum.DEFAULT.name())).thenReturn(perfil);
         // When: Executa o caso de uso
         User result = addUserCase.execute(name, email, password);
@@ -55,7 +62,7 @@ class AddUserCaseTest {
 
     // Cenário: Deve lançar exceção de conflito quando e-mail já existe
     @Test
-    void execute_deveLancarExcecaoDeConflito_quandoEmailJaExiste() {
+    void addUser_deveLancarExcecaoDeConflito_quandoEmailJaExiste() {
         // Given: Usuário já existe com o e-mail informado
         String email = "joao@email.com";
         User existingUser = mock(User.class);
@@ -69,7 +76,7 @@ class AddUserCaseTest {
     // Cenário: Deve lançar exceção de não encontrado quando perfil padrão não
     // existe
     @Test
-    void execute_deveLancarExcecaoDeNaoEncontrado_quandoPerfilPadraoNaoExiste() {
+    void addUser_deveLancarExcecaoDeNaoEncontrado_quandoPerfilPadraoNaoExiste() {
         // Given: Usuário não existe, mas perfil padrão não encontrado
         String email = "joao@email.com";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());

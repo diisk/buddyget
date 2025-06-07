@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GenericResponse {
+public abstract class GenericResponse {
 
     private Integer statusCode;
     private Boolean success;

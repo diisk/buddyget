@@ -28,7 +28,7 @@ public class CreditCardController {
     @PostMapping
     public ResponseEntity<SuccessResponse<CreditCardResponse>> createCreditCard(
             @RequestBody @Valid CreateCreditCardRequest request) {
-        return responseService.created(null, null);
+        return responseService.ok();
     }
 
     @PatchMapping("/{id}")
