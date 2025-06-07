@@ -1,6 +1,8 @@
 package br.dev.diisk.domain.value_objects;
 
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import java.util.Map;
+
+import br.dev.diisk.domain.exceptions.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -20,7 +22,7 @@ public class Email {
     private void validate() {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         if (value == null || !value.matches(emailRegex))
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Invalid email format", value);
+            throw new BusinessException(getClass(), "Email inválido.", Map.of("email", value));
 
     }
 

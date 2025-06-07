@@ -8,15 +8,15 @@ public enum WishItemPriorityEnum implements IBaseEnum {
     LOW("Baixa"),
     ;
 
-    private String titlePath;
+    private String description;
 
     WishItemPriorityEnum(String title) {
-        this.titlePath = title;
+        this.description = title;
     }
 
     @Override
-    public String getTitlePath() {
-        return titlePath;
+    public String getDescription() {
+        return description;
     }
 
 }

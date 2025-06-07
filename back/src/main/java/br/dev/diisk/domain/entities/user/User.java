@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import br.dev.diisk.domain.entities.RastreableEntity;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.value_objects.Email;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -57,12 +57,12 @@ public class User extends RastreableEntity implements UserDetails {
 
     private void validateEncryptedPassword() {
         if (encryptedPassword == null || encryptedPassword.isBlank())
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Unexpected error: encryptedPassword is null or blank",encryptedPassword);
+            throw new NullOrEmptyException(getClass(), "encryptedPassword");
     }
 
     private void validateName() {
         if (name == null || name.isBlank())
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Unexpected error: name is null or blank",name);
+            throw new NullOrEmptyException(getClass(), "name");
     }
 
     @Override

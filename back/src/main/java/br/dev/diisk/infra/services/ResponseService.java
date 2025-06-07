@@ -12,15 +12,14 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.dev.diisk.application.dtos.response.ErrorDetailsResponse;
-import br.dev.diisk.application.dtos.response.ErrorResponse;
-import br.dev.diisk.application.dtos.response.PageResponse;
-import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.mappers.BaseMapper;
 import br.dev.diisk.application.services.IMessageService;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.exceptions.EmptyListException;
+import br.dev.diisk.presentation.dtos.response.ErrorDetailsResponse;
+import br.dev.diisk.presentation.dtos.response.ErrorResponse;
+import br.dev.diisk.presentation.dtos.response.PageResponse;
+import br.dev.diisk.presentation.dtos.response.SuccessResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -136,8 +135,6 @@ public class ResponseService implements IResponseService {
 
     @Override
     public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, BaseMapper<S, T> mapper, String objectName) {
-        if (page.getContent().size() == 0)
-            throw new EmptyListException(getClass(), objectName);
 
         PageResponse<T> response = new PageResponse<T>(
                 page.getContent().stream()

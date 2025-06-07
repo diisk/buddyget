@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-import br.dev.diisk.application.dtos.response.ErrorResponse;
 import br.dev.diisk.application.services.IMessageService;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.application.services.ITokenService;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
+import br.dev.diisk.presentation.dtos.response.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

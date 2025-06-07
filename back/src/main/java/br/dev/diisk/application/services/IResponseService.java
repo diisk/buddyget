@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import br.dev.diisk.application.dtos.response.ErrorDetailsResponse;
-import br.dev.diisk.application.dtos.response.ErrorResponse;
-import br.dev.diisk.application.dtos.response.PageResponse;
-import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.mappers.BaseMapper;
 import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.presentation.dtos.response.ErrorDetailsResponse;
+import br.dev.diisk.presentation.dtos.response.ErrorResponse;
+import br.dev.diisk.presentation.dtos.response.PageResponse;
+import br.dev.diisk.presentation.dtos.response.SuccessResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface IResponseService {

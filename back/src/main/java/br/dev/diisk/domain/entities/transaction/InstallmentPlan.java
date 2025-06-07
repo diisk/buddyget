@@ -1,10 +1,11 @@
 package br.dev.diisk.domain.entities.transaction;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -53,36 +54,31 @@ public class InstallmentPlan extends UserRastrableEntity {
             return;
         }
 
-        throw new BadRequestValueCustomRuntimeException(
-                getClass(),
-                "At least two of the three values are required.",
-                "installmentsCount, totalValue, installmentValue");
+        throw new BusinessException(getClass(),
+                "É necessário pelo menos dois dos três valores: número de parcelas, valor total ou valor da parcela",
+                null);
     }
 
     private void validateInstallmentsCount() {
         if (installmentsCount <= 0) {
-            throw new BadRequestValueCustomRuntimeException(
-                    getClass(),
-                    "Installments count must be greater than zero.",
-                    installmentsCount.toString());
+            throw new BusinessException(getClass(),
+                    "O número de parcelas deve ser maior que zero",
+                    Map.of("installmentsCount", installmentsCount.toString()));
         }
     }
 
     private void validateTotalValue() {
         if (totalValue.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestValueCustomRuntimeException(
-                    getClass(),
-                    "Total value must be greater than zero.",
-                    totalValue.toString());
+            throw new BusinessException(getClass(),
+                    "O valor total deve ser maior que zero", Map.of("totalValue", totalValue.toString()));
         }
     }
 
     private void validateInstallmentValue() {
         if (installmentValue.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestValueCustomRuntimeException(
-                    getClass(),
-                    "Installment value must be greater than zero.",
-                    installmentValue.toString());
+            throw new BusinessException(getClass(),
+                    "O valor da parcela deve ser maior que zero",
+                    Map.of("installmentValue", installmentValue.toString()));
         }
     }
 

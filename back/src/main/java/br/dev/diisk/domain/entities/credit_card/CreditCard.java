@@ -1,10 +1,12 @@
 package br.dev.diisk.domain.entities.credit_card;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.value_objects.DayOfMonth;
 import br.dev.diisk.domain.value_objects.HexadecimalColor;
 import jakarta.persistence.AttributeOverride;
@@ -37,7 +39,6 @@ public class CreditCard extends UserRastrableEntity {
     @AttributeOverride(name = "value", column = @Column(name = "color", nullable = false))
     private HexadecimalColor color;
 
-
     public CreditCard(User user, String name, DayOfMonth billDueDay, DayOfMonth billClosingDay, BigDecimal cardLimit,
             HexadecimalColor color) {
         super(user);
@@ -50,28 +51,22 @@ public class CreditCard extends UserRastrableEntity {
     }
 
     private void validate() {
-        if (name == null || name.isBlank()) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Name cannot be null or empty.", name);
-        }
+        if (name == null || name.isBlank())
+            throw new NullOrEmptyException(getClass(), "name");
 
-        if (billDueDay == null) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Bill due day cannot be null.",
-                    billDueDay.toString());
-        }
+        if (billDueDay == null)
+            throw new NullOrEmptyException(getClass(), "billDueDay");
 
-        if (billClosingDay == null) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Bill closing day cannot be null.",
-                    billClosingDay.toString());
-        }
+        if (billClosingDay == null)
+            throw new NullOrEmptyException(getClass(), "billClosingDay");
 
-        if (cardLimit == null || cardLimit.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Card limit must be greater than zero.",
-                    cardLimit.toString());
-        }
+        if (cardLimit == null || cardLimit.compareTo(BigDecimal.ZERO) <= 0)
+            throw new BusinessException(getClass(), "O limite do cartão de crédito deve ser maior que zero.",
+                    Map.of("cardLimit", cardLimit != null ? cardLimit.toString() : "null"));
 
-        if (color == null) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Color cannot be null.", color.toString());
-        }
+        if (color == null)
+            throw new NullOrEmptyException(getClass(), "color");
+
     }
 
 }

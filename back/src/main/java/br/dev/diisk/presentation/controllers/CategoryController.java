@@ -5,12 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import br.dev.diisk.application.dtos.response.PageResponse;
-import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
 import br.dev.diisk.presentation.dtos.category.*;
+import br.dev.diisk.presentation.dtos.response.PageResponse;
+import br.dev.diisk.presentation.dtos.response.SuccessResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

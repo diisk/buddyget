@@ -6,9 +6,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import br.dev.diisk.application.dtos.response.ErrorResponse;
 import br.dev.diisk.application.services.IMessageService;
 import br.dev.diisk.application.services.IResponseService;
+import br.dev.diisk.presentation.dtos.response.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

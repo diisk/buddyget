@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import br.dev.diisk.domain.entities.user.UserPerfil;
+import br.dev.diisk.domain.enums.user.UserPerfilEnum;
 import br.dev.diisk.domain.enums.user.UserPermissionEnum;
 import br.dev.diisk.domain.repositories.user.IUserPerfilRepository;
 import jakarta.transaction.Transactional;
@@ -20,7 +21,7 @@ public class PerfilSeed implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
-        createPerfil("DEFAULT", 0, getDefaultPerfil());
+        createPerfil(UserPerfilEnum.DEFAULT.name(), 0, getDefaultPerfil());
     }
 
     private Boolean isEqualsPerfilPermissions(UserPerfil perfil, List<UserPermissionEnum> permissions) {
@@ -47,7 +48,7 @@ public class PerfilSeed implements ApplicationRunner {
             userPerfilRepository.save(new UserPerfil(perfilName, level, permissions));
             return;
         }
-        
+
         if (clientePerfil.getLevel() != level || !isEqualsPerfilPermissions(clientePerfil, permissions)) {
             clientePerfil.setPermissions(permissions);
             clientePerfil.setLevel(level);

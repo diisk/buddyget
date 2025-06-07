@@ -1,11 +1,14 @@
 package br.dev.diisk.domain.entities.budget;
 
 import java.util.List;
+import java.util.Map;
 
 import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
+import br.dev.diisk.domain.exceptions.BusinessException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.validations.category.CategoryIdentifierNotNullValidation;
 import br.dev.diisk.domain.validations.category.CategoryIncompatibleTypeValidation;
@@ -50,11 +53,12 @@ public class Budget extends UserRastrableEntity {
                 new CategoryIncompatibleTypeValidation(category, CategoryTypeEnum.EXPENSE));
 
         if (description == null || description.isBlank()) {
-            throw new IllegalArgumentException("Description cannot be null or empty.");
+            throw new NullOrEmptyException(getClass(), "description");
         }
 
         if (limitValue == null || limitValue <= 0) {
-            throw new IllegalArgumentException("Limit value must be greater than zero.");
+            throw new BusinessException(getClass(), "O valor limite deve ser maior que zero.", 
+                    Map.of("limitValue", limitValue != null ? limitValue.toString() : "null"));
         }
 
         validations.forEach(validation -> validation.validate(getClass()));

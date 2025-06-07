@@ -1,7 +1,7 @@
 package br.dev.diisk.domain.validations.category;
 
 import br.dev.diisk.domain.entities.category.Category;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
 
 public class CategoryNotNullValidation implements IValidationStrategy {
@@ -15,8 +15,6 @@ public class CategoryNotNullValidation implements IValidationStrategy {
     @Override
     public void validate(Class<?> classObj) {
         if (category == null)
-            throw new BadRequestValueCustomRuntimeException(classObj, "Category cannot be null", null);
-
+            throw new NullOrEmptyException(classObj, "category");
     }
-
 }

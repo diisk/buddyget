@@ -1,0 +1,44 @@
+Crie testes unitários em Java (com Spring Boot e JUnit 5) para o use case chamado "[NOME_DO_USE_CASE]". Siga estas instruções com atenção:
+
+1. **Use o padrão de nomenclatura para os métodos de teste:**  
+   [useCaseName]_[comportamentoEsperado]_[contexto]  
+   (Somente o nome do use case em inglês; restante em português)
+
+   Exemplo: calcularDesconto_deveAplicarCorretamente_quandoProdutoElegivel
+
+2. **Estruture cada teste usando o padrão Given-When-Then:**
+   - **Given**: prepare os mocks e dados de entrada
+   - **When**: execute o método a ser testado
+   - **Then**: verifique os resultados usando assertions
+
+3. **Teste todos os cenários possíveis relevantes para esse caso de uso**, incluindo:
+   - Caminhos felizes (casos válidos)
+   - Casos de exceção ou entrada inválida
+   - Casos limites (valores mínimos/máximos, nulos, vazios etc.)
+
+4. **Verifique todos os valores do retorno final**, assegurando que todos os atributos estejam como o esperado.
+
+5. Utilize:
+   - `@ExtendWith(MockitoExtension.class)` para ativar o Mockito
+   - `Mockito` para mocks e verificações
+   - `Assertions` do JUnit 5 (`assertEquals`, `assertTrue`, `assertThrows` etc.)
+
+6. **Adicione comentários explicando em português o propósito de cada teste** com linguagem clara e direta.
+
+7. **Não inclua testes de integração** ou que dependam de banco de dados real.
+
+---
+
+### Exemplo de entrada para a IA:
+
+```plaintext
+Crie testes unitários para o use case "calcularDesconto".  
+Este método aplica um desconto percentual em produtos com valor acima de R$ 100, e não aplica desconto para valores menores.  
+Se o valor for negativo ou nulo, deve lançar uma exceção.
+
+Siga o padrão:
+- Nome do teste: calcularDesconto_[comportamentoEsperado]_[contexto]
+- Estilo Given-When-Then
+- Cobertura total de cenários: produto com valor acima de 100, abaixo de 100, valor nulo, valor negativo.
+- Verifique todos os valores retornados.
+- Comentários em português.

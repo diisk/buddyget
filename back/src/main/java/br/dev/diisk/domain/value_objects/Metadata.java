@@ -3,6 +3,7 @@ package br.dev.diisk.domain.value_objects;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.persistence.Column;
@@ -28,7 +29,7 @@ public class Metadata {
     public HashMap<String, String> getData() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(value, HashMap.class);
+            return objectMapper.readValue(value, new TypeReference<HashMap<String, String>>() {});
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error converting JSON string to HashMap", e);
         }

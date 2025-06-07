@@ -2,6 +2,7 @@ package br.dev.diisk.domain.entities.wish_list;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.entities.category.Category;
@@ -10,7 +11,8 @@ import br.dev.diisk.domain.entities.transaction.ExpenseTransaction;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
 import br.dev.diisk.domain.enums.wish_list.WishItemPriorityEnum;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.validations.category.CategoryIdentifierNotNullValidation;
 import br.dev.diisk.domain.validations.category.CategoryIncompatibleTypeValidation;
@@ -73,13 +75,12 @@ public class WishListItem extends UserRastrableEntity {
                 new CategoryIncompatibleTypeValidation(category, CategoryTypeEnum.EXPENSE));
 
         if (storeOrBrand == null || storeOrBrand.isBlank()) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Store/Brand cannot be null or empty",
-                    storeOrBrand);
+            throw new NullOrEmptyException(getClass(), "storeOrBrand");
         }
 
         if (estimatedValue == null || estimatedValue.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Estimated value must be greater than zero",
-                    estimatedValue.toString());
+            throw new BusinessException(getClass(), "O valor estimado deve ser maior que zero",
+                    Map.of("estimatedValue", estimatedValue != null ? estimatedValue.toString() : "null"));
         }
 
         validations.forEach(validation -> validation.validate(getClass()));

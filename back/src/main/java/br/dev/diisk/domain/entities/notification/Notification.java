@@ -2,7 +2,7 @@ package br.dev.diisk.domain.entities.notification;
 
 import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.exceptions.BadRequestFieldCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.value_objects.Metadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -36,13 +36,12 @@ public class Notification extends UserRastrableEntity {
     }
 
     private void validate() {
-        if (title == null) {
-            throw new BadRequestFieldCustomRuntimeException(getClass(), "Title cannnot be null.", title);
+        if (title == null || title.isBlank()) {
+            throw new NullOrEmptyException(getClass(), "title");
         }
 
-        if (description == null) {
-            throw new BadRequestFieldCustomRuntimeException(getClass(), "Description cannnot be null.", description);
+        if (description == null || description.isBlank()) {
+            throw new NullOrEmptyException(getClass(), "description");
         }
-
     }
 }

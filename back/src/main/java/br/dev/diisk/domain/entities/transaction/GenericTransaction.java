@@ -2,11 +2,13 @@ package br.dev.diisk.domain.entities.transaction;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.validations.category.CategoryIdentifierNotNullValidation;
 import br.dev.diisk.domain.validations.category.CategoryNotBelongUserValidation;
@@ -52,16 +54,15 @@ public abstract class GenericTransaction extends UserRastrableEntity {
 
     private void validateValue() {
         if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestValueCustomRuntimeException(
-                    getClass(), "Value must be greater than zero",
-                    value.toString());
+            throw new BusinessException(
+                    getClass(), "O valor deve ser maior que zero.",
+                    Map.of("value", value != null ? value.toString() : "null"));
         }
     }
 
     private void validateDescription() {
         if (description == null || description.isBlank()) {
-            throw new BadRequestValueCustomRuntimeException(
-                    getClass(), "Description cannot be null or empty", null);
+            throw new NullOrEmptyException(getClass(), "description");
         }
     }
 

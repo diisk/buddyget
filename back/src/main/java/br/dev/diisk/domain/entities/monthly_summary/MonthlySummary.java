@@ -2,11 +2,13 @@ package br.dev.diisk.domain.entities.monthly_summary;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import br.dev.diisk.domain.entities.UserRastrableEntity;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.validations.category.CategoryIdentifierNotNullValidation;
 import br.dev.diisk.domain.validations.category.CategoryNotBelongUserValidation;
@@ -63,31 +65,30 @@ public class MonthlySummary extends UserRastrableEntity {
     }
 
     private void validateBudgetLimit() {
-        if (budgetLimit == null || budgetLimit <= 0) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Budget limit must be greater than zero",
-                    budgetLimit.toString());
-        }
+        if (budgetLimit == null || budgetLimit <= 0)
+            throw new BusinessException(getClass(), "O limite do orçamento deve ser maior que zero.",
+                    Map.of("budgetLimit", budgetLimit != null ? budgetLimit.toString() : "null"));
+
     }
 
     private void validateAmount() {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Amount must be greater than zero",
-                    amount.toString());
-        }
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
+            throw new BusinessException(getClass(), "O valor deve ser maior que zero",
+                    Map.of("amount", amount != null ? amount.toString() : "null"));
+
     }
 
     private void validateYear() {
-        if (year == null) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Year cannot be null",
-                    year.toString());
-        }
+        if (year == null)
+            throw new NullOrEmptyException(getClass(), "year");
+
     }
 
     private void validateMonth() {
-        if (month == null || month < 1 || month > 12) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Month must be between 1 and 12",
-                    month.toString());
-        }
+        if (month == null || month < 1 || month > 12)
+            throw new BusinessException(getClass(), "O mês deve estar entre 1 e 12",
+                    Map.of("month", month != null ? month.toString() : "null"));
+
     }
 
 }

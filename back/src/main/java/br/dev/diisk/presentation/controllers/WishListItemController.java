@@ -4,9 +4,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.dev.diisk.application.dtos.response.PageResponse;
-import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.services.IResponseService;
+import br.dev.diisk.presentation.dtos.response.PageResponse;
+import br.dev.diisk.presentation.dtos.response.SuccessResponse;
 import br.dev.diisk.presentation.dtos.wishlist.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

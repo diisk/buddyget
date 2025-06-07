@@ -8,15 +8,15 @@ public enum CategoryTypeEnum implements IBaseEnum {
 
     ;
 
-    private String titlePath;
+    private String description;
 
-    CategoryTypeEnum(String titlePath) {
-        this.titlePath = titlePath;
+    CategoryTypeEnum(String description) {
+        this.description = description;
     }
 
     @Override
-    public String getTitlePath() {
-        return titlePath;
+    public String getDescription() {
+        return description;
     }
 
 }

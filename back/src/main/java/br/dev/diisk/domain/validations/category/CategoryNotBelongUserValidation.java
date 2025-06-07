@@ -1,8 +1,9 @@
 package br.dev.diisk.domain.validations.category;
 
 import br.dev.diisk.domain.entities.category.Category;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
+import java.util.Map;
 
 public class CategoryNotBelongUserValidation implements IValidationStrategy {
 
@@ -17,8 +18,7 @@ public class CategoryNotBelongUserValidation implements IValidationStrategy {
     @Override
     public void validate(Class<?> classObj) {
         if (category.getUserId() != userId)
-            throw new BadRequestValueCustomRuntimeException(classObj, "Category must belong to the same user", null);
-
+            throw new BusinessException(classObj, "A categoria deve pertencer ao mesmo usuário", 
+                    Map.of("categoryId", category.getId().toString()));
     }
-
 }

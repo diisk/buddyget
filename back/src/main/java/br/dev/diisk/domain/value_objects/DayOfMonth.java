@@ -1,6 +1,9 @@
 package br.dev.diisk.domain.value_objects;
 
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import java.util.Map;
+
+import br.dev.diisk.domain.exceptions.BusinessException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -18,9 +21,12 @@ public class DayOfMonth {
     }
 
     private void validate() {
-        if (value != null && (value < 1 || value > 28)) {
-            throw new BadRequestValueCustomRuntimeException(
-                    getClass(), "Invalid day of month", value.toString());
+        Integer minValue = 1;
+        Integer maxValue = 28;
+        if (value != null && (value < minValue || value > maxValue)) {
+            throw new BusinessException(
+                    getClass(), "O dia do mês deve estar entre " + minValue + " e " + maxValue + ".",
+                    Map.of("valor", value.toString()));
         }
     }
 

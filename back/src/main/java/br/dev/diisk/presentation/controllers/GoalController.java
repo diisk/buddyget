@@ -2,9 +2,10 @@ package br.dev.diisk.presentation.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import br.dev.diisk.application.dtos.response.SuccessResponse;
+
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.presentation.dtos.goal.*;
+import br.dev.diisk.presentation.dtos.response.SuccessResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 

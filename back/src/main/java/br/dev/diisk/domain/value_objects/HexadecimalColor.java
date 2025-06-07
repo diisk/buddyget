@@ -1,6 +1,8 @@
 package br.dev.diisk.domain.value_objects;
 
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import java.util.Map;
+
+import br.dev.diisk.domain.exceptions.BusinessException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -19,7 +21,7 @@ public class HexadecimalColor {
 
     private void validate() {
         if (value == null || !value.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Invalid hexadecimal color value.", value);
+            throw new BusinessException(getClass(), "Hexadecimal inválido.", Map.of("cor", value));
         }
     }
 

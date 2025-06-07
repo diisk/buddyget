@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import br.dev.diisk.application.dtos.response.SuccessResponse;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.presentation.dtos.auth.UserResponse;
+import br.dev.diisk.presentation.dtos.response.SuccessResponse;
 import br.dev.diisk.presentation.dtos.auth.RefreshTokenResponse;
 import br.dev.diisk.presentation.dtos.auth.LoginRequest;
 import br.dev.diisk.presentation.dtos.auth.LoginResponse;

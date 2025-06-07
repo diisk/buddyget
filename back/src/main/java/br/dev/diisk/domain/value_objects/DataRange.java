@@ -1,8 +1,10 @@
 package br.dev.diisk.domain.value_objects;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -24,17 +26,19 @@ public class DataRange {
 
     private void validate() {
         if (startDate == null) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "Start date cannot be null", null);
+            throw new NullOrEmptyException(getClass(), "startDate");
         }
+
         if (endDate != null && endDate.isBefore(startDate)) {
-            throw new BadRequestValueCustomRuntimeException(getClass(), "End date cannot be before start date", null);
+            throw new BusinessException(getClass(), "A data final não pode ser anterior à data inicial.", Map
+                    .of("startDate", startDate.toLocalDate().toString(), "endDate", endDate.toLocalDate().toString()));
 
         }
     }
 
     public void validateEndDate(Class<?> classObj) {
         if (endDate != null) {
-            throw new BadRequestValueCustomRuntimeException(classObj, "End date cannot be null", null);
+            throw new NullOrEmptyException(getClass(), "endDate");
         }
     }
 

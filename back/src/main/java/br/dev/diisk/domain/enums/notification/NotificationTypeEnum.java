@@ -7,15 +7,15 @@ public enum NotificationTypeEnum implements IBaseEnum{
 
     ;
 
-    private String titlePath;
+    private String description;
 
     NotificationTypeEnum(String title) {
-        this.titlePath = title;
+        this.description = title;
     }
 
     @Override
-    public String getTitlePath() {
-        return titlePath;
+    public String getDescription() {
+        return description;
     }
 
 }

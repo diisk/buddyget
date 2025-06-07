@@ -1,8 +1,9 @@
 package br.dev.diisk.domain.validations.wish_list;
 
 import br.dev.diisk.domain.entities.wish_list.WishListItem;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
+import java.util.Map;
 
 public class WishListItemIfExistsNotBelongUserValidation implements IValidationStrategy {
 
@@ -18,9 +19,7 @@ public class WishListItemIfExistsNotBelongUserValidation implements IValidationS
     public void validate(Class<?> classObj) {
         if (wishListItem != null)
             if (wishListItem.getUserId() != userId)
-                throw new BadRequestValueCustomRuntimeException(classObj, "Wishlist item must belong to the same user",
-                        null);
-
+                throw new BusinessException(classObj, "O item da lista de desejos deve pertencer ao mesmo usuário",
+                        Map.of("wishListItemId", wishListItem.getId().toString()));
     }
-
 }

@@ -3,6 +3,7 @@ package br.dev.diisk.domain.entities.transaction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.credit_card.CreditCard;
@@ -10,7 +11,7 @@ import br.dev.diisk.domain.entities.goal.Goal;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.entities.wish_list.WishListItem;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
-import br.dev.diisk.domain.exceptions.BadRequestValueCustomRuntimeException;
+import br.dev.diisk.domain.exceptions.BusinessException;
 import br.dev.diisk.domain.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.validations.category.CategoryIncompatibleTypeValidation;
 import br.dev.diisk.domain.validations.category.CategoryNotBelongUserValidation;
@@ -61,17 +62,15 @@ public class ExpenseTransaction extends Transaction {
                 new WishListItemIfExistsNotBelongUserValidation(wishItem, getUserId()));
 
         if (expenseRecurring != null && expenseRecurring.getUserId() != getUserId()) {
-            throw new BadRequestValueCustomRuntimeException(getClass(),
-                    "Expense recurring transaction does not belong to the user",
-                    expenseRecurring.getId().toString());
-
+            throw new BusinessException(getClass(),
+                    "A despesa recorrente não pertence ao usuário",
+                    Map.of("expenseRecurringId", expenseRecurring.getId().toString()));
         }
 
         if (goal != null && goal.getUserId() != getUserId()) {
-            throw new BadRequestValueCustomRuntimeException(getClass(),
-                    "Goal does not belong to the user",
-                    goal.getId().toString());
-
+            throw new BusinessException(getClass(),
+                    "A meta não pertence ao usuário",
+                    Map.of("goalId", goal.getId().toString()));
         }
 
         validations.forEach(validation -> validation.validate(getClass()));
