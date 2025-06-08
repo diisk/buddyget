@@ -23,7 +23,7 @@ public class HexadecimalColor {
 
     private void validate() {
         if (value == null || !value.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")) {
-            throw new BusinessException(getClass(), "Hexadecimal inválido.", Map.of("cor", value));
+            throw new BusinessException(getClass(), "Hexadecimal inválido.", Map.of("color", value));
         }
     }
 

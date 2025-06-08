@@ -18,7 +18,8 @@ public class PersistenceExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex) {
-        return responseService.error(ErrorTypeEnum.NOT_FOUND, ex.getMessage());
+        return responseService.error("Entidade não encontrada.", ErrorTypeEnum.NOT_FOUND,
+                ex.getMessage());
     }
 
 }

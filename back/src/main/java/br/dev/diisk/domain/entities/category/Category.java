@@ -13,10 +13,12 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @Table(name = "categories")
+@NoArgsConstructor
 public class Category extends UserRastrableEntity {
 
     @Column(nullable = false)
@@ -35,11 +37,42 @@ public class Category extends UserRastrableEntity {
     @Enumerated(EnumType.STRING)
     private CategoryTypeEnum type;
 
-    public Category(User user, String description, CategoryTypeEnum type) {
+    public Category(User user, String name, String description, String iconName, CategoryTypeEnum type,
+            HexadecimalColor color) {
         super(user);
+        this.name = name;
         this.description = description;
+        this.iconName = iconName;
+        this.color = color;
         this.type = type;
         validate();
+    }
+
+    public Boolean update(String name, String description, String iconName,
+            HexadecimalColor color) {
+        Boolean updated = false;
+        if (name != null && !this.name.equals(name)) {
+            this.name = name;
+            updated = true;
+        }
+        if (description != null && !this.description.equals(description)) {
+            this.description = description;
+            updated = true;
+        }
+        if (iconName != null && !this.iconName.equals(iconName)) {
+            this.iconName = iconName;
+            updated = true;
+        }
+        if (color != null && !this.color.equals(color)) {
+            this.color = color;
+            updated = true;
+        }
+        validate();
+        return updated;
+    }
+
+    public Long getUserId() {
+        return getUser().getId();
     }
 
     private void validate() {
@@ -54,5 +87,8 @@ public class Category extends UserRastrableEntity {
 
         if (type == null)
             throw new NullOrEmptyException(getClass(), "type");
+
+        if (color == null)
+            throw new NullOrEmptyException(getClass(), "color");
     }
 }

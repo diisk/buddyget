@@ -16,12 +16,7 @@ public class UpdateUserCase {
 
     @Transactional
     public User execute(User user, UpdateUserParams params) {
-        Boolean save = false;
-        if (params.getName() != null && !params.getName().isBlank() && !params.getName().equals(user.getName())) {
-            user.setName(params.getName());
-            save = true;
-        }
-
+        Boolean save = user.update(params.getName(), null);
         if (save)
             userRepository.save(user);
 

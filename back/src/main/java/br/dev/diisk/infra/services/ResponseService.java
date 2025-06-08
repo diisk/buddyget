@@ -2,13 +2,15 @@ package br.dev.diisk.infra.services;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Function;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import br.dev.diisk.application.mappers.BaseMapper;
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.ErrorTypeEnum;
@@ -22,7 +24,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ResponseService implements IResponseService {
 
+    @Value("${spring.profiles.active:dev}")
+    private String env;
+
     private Integer getErrorCode(ErrorTypeEnum type) {
+        if (type == null)
+            return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+
         return switch (type) {
             case NOT_FOUND -> HttpServletResponse.SC_NOT_FOUND;
             case UNAUTHORIZED -> HttpServletResponse.SC_UNAUTHORIZED;
@@ -50,11 +58,11 @@ public class ResponseService implements IResponseService {
     }
 
     @Override
-    public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, BaseMapper<S, T> mapper, String objectName) {
+    public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, Function<S,T> mapper) {
 
         PageResponse<T> response = new PageResponse<T>(
                 page.getContent().stream()
-                        .map(fe -> mapper.apply(user, fe))
+                        .map(mapper)
                         .toList(),
                 page.getTotalPages());
 
@@ -87,6 +95,15 @@ public class ResponseService implements IResponseService {
     public void writeResponseObject(HttpServletResponse response, ErrorTypeEnum type, String message)
             throws JsonProcessingException, IOException {
         writeResponseObject(response, type, message, null);
+    }
+
+    @Override
+    public ResponseEntity<ErrorResponse> error(String message, ErrorTypeEnum type, String exceptionMessage) {
+        if (env.equalsIgnoreCase("prod"))
+            return error(type, message);
+
+        return error(type, message, Map.of("exceptionMessage", exceptionMessage));
+
     }
 
 }

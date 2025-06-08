@@ -1,9 +1,14 @@
 package br.dev.diisk.application.cases.user;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import br.dev.diisk.application.dtos.user.UpdateUserParams;
-import br.dev.diisk.application.services.ISecurityService;
 import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.entities.user.UserPerfil;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
+import br.dev.diisk.domain.value_objects.Email;
+import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,95 +16,65 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
 /**
  * Testes unitários para o caso de uso UpdateUserCase.
- * Cada teste segue o padrão Given-When-Then e cobre cenários felizes, limites e inválidos.
+ * Cobre cenários felizes, limites e de exceção.
  */
 @ExtendWith(MockitoExtension.class)
 class UpdateUserCaseTest {
     @Mock
     private IUserRepository userRepository;
-    @Mock
-    private ISecurityService securityService;
+
     @InjectMocks
     private UpdateUserCase updateUserCase;
 
     private User user;
+    private UserPerfil perfil;
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setName("João");
-        user.setEncryptedPassword("senhaAntiga");
+        perfil = new UserPerfil("Perfil Teste", 1, null);
+        user = new User("Nome Antigo", new Email("teste@email.com"), "senha123", perfil);
     }
 
-    // Teste: Atualiza apenas o nome quando diferente e válido
+    /**
+     * Deve atualizar o nome do usuário quando o nome for válido.
+     */
     @Test
-    void updateUser_deveAtualizarNome_quandoNomeDiferenteEValido() {
+    void updateUserCase_deveAtualizarNome_quandoNomeValido() {
         // Given
-        UpdateUserParams params = new UpdateUserParams("Maria");
+        UpdateUserParams params = new UpdateUserParams("Novo Nome");
         // When
         User result = updateUserCase.execute(user, params);
         // Then
-        assertEquals("Maria", result.getName());
-        assertEquals("senhaAntiga", result.getEncryptedPassword());
-        verify(userRepository).save((User) eq(user));
-        // O nome deve ser atualizado e senha mantida
+        assertEquals("Novo Nome", result.getName());
+        verify(userRepository).save(user);
     }
 
-    // Teste: Não atualiza nome se igual ao atual
+    /**
+     * Não deve atualizar o usuário quando o nome for nulo.
+     */
     @Test
-    void updateUser_naoDeveAtualizarNome_quandoNomeIgual() {
-        // Given
-        UpdateUserParams params = new UpdateUserParams("João");
-        // When
-        User result = updateUserCase.execute(user, params);
-        // Then
-        assertEquals("João", result.getName());
-        verify(userRepository, never()).save(any(User.class));
-        // O nome não deve ser alterado nem salvo
-    }
-
-    // Teste: Não atualiza nome se igual ao atual
-    @Test
-    void updateUser_naoDeveAtualizarNome_quandoNomeEmBranco() {
-        // Given
-        UpdateUserParams params = new UpdateUserParams("  ");
-        // When
-        User result = updateUserCase.execute(user, params);
-        // Then
-        assertEquals("João", result.getName());
-        verify(userRepository, never()).save(any(User.class));
-        // O nome não deve ser alterado nem salvo
-    }
-
-    // Teste: Não atualiza nome se igual ao atual
-    @Test
-    void updateUser_naoDeveAtualizarNome_quandoNomeVazio() {
-        // Given
-        UpdateUserParams params = new UpdateUserParams("");
-        // When
-        User result = updateUserCase.execute(user, params);
-        // Then
-        assertEquals("João", result.getName());
-        verify(userRepository, never()).save(any(User.class));
-        // O nome não deve ser alterado nem salvo
-    }
-
-    // Teste: Não salva se nada for alterado
-    @Test
-    void updateUser_naoDeveSalvar_quandoNadaAlterado() {
+    void updateUserCase_naoDeveAtualizar_quandoNomeNulo() {
         // Given
         UpdateUserParams params = new UpdateUserParams(null);
         // When
-        updateUserCase.execute(user, params);
+        User result = updateUserCase.execute(user, params);
         // Then
-        verify(userRepository, never()).save(any(User.class));
-        // Nenhuma alteração, não deve salvar
+        assertEquals("Nome Antigo", result.getName());
+        verify(userRepository, never()).save(user);
     }
+
+    /**
+     * Deve lançar exceção se o nome for vazio.
+     */
+    @Test
+    void updateUserCase_deveLancarExcecao_quandoNomeVazio() {
+        // Given
+        UpdateUserParams params = new UpdateUserParams("");
+        // When/Then
+        NullOrEmptyException ex = assertThrows(NullOrEmptyException.class, () -> updateUserCase.execute(user, params));
+        assertEquals("name", ex.getDetails().get("campo"));
+    }
+
 }

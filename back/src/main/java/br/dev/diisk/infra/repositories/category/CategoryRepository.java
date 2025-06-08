@@ -1,12 +1,12 @@
 package br.dev.diisk.infra.repositories.category;
 
-import java.util.List;
 import java.util.Optional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
+import br.dev.diisk.domain.filters.category.ListCategoriesFilter;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
 import br.dev.diisk.infra.jpas.category.CategoryJPA;
 import br.dev.diisk.infra.repositories.BaseRepository;
@@ -19,13 +19,13 @@ public class CategoryRepository extends BaseRepository<CategoryJPA, Category> im
     }
 
     @Override
-    public Optional<Category> findBy(Long userId, CategoryTypeEnum type, String description) {
-        return jpa.findByUser_IdAndTypeAndDescriptionAndDeletedFalse(userId, type, description);
+    public Optional<Category> findBy(Long userId, CategoryTypeEnum type, String name) {
+        return jpa.findByUser_IdAndTypeAndNameAndDeletedFalse(userId, type, name);
     }
 
     @Override
-    public List<Category> findAllBy(Long userId, CategoryTypeEnum type) {
-        return jpa.findByUser_IdAndTypeAndDeletedFalse(userId, type);
+    public Page<Category> findAllBy(Long userId, ListCategoriesFilter filter, Pageable pageable) {
+        return jpa.findAllByUser(userId, filter.getType(), filter.getSearchString(), pageable);
     }
 
 }

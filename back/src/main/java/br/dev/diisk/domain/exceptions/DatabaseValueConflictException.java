@@ -15,4 +15,8 @@ public class DatabaseValueConflictException extends DomainException {
                 Map.of("valor", value));
     }
 
+    public DatabaseValueConflictException(Class<?> classObject, Map<String, String> details) {
+        super(classObject, ErrorTypeEnum.CONFLICT, "Valores já registrados no banco de dados.", details);
+    }
+
 }

@@ -29,7 +29,15 @@ Crie testes unitários em Java (com Spring Boot e JUnit 5) para o use case chama
 
 8. Os testes devem ser criados no diretório correto de testes.
 
-9. Na hora de criar os testes leve em consideração as regras dos objetos de valores relacionados se houver.
+9. Caso as exceptions lançadas sejam filhas da DomainException, e o map de Details dela ser diferente de nulo, validar os valores dos details.
+Exemplo:(
+   BusinessException ex = assertThrows(BusinessException.class, () -> new Password(senhaInvalida));
+        assertTrue(ex.getDetails().get("senha").equals(senhaInvalida));
+)
+
+10. Faça testes apenas das regras contidas na classe especifica, não faça teste de regras de classes relacionadas.
+
+11. Não use "execute_" no nome do metodo, pois o execute é a função padrão dos casos de uso
 
 ---
 

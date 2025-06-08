@@ -8,114 +8,101 @@ import br.dev.diisk.domain.exceptions.UnauthorizedException;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
 import br.dev.diisk.domain.value_objects.Password;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Testes unitários para o caso de uso UpdateUserPasswordCase.
+ * Cobre cenários felizes, limites e de exceção.
+ */
 @ExtendWith(MockitoExtension.class)
 class UpdateUserPasswordCaseTest {
-
     @Mock
     private IUserRepository userRepository;
     @Mock
     private ISecurityService securityService;
-    @Mock
-    private User user;
     @InjectMocks
     private UpdateUserPasswordCase updateUserPasswordCase;
 
-    private final String currentPassword = "Senha@123";
-    private final String newPassword = "NovaSenha@123";
-    private final String encryptedCurrentPassword = "encryptedCurrent";
-    private final String encryptedNewPassword = "encryptedNew";
+    private User user;
+    private final String encryptedPassword = "senhaCriptografada";
 
     @BeforeEach
     void setUp() {
-        updateUserPasswordCase = new UpdateUserPasswordCase(userRepository, securityService);
+        user = Mockito.mock(User.class);
     }
 
-    // Teste: deve atualizar a senha corretamente quando os dados são válidos
+    /**
+     * Deve atualizar a senha do usuário quando os dados forem válidos.
+     */
     @Test
-    @DisplayName("updateUserPassword_deveAtualizarCorretamente_quandoDadosValidos")
-    void updateUserPassword_deveAtualizarCorretamente_quandoDadosValidos() {
+    void updateUserPasswordCase_deveAtualizarSenha_quandoDadosValidos() {
         // Given
-        UpdateUserPasswordParams params = new UpdateUserPasswordParams(newPassword, currentPassword);
-        when(securityService.matchPasswords(currentPassword, encryptedCurrentPassword)).thenReturn(true);
-        when(securityService.encryptPassword(new Password(newPassword))).thenReturn(encryptedNewPassword);
-        when(user.getEncryptedPassword()).thenReturn(encryptedCurrentPassword);
+        UpdateUserPasswordParams params = new UpdateUserPasswordParams("NovaSenha@123", "SenhaAtual@123");
+        when(user.getEncryptedPassword()).thenReturn(encryptedPassword);
+        when(securityService.matchPasswords("SenhaAtual@123", encryptedPassword)).thenReturn(true);
+        when(securityService.encryptPassword(any(Password.class))).thenReturn("NovaSenhaCriptografada");
 
         // When
         updateUserPasswordCase.execute(user, params);
 
         // Then
-        verify(user).setEncryptedPassword(encryptedNewPassword);
+        verify(user).update(null, "NovaSenhaCriptografada");
         verify(userRepository).save(user);
     }
 
-    // Teste: deve lançar exceção se a senha atual for nula
+    /**
+     * Deve lançar exceção se a senha atual for nula ou vazia.
+     */
     @Test
-    @DisplayName("updateUserPassword_deveLancarExcecao_quandoSenhaAtualNula")
-    void updateUserPassword_deveLancarExcecao_quandoSenhaAtualNula() {
+    void updateUserPasswordCase_deveLancarExcecao_quandoSenhaAtualNulaOuVazia() {
         // Given
-        UpdateUserPasswordParams params = new UpdateUserPasswordParams(newPassword, null);
+        UpdateUserPasswordParams paramsNula = new UpdateUserPasswordParams("NovaSenha@123", null);
+        UpdateUserPasswordParams paramsVazia = new UpdateUserPasswordParams("NovaSenha@123", "");
 
-        // When & Then
-        assertThrows(NullOrEmptyException.class, () ->
-                updateUserPasswordCase.execute(user, params));
+        // When/Then
+        NullOrEmptyException ex1 = assertThrows(NullOrEmptyException.class, () -> updateUserPasswordCase.execute(user, paramsNula));
+        assertEquals("password", ex1.getDetails().get("campo"));
+        NullOrEmptyException ex2 = assertThrows(NullOrEmptyException.class, () -> updateUserPasswordCase.execute(user, paramsVazia));
+        assertEquals("password", ex2.getDetails().get("campo"));
     }
 
-    // Teste: deve lançar exceção se a nova senha for nula
+    /**
+     * Deve lançar exceção se a nova senha for nula ou vazia.
+     */
     @Test
-    @DisplayName("updateUserPassword_deveLancarExcecao_quandoNovaSenhaNula")
-    void updateUserPassword_deveLancarExcecao_quandoNovaSenhaNula() {
+    void updateUserPasswordCase_deveLancarExcecao_quandoNovaSenhaNulaOuVazia() {
         // Given
-        UpdateUserPasswordParams params = new UpdateUserPasswordParams(null, currentPassword);
+        UpdateUserPasswordParams paramsNula = new UpdateUserPasswordParams(null, "SenhaAtual@123");
+        UpdateUserPasswordParams paramsVazia = new UpdateUserPasswordParams("", "SenhaAtual@123");
 
-        assertThrows(NullOrEmptyException.class, () ->
-                updateUserPasswordCase.execute(user, params));
+        // When/Then
+        NullOrEmptyException ex1 = assertThrows(NullOrEmptyException.class, () -> updateUserPasswordCase.execute(user, paramsNula));
+        assertEquals("newPassword", ex1.getDetails().get("campo"));
+        NullOrEmptyException ex2 = assertThrows(NullOrEmptyException.class, () -> updateUserPasswordCase.execute(user, paramsVazia));
+        assertEquals("newPassword", ex2.getDetails().get("campo"));
     }
 
-    // Teste: deve lançar exceção se a senha atual estiver incorreta
+    /**
+     * Deve lançar exceção se a senha atual não corresponder à senha do usuário.
+     */
     @Test
-    @DisplayName("updateUserPassword_deveLancarExcecao_quandoSenhaAtualIncorreta")
-    void updateUserPassword_deveLancarExcecao_quandoSenhaAtualIncorreta() {
+    void updateUserPasswordCase_deveLancarExcecao_quandoSenhaAtualIncorreta() {
         // Given
-        UpdateUserPasswordParams params = new UpdateUserPasswordParams(newPassword, currentPassword);
-        when(securityService.matchPasswords(currentPassword, encryptedCurrentPassword)).thenReturn(false);
-        when(user.getEncryptedPassword()).thenReturn(encryptedCurrentPassword);
+        UpdateUserPasswordParams params = new UpdateUserPasswordParams("NovaSenha@123", "SenhaErrada");
+        when(user.getEncryptedPassword()).thenReturn(encryptedPassword);
+        when(securityService.matchPasswords("SenhaErrada", encryptedPassword)).thenReturn(false);
 
-        // When & Then
-        assertThrows(UnauthorizedException.class, () ->
-                updateUserPasswordCase.execute(user, params));
+        // When/Then
+        UnauthorizedException ex = assertThrows(UnauthorizedException.class, () -> updateUserPasswordCase.execute(user, params));
+        assertEquals("Senha atual inválida.", ex.getMessage());
     }
 
-    // Teste: deve lançar exceção se a senha atual for vazia
-    @Test
-    @DisplayName("updateUserPassword_deveLancarExcecao_quandoSenhaAtualVazia")
-    void updateUserPassword_deveLancarExcecao_quandoSenhaAtualVazia() {
-        // Given
-        UpdateUserPasswordParams params = new UpdateUserPasswordParams(newPassword, "");
-
-        // When & Then
-        assertThrows(NullOrEmptyException.class, () ->
-                updateUserPasswordCase.execute(user, params));
-
-    }
-
-    // Teste: deve lançar exceção se a nova senha for vazia
-    @Test
-    @DisplayName("updateUserPassword_deveLancarExcecao_quandoNovaSenhaVazia")
-    void updateUserPassword_deveLancarExcecao_quandoNovaSenhaVazia() {
-        // Given
-        UpdateUserPasswordParams params = new UpdateUserPasswordParams("", currentPassword);
-
-        assertThrows(NullOrEmptyException.class, () ->
-                updateUserPasswordCase.execute(user, params));
-    }
 }

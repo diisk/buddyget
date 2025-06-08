@@ -16,11 +16,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "users")
 @NoArgsConstructor
 public class User extends RastreableEntity implements UserDetails {
@@ -46,11 +44,26 @@ public class User extends RastreableEntity implements UserDetails {
         validate();
     }
 
-    public String getEmail(){
+    public Boolean update(String name, String encryptedPassword) {
+        Boolean updated = false;
+        if (name != null) {
+            this.name = name;
+            updated = true;
+        }
+        if (encryptedPassword != null) {
+            this.encryptedPassword = encryptedPassword;
+            updated = true;
+        }
+        validate();
+        return updated;
+
+    }
+
+    public String getEmail() {
         return email.getValue();
     }
 
-    private void validate(){
+    private void validate() {
         validateName();
         validateEncryptedPassword();
     }

@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import br.dev.diisk.application.services.IResponseService;
 import br.dev.diisk.application.services.ITokenService;
 import br.dev.diisk.domain.enums.ErrorTypeEnum;
@@ -41,8 +43,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 UserDetails user = userRepository.findById(Long.valueOf(subject)).orElse(null);
 
                 if (user == null) {
-                    responseService.writeResponseObject(response, ErrorTypeEnum.DOMAIN_BUSINESS,
-                            "Usuário não encontrado, verifique o token de autenticação.");
+                    writeInvalidUserOrToken(response);
                     return;
                 }
 
@@ -50,12 +51,18 @@ public class SecurityFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (JWTVerificationException ex) {
-                ex.printStackTrace();
+                writeInvalidUserOrToken(response);
+                return;
             }
 
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void writeInvalidUserOrToken(HttpServletResponse response) throws JsonProcessingException, IOException {
+        responseService.writeResponseObject(response, ErrorTypeEnum.DOMAIN_BUSINESS,
+                "Usuario nao encontrado ou token invalida.");
     }
 
     private String recoverToken(HttpServletRequest request) {

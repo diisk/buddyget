@@ -9,81 +9,98 @@ import br.dev.diisk.domain.exceptions.DatabaseValueNotFoundException;
 import br.dev.diisk.domain.repositories.user.IUserPerfilRepository;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
 import br.dev.diisk.domain.value_objects.Password;
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import org.mockito.junit.jupiter.MockitoExtension;
-
 @ExtendWith(MockitoExtension.class)
 class AddUserCaseTest {
-
     @Mock
-    IUserRepository userRepository;
-
+    private IUserRepository userRepository;
     @Mock
-    IUserPerfilRepository userPerfilRepository;
-
+    private IUserPerfilRepository userPerfilRepository;
     @Mock
-    ISecurityService securityService;
-
+    private ISecurityService securityService;
     @InjectMocks
-    AddUserCase addUserCase;
+    private AddUserCase addUserCase;
 
-    // Cenário: Deve criar usuário com sucesso quando e-mail não existe e perfil
-    // padrão está presente
+    private final String name = "Usuário Teste";
+    private final String email = "teste@exemplo.com";
+    private final String password = "Senha@123"; // Corrigido para senha válida
+    private final String encryptedPassword = "senhaCriptografada";
+    private final UserPerfil defaultPerfil = Mockito.mock(UserPerfil.class);
+
+    // Teste: Deve adicionar usuário com sucesso quando email não existe e perfil
+    // padrão existe
     @Test
-    void addUser_deveCriarUsuario_quandoEmailNaoExisteEPerfilPadraoPresente() {
-        // Given: Usuário não existe e perfil padrão existe
-        String name = "João";
-        String email = "joao@email.com";
-        String password = "Test@123";
-        UserPerfil perfil = new UserPerfil(); // pode ser mockado se necessário
+    void addUserCase_deveAdicionarUsuario_quandoDadosValidos() {
+        // Given
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        Mockito.when(userPerfilRepository.findByName(UserPerfilEnum.DEFAULT.name())).thenReturn(defaultPerfil);
+        Mockito.when(securityService.encryptPassword(Mockito.any(Password.class))).thenReturn(encryptedPassword);
+        Mockito.doAnswer(invocation -> {
+            User user = invocation.getArgument(0);
+            Assertions.assertEquals(name, user.getName());
+            Assertions.assertEquals(email, user.getEmail()); // Corrigido: getEmail() retorna String
+            Assertions.assertEquals(encryptedPassword, user.getPassword());
+            Assertions.assertEquals(defaultPerfil, user.getPerfil());
+            return null;
+        }).when(userRepository).save(Mockito.any(User.class));
 
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-        when(securityService.encryptPassword(new Password(password))).thenReturn(password);
-        when(userPerfilRepository.findByName(UserPerfilEnum.DEFAULT.name())).thenReturn(perfil);
-        // When: Executa o caso de uso
+        // When
         User result = addUserCase.execute(name, email, password);
 
-        // Then: Usuário criado e salvo
-        assertNotNull(result);
-        assertEquals(name, result.getName());
-        assertEquals(email, result.getEmail());
-        assertEquals(perfil, result.getPerfil());
-        verify(userRepository).save(any(User.class));
+        // Then
+        Assertions.assertEquals(name, result.getName());
+        Assertions.assertEquals(email, result.getEmail()); // Corrigido: getEmail() retorna String
+        Assertions.assertEquals(encryptedPassword, result.getPassword());
+        Assertions.assertEquals(defaultPerfil, result.getPerfil());
     }
 
-    // Cenário: Deve lançar exceção de conflito quando e-mail já existe
+    // Teste: Deve lançar DatabaseValueConflictException quando email já existe
     @Test
-    void addUser_deveLancarExcecaoDeConflito_quandoEmailJaExiste() {
-        // Given: Usuário já existe com o e-mail informado
-        String email = "joao@email.com";
-        User existingUser = mock(User.class);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(existingUser));
+    void addUserCase_deveLancarDatabaseValueConflictException_quandoEmailJaExiste() {
+        // Given
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(Mockito.mock(User.class)));
 
-        // When/Then: Espera exceção de conflito
-        assertThrows(DatabaseValueConflictException.class, () -> addUserCase.execute("João", email, "senha123"));
-        verify(userRepository, never()).save(any(User.class));
+        // When & Then
+        DatabaseValueConflictException ex = Assertions.assertThrows(DatabaseValueConflictException.class,
+                () -> addUserCase.execute(name, email, password));
+        Assertions.assertTrue(ex.getDetails().get("valor").equals(email));
     }
 
-    // Cenário: Deve lançar exceção de não encontrado quando perfil padrão não
+    // Teste: Deve lançar DatabaseValueNotFoundException quando perfil padrão não
     // existe
     @Test
-    void addUser_deveLancarExcecaoDeNaoEncontrado_quandoPerfilPadraoNaoExiste() {
-        // Given: Usuário não existe, mas perfil padrão não encontrado
-        String email = "joao@email.com";
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-        when(userPerfilRepository.findByName(UserPerfilEnum.DEFAULT.name())).thenReturn(null);
+    void addUserCase_deveLancarDatabaseValueNotFoundException_quandoPerfilPadraoNaoExiste() {
+        // Given
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        Mockito.when(userPerfilRepository.findByName(UserPerfilEnum.DEFAULT.name())).thenReturn(null);
 
-        // When/Then: Espera exceção de não encontrado
-        assertThrows(DatabaseValueNotFoundException.class, () -> addUserCase.execute("João", email, "senha123"));
-        verify(userRepository, never()).save(any(User.class));
+        // When & Then
+        DatabaseValueNotFoundException ex = Assertions.assertThrows(DatabaseValueNotFoundException.class,
+                () -> addUserCase.execute(name, email, password));
+        Assertions.assertTrue(ex.getDetails().get("valor").equals(UserPerfilEnum.DEFAULT.name()));
+    }
+
+    // Teste: Deve passar a senha corretamente para o serviço de segurança
+    @Test
+    void addUserCase_deveChamarEncryptPasswordComSenhaCorreta_quandoUsuarioValido() {
+        // Given
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        Mockito.when(userPerfilRepository.findByName(UserPerfilEnum.DEFAULT.name())).thenReturn(defaultPerfil);
+        Mockito.when(securityService.encryptPassword(Mockito.any(Password.class))).thenReturn(encryptedPassword);
+
+        // When
+        addUserCase.execute(name, email, password);
+
+        // Then
+        Mockito.verify(securityService).encryptPassword(Mockito.any(Password.class));
     }
 }

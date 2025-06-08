@@ -32,7 +32,7 @@ public class UpdateUserPasswordCase {
 
         Password newPassword = new Password(params.getNewPassword());
 
-        user.setEncryptedPassword(securityService.encryptPassword(newPassword));
+        user.update(null, securityService.encryptPassword(newPassword));
         userRepository.save(user);
 
     }

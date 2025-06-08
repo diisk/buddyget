@@ -4,12 +4,14 @@ import br.dev.diisk.domain.entities.user.User;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @MappedSuperclass
 @Getter
+@NoArgsConstructor
 public abstract class UserRastrableEntity extends RastreableEntity {
     @ManyToOne(optional = false)
-    protected final User user;
+    protected User user;
 
     public UserRastrableEntity(User user) {
         this.user = user;

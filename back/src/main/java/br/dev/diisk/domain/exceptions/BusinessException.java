@@ -10,4 +10,8 @@ public class BusinessException extends DomainException {
         super(classObject, ErrorTypeEnum.DOMAIN_BUSINESS, message, details);
     }
 
+    public BusinessException(Class<?> classObject, String message) {
+        super(classObject, ErrorTypeEnum.DOMAIN_BUSINESS, message, null);
+    }
+
 }
