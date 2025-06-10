@@ -1,6 +1,7 @@
 package br.dev.diisk.application.cases.user;
 
-import br.dev.diisk.application.services.ISecurityService;
+import br.dev.diisk.application.shared.services.ISecurityService;
+import br.dev.diisk.application.user.cases.AddUserCase;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.entities.user.UserPerfil;
 import br.dev.diisk.domain.enums.user.UserPerfilEnum;

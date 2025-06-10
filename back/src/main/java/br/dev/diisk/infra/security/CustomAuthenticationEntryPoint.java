@@ -5,7 +5,8 @@ import java.io.IOException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import br.dev.diisk.application.services.IResponseService;
+
+import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.enums.ErrorTypeEnum;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

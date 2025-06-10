@@ -1,5 +1,6 @@
 package br.dev.diisk.application.cases.category;
 
+import br.dev.diisk.application.category.cases.GetCategoryCase;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.exceptions.DatabaseValueNotFoundException;

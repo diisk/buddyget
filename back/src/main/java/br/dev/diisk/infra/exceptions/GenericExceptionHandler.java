@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import br.dev.diisk.application.services.IResponseService;
+import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.enums.ErrorTypeEnum;
 import br.dev.diisk.domain.exceptions.DomainException;
 import lombok.RequiredArgsConstructor;

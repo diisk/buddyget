@@ -1,6 +1,7 @@
 package br.dev.diisk.application.cases.category;
 
-import br.dev.diisk.application.dtos.category.AddCategoryParams;
+import br.dev.diisk.application.category.cases.AddCategoryCase;
+import br.dev.diisk.application.category.dtos.AddCategoryParams;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.category.CategoryTypeEnum;

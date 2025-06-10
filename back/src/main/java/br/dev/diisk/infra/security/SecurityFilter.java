@@ -12,8 +12,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import br.dev.diisk.application.services.IResponseService;
-import br.dev.diisk.application.services.ITokenService;
+import br.dev.diisk.application.shared.services.IResponseService;
+import br.dev.diisk.application.shared.services.ITokenService;
 import br.dev.diisk.domain.enums.ErrorTypeEnum;
 import br.dev.diisk.domain.repositories.user.IUserRepository;
 import jakarta.servlet.FilterChain;

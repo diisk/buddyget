@@ -3,7 +3,8 @@ package br.dev.diisk.application.cases.user;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import br.dev.diisk.application.dtos.user.UpdateUserParams;
+import br.dev.diisk.application.user.cases.UpdateUserCase;
+import br.dev.diisk.application.user.dtos.UpdateUserParams;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.entities.user.UserPerfil;
 import br.dev.diisk.domain.repositories.user.IUserRepository;

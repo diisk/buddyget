@@ -11,12 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import br.dev.diisk.application.services.IResponseService;
+
+import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.enums.ErrorTypeEnum;
-import br.dev.diisk.presentation.dtos.response.ErrorResponse;
-import br.dev.diisk.presentation.dtos.response.PageResponse;
-import br.dev.diisk.presentation.dtos.response.SuccessResponse;
+import br.dev.diisk.infra.shared.dtos.ErrorResponse;
+import br.dev.diisk.infra.shared.dtos.PageResponse;
+import br.dev.diisk.infra.shared.dtos.SuccessResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 

@@ -1,0 +1,15 @@
+package br.dev.diisk.presentation.wish_list.dtos;
+
+import java.math.BigDecimal;
+
+import br.dev.diisk.domain.enums.wish_list.WishItemPriorityEnum;
+
+public record CreateWishListItemRequest(
+    String name,
+    BigDecimal estimatedValue,
+    WishItemPriorityEnum priority,
+    String storeOrBrand,
+    String link,
+    String observation,
+    Long categoryId
+) {}

@@ -1,7 +1,8 @@
 package br.dev.diisk.application.cases.user;
 
-import br.dev.diisk.application.dtos.user.UpdateUserPasswordParams;
-import br.dev.diisk.application.services.ISecurityService;
+import br.dev.diisk.application.shared.services.ISecurityService;
+import br.dev.diisk.application.user.cases.UpdateUserPasswordCase;
+import br.dev.diisk.application.user.dtos.UpdateUserPasswordParams;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.exceptions.UnauthorizedException;

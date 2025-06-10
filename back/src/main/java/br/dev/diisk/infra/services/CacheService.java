@@ -7,7 +7,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.services.ICacheService;
+import br.dev.diisk.application.shared.services.ICacheService;
 import lombok.RequiredArgsConstructor;
 
 @Service

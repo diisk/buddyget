@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import br.dev.diisk.application.services.ITokenService;
+import br.dev.diisk.application.shared.services.ITokenService;
 import lombok.RequiredArgsConstructor;
 
 @Service

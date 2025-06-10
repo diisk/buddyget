@@ -1,6 +1,8 @@
 package br.dev.diisk.application.cases.category;
 
-import br.dev.diisk.application.dtos.category.UpdateCategoryParams;
+import br.dev.diisk.application.category.cases.GetCategoryCase;
+import br.dev.diisk.application.category.cases.UpdateCategoryCase;
+import br.dev.diisk.application.category.dtos.UpdateCategoryParams;
 import br.dev.diisk.domain.entities.category.Category;
 import br.dev.diisk.domain.entities.user.User;
 import br.dev.diisk.domain.repositories.category.ICategoryRepository;
