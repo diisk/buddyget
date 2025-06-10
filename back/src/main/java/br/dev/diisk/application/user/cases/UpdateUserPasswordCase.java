@@ -4,11 +4,11 @@ import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.shared.services.ISecurityService;
 import br.dev.diisk.application.user.dtos.UpdateUserPasswordParams;
-import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.exceptions.NullOrEmptyException;
-import br.dev.diisk.domain.exceptions.UnauthorizedException;
-import br.dev.diisk.domain.repositories.user.IUserRepository;
-import br.dev.diisk.domain.value_objects.Password;
+import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
+import br.dev.diisk.domain.shared.exceptions.UnauthorizedException;
+import br.dev.diisk.domain.shared.value_objects.Password;
+import br.dev.diisk.domain.user.User;
+import br.dev.diisk.domain.user.interfaces.IUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

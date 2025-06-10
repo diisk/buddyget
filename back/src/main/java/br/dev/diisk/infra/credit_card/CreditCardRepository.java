@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import br.dev.diisk.domain.entities.credit_card.CreditCard;
-import br.dev.diisk.domain.repositories.credit_card.ICreditCardRepository;
+import br.dev.diisk.domain.credit_card.CreditCard;
+import br.dev.diisk.domain.credit_card.ICreditCardRepository;
 import br.dev.diisk.infra.shared.BaseRepository;
 
 @Repository

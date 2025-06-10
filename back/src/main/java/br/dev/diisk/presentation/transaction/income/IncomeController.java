@@ -6,7 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import br.dev.diisk.application.shared.services.IResponseService;
-import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.PageResponse;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
 import br.dev.diisk.presentation.transaction.income.dtos.CreateIncomeRecurringRequest;

@@ -2,8 +2,8 @@ package br.dev.diisk.infra.budget;
 
 import org.springframework.stereotype.Repository;
 
-import br.dev.diisk.domain.entities.budget.Budget;
-import br.dev.diisk.domain.repositories.budget.IBudgetRepository;
+import br.dev.diisk.domain.budget.Budget;
+import br.dev.diisk.domain.budget.IBudgetRepository;
 import br.dev.diisk.infra.shared.BaseRepository;
 
 @Repository

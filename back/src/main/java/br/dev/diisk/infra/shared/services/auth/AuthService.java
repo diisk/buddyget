@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.shared.services.IAuthService;
-import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.user.User;
 import lombok.RequiredArgsConstructor;
 
 @Service

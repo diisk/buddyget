@@ -1,7 +1,7 @@
 package br.dev.diisk.presentation.category.dtos;
 
-import br.dev.diisk.domain.entities.category.Category;
-import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
+import br.dev.diisk.domain.category.Category;
+import br.dev.diisk.domain.category.CategoryTypeEnum;
 
 public record CategoryResponse(
         Long id,

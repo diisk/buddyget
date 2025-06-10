@@ -4,9 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import br.dev.diisk.domain.entities.transaction.ExpenseTransaction;
-import br.dev.diisk.domain.filters.expense.ListExpenseFilter;
-import br.dev.diisk.domain.repositories.expense.IExpenseRepository;
+import br.dev.diisk.domain.transaction.expense.ExpenseTransaction;
+import br.dev.diisk.domain.transaction.expense.IExpenseRepository;
+import br.dev.diisk.domain.transaction.expense.ListExpenseFilter;
 import br.dev.diisk.infra.shared.BaseRepository;
 import br.dev.diisk.infra.transaction.expense.jpas.ExpenseTransactionJPA;
 

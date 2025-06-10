@@ -14,7 +14,7 @@ import br.dev.diisk.application.user.cases.UpdateUserCase;
 import br.dev.diisk.application.user.cases.UpdateUserPasswordCase;
 import br.dev.diisk.application.user.dtos.UpdateUserParams;
 import br.dev.diisk.application.user.dtos.UpdateUserPasswordParams;
-import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
 import br.dev.diisk.presentation.user.dtos.UpdatePasswordRequest;
 import br.dev.diisk.presentation.user.dtos.UpdateUserRequest;

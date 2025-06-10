@@ -2,8 +2,8 @@ package br.dev.diisk.infra.wish_list;
 
 import org.springframework.stereotype.Repository;
 
-import br.dev.diisk.domain.entities.wish_list.WishListItem;
-import br.dev.diisk.domain.repositories.wish_list.IWishListItemRepository;
+import br.dev.diisk.domain.wish_list.IWishListItemRepository;
+import br.dev.diisk.domain.wish_list.WishListItem;
 import br.dev.diisk.infra.shared.BaseRepository;
 
 @Repository

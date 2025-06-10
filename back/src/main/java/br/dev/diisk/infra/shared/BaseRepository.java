@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.dev.diisk.domain.entities.RastreableEntity;
-import br.dev.diisk.domain.repositories.IBaseRepository;
+import br.dev.diisk.domain.shared.entities.RastreableEntity;
+import br.dev.diisk.domain.shared.interfaces.IBaseRepository;
 
 public abstract class BaseRepository<J extends JpaRepository<E, Long>, E extends RastreableEntity>
         implements IBaseRepository<E> {

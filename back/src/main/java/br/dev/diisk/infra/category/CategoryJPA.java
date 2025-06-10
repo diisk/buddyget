@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-import br.dev.diisk.domain.entities.category.Category;
-import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
+import br.dev.diisk.domain.category.Category;
+import br.dev.diisk.domain.category.CategoryTypeEnum;
 
 public interface CategoryJPA extends JpaRepository<Category, Long> {
 

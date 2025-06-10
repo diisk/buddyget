@@ -1,6 +1,6 @@
 package br.dev.diisk.presentation.user.dtos;
 
-import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.user.User;
 
 public record UserResponse(
         Long id,

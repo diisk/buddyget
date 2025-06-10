@@ -4,10 +4,11 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import br.dev.diisk.domain.entities.category.Category;
-import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
-import br.dev.diisk.domain.filters.category.ListCategoriesFilter;
-import br.dev.diisk.domain.repositories.category.ICategoryRepository;
+
+import br.dev.diisk.domain.category.Category;
+import br.dev.diisk.domain.category.CategoryTypeEnum;
+import br.dev.diisk.domain.category.ICategoryRepository;
+import br.dev.diisk.domain.category.ListCategoriesFilter;
 import br.dev.diisk.infra.shared.BaseRepository;
 
 @Repository

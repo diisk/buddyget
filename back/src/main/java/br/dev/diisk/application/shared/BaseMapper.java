@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
-import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.user.User;
 import jakarta.annotation.PostConstruct;
 
 public abstract class BaseMapper<S, T>{

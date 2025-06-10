@@ -5,13 +5,13 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.category.dtos.AddCategoryParams;
-import br.dev.diisk.domain.entities.category.Category;
-import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
-import br.dev.diisk.domain.exceptions.DatabaseValueConflictException;
-import br.dev.diisk.domain.exceptions.NullOrEmptyException;
-import br.dev.diisk.domain.repositories.category.ICategoryRepository;
-import br.dev.diisk.domain.value_objects.HexadecimalColor;
+import br.dev.diisk.domain.category.Category;
+import br.dev.diisk.domain.category.CategoryTypeEnum;
+import br.dev.diisk.domain.category.ICategoryRepository;
+import br.dev.diisk.domain.shared.exceptions.DatabaseValueConflictException;
+import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
+import br.dev.diisk.domain.shared.value_objects.HexadecimalColor;
+import br.dev.diisk.domain.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

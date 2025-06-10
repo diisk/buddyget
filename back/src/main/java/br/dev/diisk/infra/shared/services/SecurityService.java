@@ -4,7 +4,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.shared.services.ISecurityService;
-import br.dev.diisk.domain.value_objects.Password;
+import br.dev.diisk.domain.shared.value_objects.Password;
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -3,8 +3,8 @@ package br.dev.diisk.infra.user.repositories;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
-import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.repositories.user.IUserRepository;
+import br.dev.diisk.domain.user.User;
+import br.dev.diisk.domain.user.interfaces.IUserRepository;
 import br.dev.diisk.infra.shared.BaseRepository;
 import br.dev.diisk.infra.user.jpas.UserJPA;
 

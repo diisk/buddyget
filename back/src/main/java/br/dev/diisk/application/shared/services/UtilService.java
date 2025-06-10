@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.domain.interfaces.IBaseEnum;
+import br.dev.diisk.domain.shared.interfaces.IBaseEnum;
 
 @Service
 public class UtilService {

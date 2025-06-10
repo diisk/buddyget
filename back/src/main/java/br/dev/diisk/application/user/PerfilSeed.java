@@ -5,10 +5,11 @@ import java.util.List;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import br.dev.diisk.domain.entities.user.UserPerfil;
-import br.dev.diisk.domain.enums.user.UserPerfilEnum;
-import br.dev.diisk.domain.enums.user.UserPermissionEnum;
-import br.dev.diisk.domain.repositories.user.IUserPerfilRepository;
+
+import br.dev.diisk.domain.user.UserPerfil;
+import br.dev.diisk.domain.user.enums.UserPerfilEnum;
+import br.dev.diisk.domain.user.enums.UserPermissionEnum;
+import br.dev.diisk.domain.user.interfaces.IUserPerfilRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

@@ -7,7 +7,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import br.dev.diisk.application.shared.services.IResponseService;
-import br.dev.diisk.domain.enums.ErrorTypeEnum;
+import br.dev.diisk.domain.shared.ErrorTypeEnum;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

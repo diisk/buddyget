@@ -1,6 +1,6 @@
 package br.dev.diisk.application.shared.services;
 
-import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.user.User;
 
 public interface IAuthService {
 

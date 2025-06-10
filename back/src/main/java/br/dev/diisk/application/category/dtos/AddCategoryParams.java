@@ -1,6 +1,6 @@
 package br.dev.diisk.application.category.dtos;
 
-import br.dev.diisk.domain.enums.category.CategoryTypeEnum;
+import br.dev.diisk.domain.category.CategoryTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -13,7 +13,7 @@ import br.dev.diisk.application.shared.services.IAuthService;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.application.shared.services.ITokenService;
 import br.dev.diisk.application.user.cases.AddUserCase;
-import br.dev.diisk.domain.entities.user.User;
+import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
 import br.dev.diisk.presentation.auth.dtos.LoginRequest;
 import br.dev.diisk.presentation.auth.dtos.LoginResponse;

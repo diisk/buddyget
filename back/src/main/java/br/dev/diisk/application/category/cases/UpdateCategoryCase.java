@@ -3,10 +3,10 @@ package br.dev.diisk.application.category.cases;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.category.dtos.UpdateCategoryParams;
-import br.dev.diisk.domain.entities.category.Category;
-import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.repositories.category.ICategoryRepository;
-import br.dev.diisk.domain.value_objects.HexadecimalColor;
+import br.dev.diisk.domain.category.Category;
+import br.dev.diisk.domain.category.ICategoryRepository;
+import br.dev.diisk.domain.shared.value_objects.HexadecimalColor;
+import br.dev.diisk.domain.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

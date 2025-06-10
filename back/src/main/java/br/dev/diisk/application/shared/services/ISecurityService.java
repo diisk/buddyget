@@ -1,6 +1,6 @@
 package br.dev.diisk.application.shared.services;
 
-import br.dev.diisk.domain.value_objects.Password;
+import br.dev.diisk.domain.shared.value_objects.Password;
 
 public interface ISecurityService {
 

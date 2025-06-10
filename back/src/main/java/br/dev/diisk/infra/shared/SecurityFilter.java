@@ -14,8 +14,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.application.shared.services.ITokenService;
-import br.dev.diisk.domain.enums.ErrorTypeEnum;
-import br.dev.diisk.domain.repositories.user.IUserRepository;
+import br.dev.diisk.domain.shared.ErrorTypeEnum;
+import br.dev.diisk.domain.user.interfaces.IUserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

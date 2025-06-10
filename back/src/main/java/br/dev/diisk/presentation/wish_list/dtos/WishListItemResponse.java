@@ -2,7 +2,7 @@ package br.dev.diisk.presentation.wish_list.dtos;
 
 import java.math.BigDecimal;
 
-import br.dev.diisk.domain.enums.wish_list.WishItemPriorityEnum;
+import br.dev.diisk.domain.wish_list.WishItemPriorityEnum;
 import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseRecurringResponse;
 import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseResponse;
 

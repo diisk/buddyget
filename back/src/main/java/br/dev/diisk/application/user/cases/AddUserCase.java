@@ -3,15 +3,15 @@ package br.dev.diisk.application.user.cases;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.shared.services.ISecurityService;
-import br.dev.diisk.domain.entities.user.User;
-import br.dev.diisk.domain.entities.user.UserPerfil;
-import br.dev.diisk.domain.enums.user.UserPerfilEnum;
-import br.dev.diisk.domain.exceptions.DatabaseValueConflictException;
-import br.dev.diisk.domain.exceptions.DatabaseValueNotFoundException;
-import br.dev.diisk.domain.repositories.user.IUserPerfilRepository;
-import br.dev.diisk.domain.repositories.user.IUserRepository;
-import br.dev.diisk.domain.value_objects.Email;
-import br.dev.diisk.domain.value_objects.Password;
+import br.dev.diisk.domain.shared.exceptions.DatabaseValueConflictException;
+import br.dev.diisk.domain.shared.exceptions.DatabaseValueNotFoundException;
+import br.dev.diisk.domain.shared.value_objects.Email;
+import br.dev.diisk.domain.shared.value_objects.Password;
+import br.dev.diisk.domain.user.User;
+import br.dev.diisk.domain.user.UserPerfil;
+import br.dev.diisk.domain.user.enums.UserPerfilEnum;
+import br.dev.diisk.domain.user.interfaces.IUserPerfilRepository;
+import br.dev.diisk.domain.user.interfaces.IUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

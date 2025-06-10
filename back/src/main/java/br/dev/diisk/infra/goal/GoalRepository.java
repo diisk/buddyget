@@ -2,8 +2,8 @@ package br.dev.diisk.infra.goal;
 
 import org.springframework.stereotype.Repository;
 
-import br.dev.diisk.domain.entities.goal.Goal;
-import br.dev.diisk.domain.repositories.goal.IGoalRepository;
+import br.dev.diisk.domain.goal.Goal;
+import br.dev.diisk.domain.goal.IGoalRepository;
 import br.dev.diisk.infra.shared.BaseRepository;
 
 @Repository
