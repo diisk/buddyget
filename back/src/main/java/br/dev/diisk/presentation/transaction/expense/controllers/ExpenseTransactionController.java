@@ -1,4 +1,4 @@
-package br.dev.diisk.presentation.transaction.expense;
+package br.dev.diisk.presentation.transaction.expense.controllers;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -9,20 +9,16 @@ import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.PageResponse;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
-import br.dev.diisk.presentation.transaction.expense.dtos.CreateExpenseRecurringRequest;
 import br.dev.diisk.presentation.transaction.expense.dtos.CreateExpenseRequest;
-import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseRecurringResponse;
 import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseResponse;
-import br.dev.diisk.presentation.transaction.expense.dtos.UpdateExpenseRecurringRequest;
 import br.dev.diisk.presentation.transaction.expense.dtos.UpdateExpenseRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
-@RequestMapping("api/expenses")
+@RequestMapping("api/transactions/expenses")
 @RequiredArgsConstructor
-public class ExpenseController {
+public class ExpenseTransactionController {
 
     private final IResponseService responseService;
 
@@ -55,31 +51,6 @@ public class ExpenseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse<Boolean>> deleteExpense(@PathVariable Long id) {
-        return responseService.ok(true);
-    }
-
-    @GetMapping("/recurring")
-    public ResponseEntity<SuccessResponse<PageResponse<ExpenseRecurringResponse>>> listExpensesRecurrings(
-            @RequestParam(required = false) String searchString,
-            Pageable pageable,
-            @AuthenticationPrincipal User user) {
-        return responseService.ok(null);
-    }
-
-    @PostMapping("/recurring")
-    public ResponseEntity<SuccessResponse<ExpenseRecurringResponse>> createExpenseRecurring(
-            @RequestBody @Valid CreateExpenseRecurringRequest request) {
-        return responseService.ok();
-    }
-
-    @PatchMapping("/recurring/{id}")
-    public ResponseEntity<SuccessResponse<ExpenseRecurringResponse>> updateExpenseRecurring(
-            @PathVariable Long id, @RequestBody @Valid UpdateExpenseRecurringRequest request) {
-        return responseService.ok(null);
-    }
-
-    @DeleteMapping("/recurring/{id}")
-    public ResponseEntity<SuccessResponse<Boolean>> deleteExpenseRecurring(@PathVariable Long id) {
         return responseService.ok(true);
     }
 }

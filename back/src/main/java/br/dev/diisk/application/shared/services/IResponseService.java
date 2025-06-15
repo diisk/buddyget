@@ -21,11 +21,13 @@ public interface IResponseService {
 
         public <T> ResponseEntity<SuccessResponse<T>> ok();
 
-        public ResponseEntity<ErrorResponse> error(ErrorTypeEnum type, String message, Map<String, String> details);
+        public ResponseEntity<ErrorResponse> error(Class<?> classObject, ErrorTypeEnum type, String message,
+                        Map<String, String> details);
 
-        public ResponseEntity<ErrorResponse> error(ErrorTypeEnum type, String message);
+        public ResponseEntity<ErrorResponse> error(Class<?> classObject, ErrorTypeEnum type, String message);
 
-        public ResponseEntity<ErrorResponse> error(String message, ErrorTypeEnum type, String exceptionMessage);
+        public ResponseEntity<ErrorResponse> error(Class<?> classObject, String message, ErrorTypeEnum type,
+                        String exceptionMessage);
 
         public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, Function<S, T> mapper);
 

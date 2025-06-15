@@ -17,8 +17,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @MappedSuperclass
 public abstract class GenericTransaction extends UserRastrableEntity {
 

@@ -10,8 +10,10 @@ import br.dev.diisk.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @MappedSuperclass
 public abstract class Transaction extends GenericTransaction {
 

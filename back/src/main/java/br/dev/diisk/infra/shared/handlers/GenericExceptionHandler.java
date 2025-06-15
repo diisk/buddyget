@@ -6,6 +6,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -25,24 +26,33 @@ public class GenericExceptionHandler {
     public ResponseEntity<?> handleException(Exception ex) throws JsonProcessingException {
         // TODO: SALVAR LOG DO ERRO AQUI
 
-        return responseService.error("Erro interno do servidor. Tente novamente mais tarde.", null, ex.getMessage());
+        return responseService.error(null, "Erro interno do servidor. Tente novamente mais tarde.", null,
+                ex.getMessage());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<?> handleException(NoResourceFoundException ex) {
+        return responseService.error(null, "Erro ao buscar recurso. O recurso solicitado não foi encontrado.",
+                ErrorTypeEnum.DOMAIN_BUSINESS,
+                ex.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<?> handleException(HttpMessageNotReadableException ex) throws JsonProcessingException {
-        return responseService.error("O corpo da requisição está diferente do esperado.", ErrorTypeEnum.DOMAIN_BUSINESS,
+    public ResponseEntity<?> handleException(HttpMessageNotReadableException ex) {
+        return responseService.error(null, "O corpo da requisição está diferente do esperado.",
+                ErrorTypeEnum.DOMAIN_BUSINESS,
                 ex.getMessage());
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<?> handleException(AuthorizationDeniedException ex) {
-        return responseService.error(ErrorTypeEnum.UNAUTHORIZED,
+        return responseService.error(null, ErrorTypeEnum.UNAUTHORIZED,
                 "Não autorizado. Você precisa estar autenticado para acessar este recurso.");
     }
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<?> handleException(DomainException ex) {
-        return responseService.error(ex.getType(), ex.getMessage(), ex.getDetails());
+        return responseService.error(ex.getClassObject(), ex.getType(), ex.getMessage(), ex.getDetails());
     }
 
 }

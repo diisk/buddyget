@@ -1,5 +1,7 @@
 package br.dev.diisk.infra.monthly_summary;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import br.dev.diisk.domain.monthly_summary.IMonthlySummaryRepository;
@@ -13,5 +15,9 @@ public class MonthlySummaryRepository extends BaseRepository<MonthlySummaryJPA, 
         super(jpa);
     }
 
-    // Add any custom methods if needed
+    @Override
+    public Optional<MonthlySummary> findBy(Long userId, Integer month, Integer year, Long categoryId) {
+        return jpa.findByUser_IdAndMonthAndYearAndCategory_IdAndDeletedFalse(userId, month, year, categoryId);
+    }
+
 }

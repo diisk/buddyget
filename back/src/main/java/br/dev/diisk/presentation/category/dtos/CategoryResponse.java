@@ -5,6 +5,7 @@ import br.dev.diisk.domain.category.CategoryTypeEnum;
 
 public record CategoryResponse(
         Long id,
+        String name,
         String description,
         CategoryTypeEnum type,
         String color,
@@ -12,6 +13,7 @@ public record CategoryResponse(
     public CategoryResponse(Category category) {
         this(
                 category.getId(),
+                category.getName(),
                 category.getDescription(),
                 category.getType(),
                 category.getColor().getValue(),

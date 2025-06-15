@@ -18,9 +18,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "monthly_summary")
 public class MonthlySummary extends UserRastrableEntity {
 
@@ -50,6 +52,12 @@ public class MonthlySummary extends UserRastrableEntity {
         validate();
     }
 
+    public void addAmount(BigDecimal value) {
+        validateAmount(value);
+        amount = amount.add(value);
+
+    }
+
     private void validate() {
         List<IValidationStrategy> validations = List.of(
                 new CategoryNotNullValidation(category),
@@ -58,22 +66,22 @@ public class MonthlySummary extends UserRastrableEntity {
 
         validateMonth();
         validateYear();
-        validateAmount();
+        validateAmount(this.amount);
         validateBudgetLimit();
 
         validations.forEach(validation -> validation.validate(getClass()));
     }
 
     private void validateBudgetLimit() {
-        if (budgetLimit == null || budgetLimit <= 0)
-            throw new BusinessException(getClass(), "O limite do orçamento deve ser maior que zero.",
+        if (budgetLimit == null || budgetLimit < 0)
+            throw new BusinessException(getClass(), "O limite do orçamento deve ser maior ou igual a zero.",
                     Map.of("budgetLimit", budgetLimit != null ? budgetLimit.toString() : "null"));
 
     }
 
-    private void validateAmount() {
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0)
-            throw new BusinessException(getClass(), "O valor deve ser maior que zero",
+    private void validateAmount(BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0)
+            throw new BusinessException(getClass(), "O valor deve ser maior ou igual a zero",
                     Map.of("amount", amount != null ? amount.toString() : "null"));
 
     }

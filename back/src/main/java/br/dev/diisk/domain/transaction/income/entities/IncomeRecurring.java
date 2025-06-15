@@ -1,4 +1,4 @@
-package br.dev.diisk.domain.transaction.income;
+package br.dev.diisk.domain.transaction.income.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,6 +22,18 @@ public class IncomeRecurring extends Recurring {
             LocalDateTime date, User user) {
         super(description, category, value, period, user);
         validate();
+    }
+
+    public LocalDateTime getStartDate() {
+        return getPeriod().getStartDate();
+    }
+
+    public LocalDateTime getEndDate() {
+        return getPeriod().getEndDate();
+    }
+
+    public Integer getRecurringDayValue() {
+        return getRecurringDay().getValue();
     }
 
     private void validate() {

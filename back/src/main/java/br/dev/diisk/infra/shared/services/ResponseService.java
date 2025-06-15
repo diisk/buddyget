@@ -1,6 +1,7 @@
 package br.dev.diisk.infra.shared.services;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -59,7 +60,7 @@ public class ResponseService implements IResponseService {
     }
 
     @Override
-    public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, Function<S,T> mapper) {
+    public <S, T> PageResponse<T> getPageResponse(User user, Page<S> page, Function<S, T> mapper) {
 
         PageResponse<T> response = new PageResponse<T>(
                 page.getContent().stream()
@@ -71,15 +72,24 @@ public class ResponseService implements IResponseService {
     }
 
     @Override
-    public ResponseEntity<ErrorResponse> error(ErrorTypeEnum type, String message, Map<String, String> details) {
+    public ResponseEntity<ErrorResponse> error(Class<?> classObject, ErrorTypeEnum type, String message,
+            Map<String, String> details) {
         Integer errorCode = getErrorCode(type);
+        if (!env.equalsIgnoreCase("prod") && classObject != null) {
+            if (details == null)
+                details = Map.of();
+
+            details = new HashMap<>(details);
+            details.put("class", classObject.getSimpleName());
+        }
+
         return ResponseEntity.status(errorCode).body(
                 new ErrorResponse(errorCode, message, details));
     }
 
     @Override
-    public ResponseEntity<ErrorResponse> error(ErrorTypeEnum type, String message) {
-        return error(type, message, null);
+    public ResponseEntity<ErrorResponse> error(Class<?> classObject, ErrorTypeEnum type, String message) {
+        return error(classObject, type, message, null);
     }
 
     @Override
@@ -99,11 +109,12 @@ public class ResponseService implements IResponseService {
     }
 
     @Override
-    public ResponseEntity<ErrorResponse> error(String message, ErrorTypeEnum type, String exceptionMessage) {
+    public ResponseEntity<ErrorResponse> error(Class<?> classObject, String message, ErrorTypeEnum type,
+            String exceptionMessage) {
         if (env.equalsIgnoreCase("prod"))
-            return error(type, message);
+            return error(classObject, type, message);
 
-        return error(type, message, Map.of("exceptionMessage", exceptionMessage));
+        return error(classObject, type, message, Map.of("exceptionMessage", exceptionMessage));
 
     }
 

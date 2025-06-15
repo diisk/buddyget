@@ -1,6 +1,7 @@
 package br.dev.diisk.domain.credit_card;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import br.dev.diisk.domain.shared.entities.UserRastrableEntity;
@@ -38,6 +39,32 @@ public class CreditCard extends UserRastrableEntity {
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "color", nullable = false))
     private HexadecimalColor color;
+
+    public String getColorString() {
+        return color != null ? color.getValue() : null;
+    }
+
+    public LocalDateTime getBillDueDate(LocalDateTime referenceDate) {
+        if (billDueDay == null)
+            return null;
+        if (referenceDate == null)
+            referenceDate = LocalDateTime.now();
+
+        LocalDateTime billDueDate = referenceDate.withDayOfMonth(billDueDay.getValue());
+
+        return billDueDate;
+    }
+
+    public LocalDateTime getBillClosingDate(LocalDateTime referenceDate) {
+        if (billClosingDay == null)
+            return null;
+        if (referenceDate == null)
+            referenceDate = LocalDateTime.now();
+
+        LocalDateTime billClosingDate = referenceDate.withDayOfMonth(billClosingDay.getValue());
+
+        return billClosingDate;
+    }
 
     public CreditCard(User user, String name, DayOfMonth billDueDay, DayOfMonth billClosingDay, BigDecimal cardLimit,
             HexadecimalColor color) {

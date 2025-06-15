@@ -47,6 +47,10 @@ public class Category extends UserRastrableEntity {
         validate();
     }
 
+    public String getColorString() {
+        return color != null ? color.getValue() : null;
+    }
+
     public Boolean update(String name, String description, String iconName,
             HexadecimalColor color) {
         Boolean updated = false;

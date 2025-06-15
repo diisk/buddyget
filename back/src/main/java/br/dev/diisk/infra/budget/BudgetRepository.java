@@ -1,5 +1,7 @@
 package br.dev.diisk.infra.budget;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import br.dev.diisk.domain.budget.Budget;
@@ -13,5 +15,9 @@ public class BudgetRepository extends BaseRepository<BudgetJPA, Budget> implemen
         super(jpa);
     }
 
-    // Add any custom methods if needed
+    @Override
+    public Optional<Budget> findByCategory(Long userId, Long categoryId) {
+       return jpa.findByUser_IdAndCategory_Id(userId, categoryId);
+    }
+
 }
