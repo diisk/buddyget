@@ -2,7 +2,7 @@ package br.dev.diisk.domain.shared.exceptions;
 
 import java.util.Map;
 
-import br.dev.diisk.domain.shared.ErrorTypeEnum;
+import br.dev.diisk.domain.shared.enums.ErrorTypeEnum;
 
 public class DatabaseValueNotFoundException extends DomainException {
 

@@ -1,4 +1,4 @@
-package br.dev.diisk.infra.shared.configurations.security;
+package br.dev.diisk.infra.shared.configs;
 
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.util.unit.DataSize;
 import jakarta.servlet.MultipartConfigElement;
 
 @Configuration
-public class FileUploadConfiguration {
+public class MultipartConfig {
 
 
     @Bean

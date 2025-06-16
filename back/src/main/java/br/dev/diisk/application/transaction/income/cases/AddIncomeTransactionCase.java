@@ -31,7 +31,7 @@ public class AddIncomeTransactionCase {
         String description = params.getDescription();
         Long categoryId = params.getCategoryId();
         BigDecimal value = params.getValue();
-        LocalDateTime date = params.getDate();
+        LocalDateTime date = params.getReceiptDate();
         Long goalId = params.getGoalId();
 
         Category category = null;

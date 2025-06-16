@@ -14,8 +14,10 @@ public interface IncomeTransactionJPA extends JpaRepository<IncomeTransaction, L
     @Query("""
             SELECT t FROM IncomeTransaction t
             WHERE t.user.id = :userId
-            AND (:startDate IS NULL OR t.date >= :startDate)
-            AND (:endDate IS NULL OR t.date <= :endDate)
+            AND t.date IS NULL OR (
+                (:startDate IS NULL OR t.date >= :startDate)
+                AND (:endDate IS NULL OR t.date <= :endDate)
+            )
             AND (
                 :searchString IS NULL
                 OR LOWER(t.description) LIKE LOWER(CONCAT('%', :searchString, '%'))
@@ -25,6 +27,10 @@ public interface IncomeTransactionJPA extends JpaRepository<IncomeTransaction, L
                 OR LOWER(t.category.description) LIKE LOWER(CONCAT('%', :searchString, '%'))
                 OR LOWER(CAST(t.category.type AS string)) LIKE LOWER(CONCAT('%', :searchString, '%'))
             )
+            AND t.deleted = false
+            ORDER BY 
+                CASE WHEN t.date IS NULL THEN 0 ELSE 1 END,
+                t.date DESC
             """)
     Page<IncomeTransaction> findAllBy(Long userId, LocalDateTime startDate, LocalDateTime endDate, String searchString,
             Pageable pageable);

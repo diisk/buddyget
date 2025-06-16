@@ -26,7 +26,17 @@ public abstract class Transaction extends GenericTransaction {
         validate();
     }
 
+    public void update(String description, BigDecimal value, LocalDateTime date) {
+        super.update(description, value);
+        validateDate(date);
+        this.date = date;
+    }
+
     private void validate() {
+        validateDate(this.date);
+    }
+
+    private void validateDate(LocalDateTime date) {
         if (date != null && date.isAfter(LocalDateTime.now())) {
             throw new BusinessException(getClass(), "A data não pode estar no futuro",
                     Map.of("date", date.toString()));

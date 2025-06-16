@@ -1,9 +1,13 @@
 package br.dev.diisk.infra.shared.handlers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -11,7 +15,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import br.dev.diisk.application.shared.services.IResponseService;
-import br.dev.diisk.domain.shared.ErrorTypeEnum;
+import br.dev.diisk.domain.shared.enums.ErrorTypeEnum;
 import br.dev.diisk.domain.shared.exceptions.DomainException;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +32,15 @@ public class GenericExceptionHandler {
 
         return responseService.error(null, "Erro interno do servidor. Tente novamente mais tarde.", null,
                 ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors()
+                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        return responseService.error(null, ErrorTypeEnum.DOMAIN_BUSINESS, "Erro de validação nos campos informados.",
+                errors);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

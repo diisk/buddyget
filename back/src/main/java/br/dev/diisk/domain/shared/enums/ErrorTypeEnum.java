@@ -1,4 +1,4 @@
-package br.dev.diisk.domain.shared;
+package br.dev.diisk.domain.shared.enums;
 
 import br.dev.diisk.domain.shared.interfaces.IBaseEnum;
 import lombok.Getter;

@@ -36,6 +36,7 @@ public class IncomeTransaction extends Transaction {
         validate();
     }
 
+
     public void addGoal(Goal goal) {
         if (this.goal != null)
             throw new BusinessException(getClass(), "A meta já foi definida");

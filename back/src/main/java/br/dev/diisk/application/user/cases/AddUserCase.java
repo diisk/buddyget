@@ -25,6 +25,9 @@ public class AddUserCase {
 
     @Transactional
     public User execute(String name, String email, String password) {
+        Email emailObject = new Email(email);
+        Password passwordObject = new Password(password);
+
         User user = userRepository.findByEmail(email).orElse(null);
         if (user != null)
             throw new DatabaseValueConflictException(getClass(), email);
@@ -34,9 +37,9 @@ public class AddUserCase {
         if (defaultUserPerfil == null)
             throw new DatabaseValueNotFoundException(getClass(), perfilName);
 
-        String encryptedPassword = securityService.encryptPassword(new Password(password));
+        String encryptedPassword = securityService.encryptPassword(passwordObject);
 
-        User newUser = new User(name, new Email(email), encryptedPassword, defaultUserPerfil);
+        User newUser = new User(name, emailObject, encryptedPassword, defaultUserPerfil);
         userRepository.save(newUser);
         return newUser;
     }

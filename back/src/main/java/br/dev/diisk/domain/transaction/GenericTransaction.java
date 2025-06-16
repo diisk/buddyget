@@ -41,20 +41,27 @@ public abstract class GenericTransaction extends UserRastrableEntity {
         validate();
     }
 
+    void update(String description, BigDecimal value) {
+        validateDescription(description);
+        validateValue(value);
+        this.description = description;
+        this.value = value;
+    }
+
     private void validate() {
         List<IValidationStrategy> validations = List.of(
                 new CategoryNotNullValidation(category),
                 new CategoryIdentifierNotNullValidation(category),
                 new CategoryNotBelongUserValidation(category, getUserId()));
 
-        validateDescription();
+        validateDescription(this.description);
 
-        validateValue();
+        validateValue(this.value);
 
         validations.forEach(validation -> validation.validate(getClass()));
     }
 
-    private void validateValue() {
+    private void validateValue(BigDecimal value) {
         if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BusinessException(
                     getClass(), "O valor deve ser maior que zero.",
@@ -62,7 +69,7 @@ public abstract class GenericTransaction extends UserRastrableEntity {
         }
     }
 
-    private void validateDescription() {
+    private void validateDescription(String description) {
         if (description == null || description.isBlank()) {
             throw new NullOrEmptyException(getClass(), "description");
         }

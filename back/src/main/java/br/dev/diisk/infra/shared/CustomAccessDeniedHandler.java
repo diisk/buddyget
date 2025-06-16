@@ -7,7 +7,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import br.dev.diisk.application.shared.services.IResponseService;
-import br.dev.diisk.domain.shared.ErrorTypeEnum;
+import br.dev.diisk.domain.shared.enums.ErrorTypeEnum;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

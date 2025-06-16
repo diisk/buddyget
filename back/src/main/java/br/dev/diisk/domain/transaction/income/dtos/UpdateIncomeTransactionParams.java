@@ -1,4 +1,4 @@
-package br.dev.diisk.application.transaction.income.dtos;
+package br.dev.diisk.domain.transaction.income.dtos;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,11 +12,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddIncomeTransactionParams {
+public class UpdateIncomeTransactionParams {
     private String description;
     private BigDecimal value;
-    private Long categoryId;
     private LocalDateTime receiptDate;
-    private Long goalId;
-    private Long incomeRecurringId;
 }

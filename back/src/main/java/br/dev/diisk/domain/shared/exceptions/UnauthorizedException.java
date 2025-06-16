@@ -1,6 +1,6 @@
 package br.dev.diisk.domain.shared.exceptions;
 
-import br.dev.diisk.domain.shared.ErrorTypeEnum;
+import br.dev.diisk.domain.shared.enums.ErrorTypeEnum;
 
 public class UnauthorizedException extends DomainException {
 

@@ -3,6 +3,7 @@ package br.dev.diisk.domain.shared.value_objects;
 import java.util.Map;
 
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
+import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -23,7 +24,10 @@ public class Email {
 
     private void validate() {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (value == null || !value.matches(emailRegex))
+        if (value == null)
+            throw new NullOrEmptyException(getClass(), "email");
+
+        if (!value.matches(emailRegex))
             throw new BusinessException(getClass(), "Email inválido.", Map.of("email", value));
 
     }

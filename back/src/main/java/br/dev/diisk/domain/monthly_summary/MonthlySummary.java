@@ -55,7 +55,16 @@ public class MonthlySummary extends UserRastrableEntity {
     public void addAmount(BigDecimal value) {
         validateAmount(value);
         amount = amount.add(value);
+    }
 
+    public void removeAmount(BigDecimal value) {
+        validateAmount(value);
+        BigDecimal newAmount = amount.subtract(value);
+        if (newAmount.compareTo(BigDecimal.ZERO) < 0)
+            throw new BusinessException(getClass(), "O valor não pode ser negativo após a remoção",
+                    Map.of("currentAmount", amount.toString(), "valueToRemove", value.toString()));
+
+        amount = newAmount;
     }
 
     private void validate() {

@@ -1,4 +1,4 @@
-package br.dev.diisk.infra.shared.configurations;
+package br.dev.diisk.infra.shared.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
-public class SpringDocumentationConfiguration {
+public class SwaggerConfig {
 
     @Bean
     OpenAPI customOpenAPI() {

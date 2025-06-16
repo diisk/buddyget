@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.dev.diisk.application.shared.services.IResponseService;
-import br.dev.diisk.domain.shared.ErrorTypeEnum;
+import br.dev.diisk.domain.shared.enums.ErrorTypeEnum;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 

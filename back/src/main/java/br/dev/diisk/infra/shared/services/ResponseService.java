@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.dev.diisk.application.shared.services.IResponseService;
-import br.dev.diisk.domain.shared.ErrorTypeEnum;
+import br.dev.diisk.domain.shared.enums.ErrorTypeEnum;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.ErrorResponse;
 import br.dev.diisk.infra.shared.dtos.PageResponse;

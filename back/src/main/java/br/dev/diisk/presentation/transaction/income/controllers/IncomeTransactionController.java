@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.application.transaction.income.cases.AddIncomeTransactionCase;
+import br.dev.diisk.application.transaction.income.cases.DeleteIncomeTransactionCase;
 import br.dev.diisk.application.transaction.income.cases.ListIncomeTransactionsCase;
+import br.dev.diisk.application.transaction.income.cases.UpdateIncomeTransactionCase;
 import br.dev.diisk.application.transaction.income.dtos.AddIncomeTransactionParams;
 import br.dev.diisk.domain.transaction.income.ListIncomeTransactionsFilter;
+import br.dev.diisk.domain.transaction.income.dtos.UpdateIncomeTransactionParams;
 import br.dev.diisk.domain.transaction.income.entities.IncomeTransaction;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.PageResponse;
@@ -31,6 +34,8 @@ public class IncomeTransactionController {
     private final IResponseService responseService;
     private final AddIncomeTransactionCase addIncomeTransactionCase;
     private final ListIncomeTransactionsCase listIncomeTransactionsCase;
+    private final UpdateIncomeTransactionCase updateIncomeTransactionCase;
+    private final DeleteIncomeTransactionCase deleteIncomeTransactionCase;
 
     @GetMapping
     public ResponseEntity<SuccessResponse<PageResponse<IncomeResponse>>> listIncomes(
@@ -49,10 +54,11 @@ public class IncomeTransactionController {
         return responseService.ok(pageResponse);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SuccessResponse<IncomeResponse>> getIncome(@PathVariable Long id) {
-        return responseService.ok(null);
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<SuccessResponse<IncomeResponse>>
+    // getIncome(@PathVariable Long id) {
+    // return responseService.ok(null);
+    // }
 
     @PostMapping
     public ResponseEntity<SuccessResponse<IncomeResponse>> createIncome(
@@ -62,7 +68,7 @@ public class IncomeTransactionController {
         params.setDescription(request.description());
         params.setCategoryId(request.categoryId());
         params.setValue(request.value());
-        params.setDate(request.receiptDate());
+        params.setReceiptDate(request.receiptDate());
 
         IncomeTransaction incomeTransaction = addIncomeTransactionCase.execute(user, params);
         IncomeResponse response = new IncomeResponse(incomeTransaction);
@@ -70,14 +76,24 @@ public class IncomeTransactionController {
         return responseService.ok(response);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SuccessResponse<IncomeResponse>> updateIncome(
+            @AuthenticationPrincipal User user,
             @PathVariable Long id, @RequestBody @Valid UpdateIncomeRequest request) {
-        return responseService.ok(null);
+        UpdateIncomeTransactionParams params = new UpdateIncomeTransactionParams();
+        params.setDescription(request.description());
+        params.setValue(request.value());
+        params.setReceiptDate(request.receiptDate());
+
+        IncomeTransaction incomeTransaction = updateIncomeTransactionCase.execute(user, id, params);
+        IncomeResponse response = new IncomeResponse(incomeTransaction);
+        return responseService.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessResponse<Boolean>> deleteIncome(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<Boolean>> deleteIncome(@AuthenticationPrincipal User user,
+            @PathVariable Long id) {
+        deleteIncomeTransactionCase.execute(user, id);
         return responseService.ok(true);
     }
 }

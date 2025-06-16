@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
+import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +36,15 @@ class EmailTest {
         // When/Then
         BusinessException ex = assertThrows(BusinessException.class, () -> new Email(emailInvalido));
         assertTrue(ex.getDetails().get("email").equals(emailInvalido));
+        // Exceção lançada para email inválido
+    }
+
+    // Teste: Deve lançar exceção para email nulo
+    @Test
+    void email_deveLancarExcecao_quandoEmailNulo() {
+        // When/Then
+        NullOrEmptyException ex = assertThrows(NullOrEmptyException.class, () -> new Email(null));
+        assertTrue(ex.getDetails().get("campo").equals("email"));
         // Exceção lançada para email inválido
     }
 

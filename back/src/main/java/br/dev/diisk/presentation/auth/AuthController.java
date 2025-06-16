@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.dev.diisk.application.shared.services.IAuthService;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.application.shared.services.ITokenService;
 import br.dev.diisk.application.user.cases.AddUserCase;
+import br.dev.diisk.application.user.cases.LoginUserCase;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
 import br.dev.diisk.presentation.auth.dtos.LoginRequest;
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AddUserCase addUserCase;
-    private final IAuthService authService;
+    private final LoginUserCase loginUserCase;
     private final ITokenService tokenService;
     private final IResponseService responseService;
 
@@ -46,8 +46,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest request) {
-        User user = authService.authenticate(request.email(), request.password());
-        String token = tokenService.generateToken(user.getId().toString());
+        String token = loginUserCase.execute(request.email(), request.password());
         LoginResponse response = new LoginResponse(token);
         return responseService.ok(response);
     }

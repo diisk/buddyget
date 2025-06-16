@@ -1,4 +1,4 @@
-package br.dev.diisk.infra.shared.configurations.mapper;
+package br.dev.diisk.infra.shared.configs;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ModelMapperConfiguration {
+public class ModelMapperConfig {
 
     @Bean
     ModelMapper modelMapper() {
