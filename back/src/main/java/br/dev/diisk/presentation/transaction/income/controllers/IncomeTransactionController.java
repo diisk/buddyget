@@ -14,8 +14,8 @@ import br.dev.diisk.application.transaction.income.cases.DeleteIncomeTransaction
 import br.dev.diisk.application.transaction.income.cases.ListIncomeTransactionsCase;
 import br.dev.diisk.application.transaction.income.cases.UpdateIncomeTransactionCase;
 import br.dev.diisk.application.transaction.income.dtos.AddIncomeTransactionParams;
+import br.dev.diisk.application.transaction.income.dtos.UpdateIncomeTransactionParams;
 import br.dev.diisk.domain.transaction.income.ListIncomeTransactionsFilter;
-import br.dev.diisk.domain.transaction.income.dtos.UpdateIncomeTransactionParams;
 import br.dev.diisk.domain.transaction.income.entities.IncomeTransaction;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.PageResponse;

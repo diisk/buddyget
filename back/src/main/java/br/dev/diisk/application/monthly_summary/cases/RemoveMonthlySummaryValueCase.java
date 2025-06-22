@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.monthly_summary.dtos.AddMonthlySummaryValueParams;
 import br.dev.diisk.application.monthly_summary.dtos.GetMonthlySummaryParams;
+import br.dev.diisk.application.monthly_summary.dtos.RemoveMonthlySummaryValueParams;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.monthly_summary.IMonthlySummaryRepository;
 import br.dev.diisk.domain.monthly_summary.MonthlySummary;
@@ -23,7 +23,7 @@ public class RemoveMonthlySummaryValueCase {
     private final GetMonthlySummaryCase getMonthlySummaryCase;
 
     @Transactional
-    public MonthlySummary execute(User user, AddMonthlySummaryValueParams params) {
+    public MonthlySummary execute(User user, RemoveMonthlySummaryValueParams params) {
         Integer month = params.getMonth();
         Integer year = params.getYear();
         Category category = params.getCategory();

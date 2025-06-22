@@ -1,4 +1,4 @@
-package br.dev.diisk.infra.transaction.income;
+package br.dev.diisk.infra.transaction.income.jpas;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,7 @@
 package br.dev.diisk.domain.transaction;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.shared.value_objects.DataRange;
@@ -33,6 +34,18 @@ public abstract class Recurring extends GenericTransaction {
         super(description, category, value, user);
         this.period = period;
         validate();
+    }
+
+    public Integer getRecurringDayValue() {
+        return recurringDay != null ? recurringDay.getValue() : null;
+    }
+
+    public LocalDateTime getStartDate() {
+        return period.getStartDate();
+    }
+
+    public LocalDateTime getEndDate() {
+        return period.getEndDate();
     }
 
     private void validate() {

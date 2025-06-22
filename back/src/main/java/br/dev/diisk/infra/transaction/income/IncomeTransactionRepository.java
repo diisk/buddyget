@@ -8,6 +8,7 @@ import br.dev.diisk.domain.transaction.income.IIncomeTransactionRepository;
 import br.dev.diisk.domain.transaction.income.ListIncomeTransactionsFilter;
 import br.dev.diisk.domain.transaction.income.entities.IncomeTransaction;
 import br.dev.diisk.infra.shared.BaseRepository;
+import br.dev.diisk.infra.transaction.income.jpas.IncomeTransactionJPA;
 
 @Repository
 public class IncomeTransactionRepository extends BaseRepository<IncomeTransactionJPA, IncomeTransaction>

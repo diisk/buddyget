@@ -1,4 +1,4 @@
-package br.dev.diisk.domain.transaction.income.dtos;
+package br.dev.diisk.application.transaction.income.dtos;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

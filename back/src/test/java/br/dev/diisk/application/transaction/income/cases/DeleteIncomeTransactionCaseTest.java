@@ -1,7 +1,7 @@
 package br.dev.diisk.application.transaction.income.cases;
 
 import br.dev.diisk.application.monthly_summary.cases.RemoveMonthlySummaryValueCase;
-import br.dev.diisk.application.monthly_summary.dtos.AddMonthlySummaryValueParams;
+import br.dev.diisk.application.monthly_summary.dtos.RemoveMonthlySummaryValueParams;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.transaction.income.IIncomeTransactionRepository;
 import br.dev.diisk.domain.transaction.income.entities.IncomeTransaction;
@@ -56,7 +56,7 @@ class DeleteIncomeTransactionCaseTest {
         BigDecimal value = BigDecimal.valueOf(100);
         when(incomeRepository.findById(transactionId)).thenReturn(Optional.of(incomeTransaction));
         when(incomeTransaction.getUserId()).thenReturn(1L);
-        when(incomeTransaction.getDate()).thenReturn(date);
+        when(incomeTransaction.getReceiptDate()).thenReturn(date);
         when(incomeTransaction.getCategory()).thenReturn(category);
         when(incomeTransaction.getValue()).thenReturn(value);
 
@@ -67,9 +67,9 @@ class DeleteIncomeTransactionCaseTest {
         // Verifica se a transação foi salva
         verify(incomeRepository).save(incomeTransaction);
         // Verifica se o resumo mensal foi atualizado corretamente
-        ArgumentCaptor<AddMonthlySummaryValueParams> captor = ArgumentCaptor.forClass(AddMonthlySummaryValueParams.class);
+        ArgumentCaptor<RemoveMonthlySummaryValueParams> captor = ArgumentCaptor.forClass(RemoveMonthlySummaryValueParams.class);
         verify(removeMonthlySummaryValueCase).execute(eq(user), captor.capture());
-        AddMonthlySummaryValueParams params = captor.getValue();
+        RemoveMonthlySummaryValueParams params = captor.getValue();
         assertEquals(date.getMonthValue(), params.getMonth());
         assertEquals(date.getYear(), params.getYear());
         assertEquals(value, params.getValue());
@@ -116,7 +116,7 @@ class DeleteIncomeTransactionCaseTest {
         Long transactionId = 40L;
         when(incomeRepository.findById(transactionId)).thenReturn(Optional.of(incomeTransaction));
         when(incomeTransaction.getUserId()).thenReturn(1L);
-        when(incomeTransaction.getDate()).thenReturn(null);
+        when(incomeTransaction.getReceiptDate()).thenReturn(null);
 
         deleteIncomeTransactionCase.execute(user, transactionId);
 

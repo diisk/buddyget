@@ -53,6 +53,10 @@ public class ExpenseRecurring extends Recurring {
         validate();
     }
 
+    public Integer getDueDayValue() {
+        return dueDay != null ? dueDay.getValue() : null;
+    }
+
     private void validate() {
         List<IValidationStrategy> validations = List.of(
                 new CategoryIncompatibleTypeValidation(category, CategoryTypeEnum.EXPENSE),

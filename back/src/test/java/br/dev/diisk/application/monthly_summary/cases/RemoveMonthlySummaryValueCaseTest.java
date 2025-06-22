@@ -1,7 +1,7 @@
 package br.dev.diisk.application.monthly_summary.cases;
 
-import br.dev.diisk.application.monthly_summary.dtos.AddMonthlySummaryValueParams;
 import br.dev.diisk.application.monthly_summary.dtos.GetMonthlySummaryParams;
+import br.dev.diisk.application.monthly_summary.dtos.RemoveMonthlySummaryValueParams;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.monthly_summary.IMonthlySummaryRepository;
 import br.dev.diisk.domain.monthly_summary.MonthlySummary;
@@ -42,11 +42,11 @@ class RemoveMonthlySummaryValueCaseTest {
     @InjectMocks
     private RemoveMonthlySummaryValueCase removeMonthlySummaryValueCase;
 
-    private AddMonthlySummaryValueParams params;
+    private RemoveMonthlySummaryValueParams params;
 
     @BeforeEach
     void setUp() {
-        params = mock(AddMonthlySummaryValueParams.class);
+        params = mock(RemoveMonthlySummaryValueParams.class);
         when(params.getMonth()).thenReturn(6);
         when(params.getYear()).thenReturn(2025);
         when(params.getCategory()).thenReturn(category);

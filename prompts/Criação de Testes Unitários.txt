@@ -30,14 +30,40 @@ Crie testes unitários em Java (com Spring Boot e JUnit 5) para o use case chama
 8. Os testes devem ser criados no diretório correto de testes.
 
 9. Caso as exceptions lançadas sejam filhas da DomainException, e o map de Details dela ser diferente de nulo, validar os valores dos details.
-Exemplo:(
+segue alguns exemplos para algumas classes
+Exemplo DatabaseValueNotFoundException:(
+   DatabaseValueNotFoundException ex = assertThrows(DatabaseValueNotFoundException.class, () ->
+                getExpenseRecurringCase.execute(user, expenseRecurringId)
+        );
+        assertEquals(expenseRecurringId.toString(), ex.getDetails().get("valor"));
+)
+
+Exemplo BusinessException:(
    BusinessException ex = assertThrows(BusinessException.class, () -> new Password(senhaInvalida));
         assertTrue(ex.getDetails().get("senha").equals(senhaInvalida));
 )
+OBS: as classes das exceções estão no caminho domain/shared/exceptions la você vai econtrar como validar os details, sempre utilize os mesmos valores de chave que encontrar la.
 
-10. Faça testes apenas das regras contidas na classe especifica, não faça teste de regras de classes relacionadas.
+10. IMPORTANTE: Só crie testes para regras, validações e fluxos que estejam implementados diretamente na classe alvo do teste.
+NUNCA crie testes para regras de entidades, objetos de valor, validadores ou qualquer lógica que pertença a outras classes, mesmo que sejam utilizadas pela classe alvo.
+Sempre verifique se a responsabilidade da regra está realmente na classe que está sendo testada antes de criar o teste.
 
 11. Não use "execute_" no nome do metodo, pois o execute é a função padrão dos casos de uso
+
+12. Não utilize o setup com @BeforeEach de forma alguma!
+
+13. Quando for fazer assertas para as exceções utilizar a propriedade details e não a propriedade mensagem.
+
+14. Você deve  olhar toda a hierarquia da classe para ver os campos obrigatórios, e não leve em conta o cosntrutor vazio quando a classe tiver outro contrutor além do vazio.
+
+15.
+Ao criar entidades para os testes, prefira sempre instanciar diretamente as entidades utilizando fixtures ao invés de mockar.
+As fixtures devem ficar em classes isoladas em seu respectivo diretorio dentro do caminho de testes, exemplo a entidade Category fica dentro da domain/category, logo a CategoryFixture deve ficar na domain/category na pasta de testes.
+Crie métodos de fixture que preencham todos os campos obrigatórios dessas entidades, incluindo o campo de id (exemplo: Category category = CategoryFixture.umaCategoriaComId(idCategoria);).
+Certifique-se de que todos os campos obrigatórios estejam devidamente preenchidos nas instâncias criadas pelas fixtures.  
+Sempre que precisar definir o id de uma entidade, utilize o método setId ao invés de manipular o campo via reflexão (exemplo: expenseRecurring.setId(idExpenseRecurring);).
+Inclua também o User nessas entidades quando aplicável.
+Não crie fixtures de objetos de valor ou de fixtures que já existem.
 
 ---
 
@@ -54,3 +80,4 @@ Siga o padrão:
 - Cobertura total de cenários: produto com valor acima de 100, abaixo de 100, valor nulo, valor negativo.
 - Verifique todos os valores retornados.
 - Comentários em português.
+```

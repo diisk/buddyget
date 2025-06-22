@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 
 import br.dev.diisk.domain.shared.interfaces.IBaseRepository;
 
-public interface IExpenseRepository extends IBaseRepository<ExpenseTransaction> {
+public interface IExpenseTransactionRepository extends IBaseRepository<ExpenseTransaction> {
     
-    Page<ExpenseTransaction> findBy(Long userId, ListExpenseFilter filter, Pageable pageable);
+    Page<ExpenseTransaction> findAllBy(Long userId, ListExpenseTransactionsFilter filter, Pageable pageable);
 
 }

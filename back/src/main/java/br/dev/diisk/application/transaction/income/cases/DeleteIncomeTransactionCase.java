@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.monthly_summary.cases.RemoveMonthlySummaryValueCase;
-import br.dev.diisk.application.monthly_summary.dtos.AddMonthlySummaryValueParams;
+import br.dev.diisk.application.monthly_summary.dtos.RemoveMonthlySummaryValueParams;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.transaction.income.IIncomeTransactionRepository;
 import br.dev.diisk.domain.transaction.income.entities.IncomeTransaction;
@@ -32,12 +32,12 @@ public class DeleteIncomeTransactionCase {
         incomeTransaction.delete();
         incomeRepository.save(incomeTransaction);
 
-        if (incomeTransaction.getDate() != null) {
-            LocalDateTime receiptDate = incomeTransaction.getDate();
+        LocalDateTime receiptDate = incomeTransaction.getReceiptDate();
+        if (receiptDate != null) {
             Category category = incomeTransaction.getCategory();
             BigDecimal value = incomeTransaction.getValue();
             removeMonthlySummaryValueCase.execute(user,
-                    new AddMonthlySummaryValueParams(receiptDate.getMonthValue(), receiptDate.getYear(),
+                    new RemoveMonthlySummaryValueParams(receiptDate.getMonthValue(), receiptDate.getYear(),
                             value, category));
         }
 
