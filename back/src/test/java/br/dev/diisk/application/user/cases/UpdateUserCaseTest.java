@@ -1,7 +1,8 @@
 package br.dev.diisk.application.user.cases;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import br.dev.diisk.application.user.dtos.UpdateUserParams;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;

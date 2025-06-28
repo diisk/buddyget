@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import br.dev.diisk.domain.wish_list.WishItemPriorityEnum;
 import br.dev.diisk.domain.wish_list.WishListItem;
 import br.dev.diisk.presentation.category.dtos.CategoryResponse;
-import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseRecurringResponse;
-import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseResponse;
+import br.dev.diisk.presentation.finance.expense_recurring.dtos.ExpenseRecurringResponse;
+import br.dev.diisk.presentation.finance.expense_transaction.dtos.ExpenseResponse;
 
 public record WishListItemResponse(
                 Long id,

@@ -10,12 +10,12 @@ import br.dev.diisk.domain.category.validations.CategoryIdentifierNotNullValidat
 import br.dev.diisk.domain.category.validations.CategoryIncompatibleTypeValidation;
 import br.dev.diisk.domain.category.validations.CategoryNotBelongUserValidation;
 import br.dev.diisk.domain.category.validations.CategoryNotNullValidation;
+import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
+import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.shared.entities.UserRastrableEntity;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.shared.interfaces.IValidationStrategy;
-import br.dev.diisk.domain.transaction.expense.ExpenseRecurring;
-import br.dev.diisk.domain.transaction.expense.ExpenseTransaction;
 import br.dev.diisk.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

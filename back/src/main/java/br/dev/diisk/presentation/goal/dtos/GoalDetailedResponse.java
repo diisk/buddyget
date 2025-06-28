@@ -3,8 +3,8 @@ package br.dev.diisk.presentation.goal.dtos;
 import java.math.BigDecimal;
 import java.util.List;
 
-import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseResponse;
-import br.dev.diisk.presentation.transaction.income.dtos.IncomeResponse;
+import br.dev.diisk.presentation.finance.expense_transaction.dtos.ExpenseResponse;
+import br.dev.diisk.presentation.finance.income_transaction.dtos.IncomeResponse;
 
 public record GoalDetailedResponse(
         Long id,

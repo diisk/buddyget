@@ -27,7 +27,6 @@ public class UpdateMonthlySummaryCase {
 
         BigDecimal previousValue = params.getPreviousValue();
         LocalDateTime previousDate = params.getPreviousDate();
-        Boolean hadReceiptDate = previousDate != null;
         BigDecimal newValue = params.getNewValue();
         LocalDateTime newDate = params.getNewDate();
         Category category = params.getCategory();
@@ -36,12 +35,12 @@ public class UpdateMonthlySummaryCase {
 
         MonthlySummary monthlySummary = null;
 
-        if (hadReceiptDate && (newDate == null || isValueChanged))
+        if (previousDate != null && (newDate == null || isValueChanged))
             monthlySummary = removeMonthlySummaryValueCase.execute(user,
                     new RemoveMonthlySummaryValueParams(previousDate.getMonthValue(), previousDate.getYear(),
                             previousValue, category));
 
-        if (newDate != null && (!hadReceiptDate || isValueChanged))
+        if (newDate != null && (previousDate == null || isValueChanged))
             monthlySummary = addMonthlySummaryValueCase.execute(user,
                     new AddMonthlySummaryValueParams(newDate.getMonthValue(), newDate.getYear(),
                             newValue, category));

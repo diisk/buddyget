@@ -23,28 +23,14 @@ public class UtilService {
                 .replaceAll("-[a-z]{1,2}-", "-");
     }
 
-    public LocalDateTime toReference(LocalDateTime dateTime) {
-        return toReference(dateTime, false);
+    public LocalDateTime getFirstDayMonthReference(LocalDateTime dateTime) {
+        return LocalDateTime.of(dateTime.getYear(), dateTime.getMonthValue(), 1, 0, 0, 0);
     }
 
-    public LocalDateTime toReference(LocalDateTime dateTime, Boolean endOfMonth) {
-        if (dateTime == null)
-            return null;
-
-        LocalDateTime startOfMonth = LocalDateTime
-                .of(
-                        dateTime.getYear(),
-                        dateTime.getMonthValue(),
-                        1,
-                        0,
-                        0,
-                        0,
-                        0);
-
-        if (endOfMonth)
-            return startOfMonth.plusMonths(1).minusNanos(1);
-
-        return startOfMonth;
+    public LocalDateTime getLastDayMonthReference(LocalDateTime dateTime) {
+        return getFirstDayMonthReference(dateTime)
+                .plusMonths(1)
+                .minusSeconds(1);
     }
 
     public String getMonthName(LocalDateTime dateTime) {

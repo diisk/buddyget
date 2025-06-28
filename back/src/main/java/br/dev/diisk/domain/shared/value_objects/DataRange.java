@@ -38,12 +38,6 @@ public class DataRange {
         }
     }
 
-    public void validateEndDate(Class<?> classObj) {
-        if (endDate != null) {
-            throw new NullOrEmptyException(getClass(), "endDate");
-        }
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

@@ -1,6 +1,6 @@
 package br.dev.diisk.presentation.goal.dtos;
 
-import br.dev.diisk.presentation.transaction.expense.dtos.ExpenseResponse;
+import br.dev.diisk.presentation.finance.expense_transaction.dtos.ExpenseResponse;
 
 public record GoalDepositResponse(
     GoalResponse goal,
