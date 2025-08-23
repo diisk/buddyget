@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
-
 import br.dev.diisk.domain.shared.interfaces.IBaseEnum;
 
 @Service

@@ -1,6 +1,7 @@
 package br.dev.diisk.presentation.finance.expense_transaction;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import br.dev.diisk.application.finance.expense_transaction.cases.AddExpenseTransactionCase;
 import br.dev.diisk.application.finance.expense_transaction.cases.DeleteExpenseTransactionCase;
-import br.dev.diisk.application.finance.expense_transaction.cases.ListExpenseTransactionsCase;
+import br.dev.diisk.application.finance.expense_transaction.cases.ListPaidExpenseTransactionsCase;
+import br.dev.diisk.application.finance.expense_transaction.cases.ListPendingExpenseTransactionsCase;
 import br.dev.diisk.application.finance.expense_transaction.cases.UpdateExpenseTransactionCase;
 import br.dev.diisk.application.finance.expense_transaction.dtos.AddExpenseTransactionParams;
+import br.dev.diisk.application.finance.expense_transaction.dtos.PendingExpenseTransactionDTO;
 import br.dev.diisk.application.finance.expense_transaction.dtos.UpdateExpenseTransactionParams;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
@@ -33,12 +36,27 @@ public class ExpenseTransactionController {
 
     private final IResponseService responseService;
     private final AddExpenseTransactionCase addExpenseTransactionCase;
-    private final ListExpenseTransactionsCase listExpenseTransactionsCase;
+    private final ListPaidExpenseTransactionsCase listPaidExpenseTransactionsCase;
     private final UpdateExpenseTransactionCase updateExpenseTransactionCase;
     private final DeleteExpenseTransactionCase deleteExpenseTransactionCase;
+    private final ListPendingExpenseTransactionsCase listPendingExpenseTransactionsCase;
 
-    @GetMapping
-    public ResponseEntity<SuccessResponse<PageResponse<ExpenseResponse>>> listExpenses(
+    @GetMapping("")
+    public ResponseEntity<SuccessResponse<List<ExpenseResponse>>> listPendingExpenses(
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) String searchString,
+            @AuthenticationPrincipal User user) {
+        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        filter.setStartDate(startDate);
+        filter.setEndDate(endDate);
+        filter.setSearchString(searchString);
+
+        return responseService.ok(null);
+    }
+
+    @GetMapping("/paids")
+    public ResponseEntity<SuccessResponse<PageResponse<ExpenseResponse>>> listPaidExpenses(
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
             @RequestParam(required = false) String searchString,
@@ -48,9 +66,17 @@ public class ExpenseTransactionController {
         filter.setStartDate(startDate);
         filter.setEndDate(endDate);
         filter.setSearchString(searchString);
-        Page<ExpenseTransaction> expenses = listExpenseTransactionsCase.execute(user, filter, pageable);
+        Page<ExpenseTransaction> expenses = listPaidExpenseTransactionsCase.execute(user, filter, pageable);
         PageResponse<ExpenseResponse> response = responseService.getPageResponse(user, expenses,
                 ExpenseResponse::new);
+        return responseService.ok(response);
+    }
+
+    @GetMapping("/pendings")
+    public ResponseEntity<SuccessResponse<List<ExpenseResponse>>> listPendingExpenses(
+            @AuthenticationPrincipal User user) {
+        List<PendingExpenseTransactionDTO> pendingTransactions = listPendingExpenseTransactionsCase.execute(user);
+        List<ExpenseResponse> response = pendingTransactions.stream().map(ExpenseResponse::new).toList();
         return responseService.ok(response);
     }
 

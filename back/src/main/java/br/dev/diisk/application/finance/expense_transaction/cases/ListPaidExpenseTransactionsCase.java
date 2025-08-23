@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ListExpenseTransactionsCase {
+public class ListPaidExpenseTransactionsCase {
 
     private final IExpenseTransactionRepository expenseRepository;
 
@@ -41,6 +41,6 @@ public class ListExpenseTransactionsCase {
 
         validations.forEach(validation -> validation.validate(getClass()));
 
-        return expenseRepository.findAllBy(user.getId(), filter, pageable);
+        return expenseRepository.findAllPaidBy(user.getId(), filter, pageable);
     }
 }

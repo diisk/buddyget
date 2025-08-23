@@ -2,6 +2,7 @@ package br.dev.diisk.application.finance.expense_transaction.cases;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import br.dev.diisk.application.finance.expense_transaction.dtos.AddExpenseTrans
 import br.dev.diisk.application.goal.cases.GetGoalCase;
 import br.dev.diisk.application.monthly_summary.cases.AddMonthlySummaryValueCase;
 import br.dev.diisk.application.monthly_summary.dtos.AddMonthlySummaryValueParams;
+import br.dev.diisk.application.shared.services.UtilService;
 import br.dev.diisk.application.wish_list.cases.GetWishListItemCase;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.credit_card.CreditCard;
@@ -19,6 +21,7 @@ import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionRepository;
 import br.dev.diisk.domain.goal.Goal;
+import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.wish_list.WishListItem;
 import jakarta.transaction.Transactional;
@@ -35,6 +38,7 @@ public class AddExpenseTransactionCase {
     private final GetWishListItemCase getWishListItemCase;
     private final GetExpenseRecurringCase getExpenseRecurringCase;
     private final AddMonthlySummaryValueCase addMonthlySummaryValueCase;
+    private final UtilService utilService;
 
     @Transactional
     public ExpenseTransaction execute(User user, AddExpenseTransactionParams params) {
@@ -43,6 +47,7 @@ public class AddExpenseTransactionCase {
         BigDecimal value = params.getValue();
         LocalDateTime paymentDate = params.getPaymentDate();
         LocalDateTime dueDate = params.getDueDate();
+        LocalDateTime recurringReferenceDate = params.getRecurringReferenceDate();
         Long wishItemId = params.getWishItemId();
         Long expenseRecurringId = params.getExpenseRecurringId();
         Long goalId = params.getGoalId();
@@ -61,8 +66,40 @@ public class AddExpenseTransactionCase {
             wishItem = getWishListItemCase.execute(user, wishItemId);
 
         ExpenseRecurring expenseRecurring = null;
-        if (expenseRecurringId != null)
+        if (expenseRecurringId != null) {
             expenseRecurring = getExpenseRecurringCase.execute(user, expenseRecurringId);
+            if (recurringReferenceDate == null)
+                throw new BusinessException(getClass(),
+                        "A data da referência da recorrencia deve ser informada se a despesa for recorrente.");
+
+            if (paymentDate == null)
+                throw new BusinessException(getClass(),
+                        "A data do pagamento deve ser informada se a despesa for recorrente.");
+
+            LocalDateTime startReference = utilService
+                    .getFirstDayMonthReference(expenseRecurring.getPeriod().getStartDate());
+
+            LocalDateTime endReference = expenseRecurring.getPeriod().getEndDate() != null
+                    ? utilService.getLastDayMonthReference(expenseRecurring.getPeriod().getEndDate())
+                    : null;
+
+            if (recurringReferenceDate.isBefore(startReference)
+                    || (endReference != null && recurringReferenceDate.isAfter(endReference)))
+                throw new BusinessException(getClass(),
+                        "A data da referência da recorrência deve estar entre o período de vigência da mesma.");
+
+            List<ExpenseTransaction> relatedTransactions = expenseRepository
+                    .findAllRecurringRelatedBy(List.of(expenseRecurring.getId()));
+            Boolean hasTransactionInReferenceMonth = relatedTransactions.stream().anyMatch(rt -> {
+                return rt.getRecurringReferenceDate().getMonthValue() == recurringReferenceDate.getMonthValue() &&
+                        rt.getRecurringReferenceDate().getYear() == recurringReferenceDate.getYear();
+            });
+
+            if (hasTransactionInReferenceMonth)
+                throw new BusinessException(getClass(),
+                        "Já existe uma despesa vinculada a essa recorrência na referência informada.");
+
+        }
 
         Goal goal = null;
         if (goalId != null)
@@ -77,7 +114,7 @@ public class AddExpenseTransactionCase {
             expenseTransaction.addCreditCard(creditCard);
 
         if (expenseRecurring != null)
-            expenseTransaction.addExpenseRecurring(expenseRecurring);
+            expenseTransaction.addExpenseRecurring(expenseRecurring, recurringReferenceDate);
 
         if (wishItem != null)
             expenseTransaction.addWishItem(wishItem);

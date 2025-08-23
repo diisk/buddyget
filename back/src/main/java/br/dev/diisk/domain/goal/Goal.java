@@ -28,6 +28,7 @@ public class Goal extends UserRastrableEntity {
     private LocalDateTime dueDate;
 
     @Column(nullable = false)
+    @Getter(value = lombok.AccessLevel.NONE)
     private Boolean completed = false;
 
     public Goal(User user, String description, BigDecimal targetAmount) {
@@ -35,6 +36,10 @@ public class Goal extends UserRastrableEntity {
         this.description = description;
         this.targetAmount = targetAmount;
         validate();
+    }
+
+    public Boolean isCompleted() {
+        return completed;
     }
 
     private void validate() {

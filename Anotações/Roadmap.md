@@ -200,7 +200,7 @@ O gerenciamento de cartões de crédito depende do sistema de transações, mas 
 Orçamentos e metas se baseiam em transações e categorias para fornecer recursos de planejamento financeiro.
 
 ---
-
+### (DESCONTINUADO)
 ### Fase 7: Planos de Parcelamento e Gerenciamento Complexo de Despesas
 
 #### Entidades

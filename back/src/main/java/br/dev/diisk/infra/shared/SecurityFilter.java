@@ -61,7 +61,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private void writeInvalidUserOrToken(HttpServletResponse response) throws JsonProcessingException, IOException {
-        responseService.writeResponseObject(response, ErrorTypeEnum.DOMAIN_BUSINESS,
+        responseService.writeResponseObject(response, ErrorTypeEnum.UNAUTHORIZED,
                 "Usuario nao encontrado ou token invalida.");
     }
 

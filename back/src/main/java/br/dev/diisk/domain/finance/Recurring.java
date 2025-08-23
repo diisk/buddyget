@@ -7,6 +7,7 @@ import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.shared.value_objects.DataRange;
 import br.dev.diisk.domain.user.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -19,6 +20,10 @@ public abstract class Recurring extends Finance {
 
     @Embedded
     protected DataRange period;
+
+    @Getter(value = lombok.AccessLevel.NONE)
+    @Column(nullable = false)
+    private Boolean active = true;
 
     public Recurring(String description, Category category, BigDecimal value, DataRange period,
             User user) {

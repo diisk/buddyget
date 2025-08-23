@@ -22,6 +22,7 @@ public class Notification extends UserRastrableEntity {
     private String description;
 
     @Column(nullable = false)
+    @Getter(value = lombok.AccessLevel.NONE)
     private Boolean readed = false;
 
     @Embedded
@@ -33,6 +34,10 @@ public class Notification extends UserRastrableEntity {
         this.description = description;
         this.metadata = metadata;
         validate();
+    }
+
+    public Boolean isReaded(){
+        return readed;
     }
 
     private void validate() {

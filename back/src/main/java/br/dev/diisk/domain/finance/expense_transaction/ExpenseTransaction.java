@@ -12,6 +12,7 @@ import br.dev.diisk.domain.category.validations.CategoryNotBelongUserValidation;
 import br.dev.diisk.domain.credit_card.CreditCard;
 import br.dev.diisk.domain.credit_card.CreditCardIfExistsNotBelongUserValidation;
 import br.dev.diisk.domain.finance.Transaction;
+import br.dev.diisk.domain.finance.TransactionStatusEnum;
 import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
@@ -66,12 +67,12 @@ public class ExpenseTransaction extends Transaction {
 
     public String getStatus() {
         if (getPaymentDate() != null)
-            return "Pago";
+            return TransactionStatusEnum.PAID.getDescription();
 
         if (dueDate != null && dueDate.isBefore(LocalDateTime.now()))
-            return "Atrasado";
+            return TransactionStatusEnum.LATE.getDescription();
 
-        return "Pendente";
+        return TransactionStatusEnum.PENDING.getDescription();
     }
 
     public void addWishItem(WishListItem wishItem) {
@@ -100,12 +101,14 @@ public class ExpenseTransaction extends Transaction {
         this.creditCard = creditCard;
     }
 
-    public void addExpenseRecurring(ExpenseRecurring expenseRecurring) {
+    public void addExpenseRecurring(ExpenseRecurring expenseRecurring, LocalDateTime recurringReferenceDate) {
         if (this.expenseRecurring != null)
             throw new BusinessException(getClass(), "A despesa recorrente já foi definida");
 
         if (expenseRecurring == null)
             throw new NullOrEmptyException(getClass(), "expenseRecurring");
+
+        super.addRecurringDate(recurringReferenceDate);
 
         validateExpenseRecurring(expenseRecurring);
 

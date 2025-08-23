@@ -1,4 +1,4 @@
-package br.dev.diisk.application.finance.expense_transaction.dtos;
+package br.dev.diisk.application.finance.expense_recurring.dtos;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,15 +12,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddExpenseTransactionParams {
+public class AddExpenseRecurringParams {
     private String description;
     private BigDecimal value;
     private Long categoryId;
-    private LocalDateTime paymentDate;
-    private LocalDateTime dueDate;
-    private LocalDateTime recurringReferenceDate;
-    private Long creditCardId;
     private Long wishItemId;
-    private Long goalId;
-    private Long expenseRecurringId;
+    private Long creditCardId;
+    private Integer dueDay;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 }

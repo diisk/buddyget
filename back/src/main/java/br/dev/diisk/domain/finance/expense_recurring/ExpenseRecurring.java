@@ -1,7 +1,6 @@
 package br.dev.diisk.domain.finance.expense_recurring;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import br.dev.diisk.domain.category.Category;
@@ -10,6 +9,7 @@ import br.dev.diisk.domain.category.validations.CategoryIncompatibleTypeValidati
 import br.dev.diisk.domain.credit_card.CreditCard;
 import br.dev.diisk.domain.credit_card.CreditCardIfExistsNotBelongUserValidation;
 import br.dev.diisk.domain.finance.Recurring;
+import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.shared.value_objects.DataRange;
 import br.dev.diisk.domain.shared.value_objects.DayOfMonth;
@@ -25,10 +25,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
 @Table(name = "expenses_recurrings")
+@NoArgsConstructor
 public class ExpenseRecurring extends Recurring {
 
     @ManyToOne(optional = true)
@@ -38,12 +41,10 @@ public class ExpenseRecurring extends Recurring {
     private WishListItem wishItem;
 
     @Embedded
-    private InstallmentPlan installmentPlan;
-
-    @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "due_day"))
     })
+    @Setter
     private DayOfMonth dueDay;
 
     @Embedded
@@ -53,10 +54,34 @@ public class ExpenseRecurring extends Recurring {
     protected DayOfMonth paymentDay;
 
     public ExpenseRecurring(String description, DataRange period, Category category,
-            BigDecimal value,
-            LocalDateTime date, User user) {
+            BigDecimal value, User user) {
         super(description, category, value, period, user);
         validate();
+    }
+
+    public void addCreditCard(CreditCard creditCard) {
+        if (this.creditCard != null)
+            throw new BusinessException(getClass(), "A despesa recorrente já possui um cartão de crédito definido");
+
+        if (creditCard == null)
+            throw new NullPointerException("creditCard não pode ser nulo");
+
+        new CreditCardIfExistsNotBelongUserValidation(creditCard, getUserId()).validate(getClass());
+
+        this.creditCard = creditCard;
+    }
+
+    public void addWishItem(WishListItem wishItem) {
+        if (this.wishItem != null)
+            throw new BusinessException(getClass(),
+                    "A despesa recorrente já possui um item da lista de desejos definido");
+
+        if (wishItem == null)
+            throw new NullPointerException("wishItem não pode ser nulo");
+
+        new WishListItemIfExistsNotBelongUserValidation(wishItem, getUserId()).validate(getClass());
+
+        this.wishItem = wishItem;
     }
 
     public Integer getPaymentDayValue() {

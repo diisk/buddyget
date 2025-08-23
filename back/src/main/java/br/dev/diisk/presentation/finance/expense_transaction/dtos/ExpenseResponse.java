@@ -2,6 +2,7 @@ package br.dev.diisk.presentation.finance.expense_transaction.dtos;
 
 import java.math.BigDecimal;
 
+import br.dev.diisk.application.finance.expense_transaction.dtos.PendingExpenseTransactionDTO;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.presentation.category.dtos.CategoryResponse;
 import br.dev.diisk.presentation.credit_card.dtos.CreditCardResponse;
@@ -53,5 +54,29 @@ public record ExpenseResponse(
                                 expenseTransaction.getCreatedAt() != null
                                                 ? expenseTransaction.getCreatedAt().toString()
                                                 : null);
+        }
+
+        public ExpenseResponse(PendingExpenseTransactionDTO expenseTransaction) {
+                this(
+                                expenseTransaction.id(),
+                                expenseTransaction.dueDate(),
+                                expenseTransaction.recurring() != null
+                                                ? new ExpenseRecurringResponse(expenseTransaction.recurring())
+                                                : null,
+                                expenseTransaction.creditCard() != null
+                                                ? new CreditCardResponse(expenseTransaction.creditCard(), null)
+                                                : null,
+                                expenseTransaction.wishitem() != null
+                                                ? new WishListItemResponse(expenseTransaction.wishitem())
+                                                : null,
+                                null,
+                                null,
+                                expenseTransaction.value(),
+                                expenseTransaction.description(),
+                                expenseTransaction.category() != null
+                                                ? new CategoryResponse(expenseTransaction.category())
+                                                : null,
+                                expenseTransaction.status(),
+                                expenseTransaction.createdAt());
         }
 }

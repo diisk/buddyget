@@ -62,7 +62,7 @@ public class AddIncomeTransactionCase {
         if (goal != null)
             incomeTransaction.addGoal(goal);
 
-        if (incomeRecurring != null && recurringReferenceDate != null)
+        if (incomeRecurring != null)
             incomeTransaction.addIncomeRecurring(incomeRecurring, recurringReferenceDate);
 
         incomeRepository.save(incomeTransaction);

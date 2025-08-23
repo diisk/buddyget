@@ -8,6 +8,7 @@ import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.category.CategoryTypeEnum;
 import br.dev.diisk.domain.category.validations.CategoryIncompatibleTypeValidation;
 import br.dev.diisk.domain.finance.Transaction;
+import br.dev.diisk.domain.finance.TransactionStatusEnum;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurring;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
@@ -52,7 +53,8 @@ public class IncomeTransaction extends Transaction {
     }
 
     public String getStatus() {
-        return getReceiptDate() != null ? "Recebido" : "Pendente";
+        return getReceiptDate() != null ? TransactionStatusEnum.RECEIVED.getDescription()
+                : TransactionStatusEnum.PENDING.getDescription();
     }
 
     public void update(String description, BigDecimal value, LocalDateTime receiptDate) {
