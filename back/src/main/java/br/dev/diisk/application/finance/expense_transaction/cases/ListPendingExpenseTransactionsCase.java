@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import br.dev.diisk.application.finance.ListRecurringReferenceDates;
+import br.dev.diisk.application.finance.ListRecurringReferenceDatesCase;
 import br.dev.diisk.application.finance.expense_transaction.dtos.PendingExpenseTransactionDTO;
 import br.dev.diisk.domain.finance.TransactionStatusEnum;
 import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
@@ -23,7 +23,7 @@ public class ListPendingExpenseTransactionsCase {
 
     private final IExpenseTransactionRepository expenseRepository;
     private final IExpenseRecurringRepository expenseRecurringRepository;
-    private final ListRecurringReferenceDates listRecurringReferenceDates;
+    private final ListRecurringReferenceDatesCase listRecurringReferenceDates;
 
     @Transactional
     public List<PendingExpenseTransactionDTO> execute(User user) {

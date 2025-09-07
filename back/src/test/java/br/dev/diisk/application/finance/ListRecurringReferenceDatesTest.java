@@ -33,7 +33,7 @@ class ListRecurringReferenceDatesTest {
     private UtilService utilService;
 
     @InjectMocks
-    private ListRecurringReferenceDates listRecurringReferenceDates;
+    private ListRecurringReferenceDatesCase listRecurringReferenceDates;
 
     /**
      * Método auxiliar para criar uma ExpenseRecurring com período específico.

@@ -1,6 +1,6 @@
 package br.dev.diisk.application.finance.expense_transaction.cases;
 
-import br.dev.diisk.application.finance.ListRecurringReferenceDates;
+import br.dev.diisk.application.finance.ListRecurringReferenceDatesCase;
 import br.dev.diisk.application.finance.expense_transaction.dtos.PendingExpenseTransactionDTO;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.category.CategoryFixture;
@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
-/**
+/** 
  * Testes unitários para ListPendingExpenseTransactionsCase.
  */
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +43,7 @@ class ListPendingExpenseTransactionsCaseTest {
     private IExpenseRecurringRepository expenseRecurringRepository;
 
     @Mock
-    private ListRecurringReferenceDates listRecurringReferenceDates;
+    private ListRecurringReferenceDatesCase listRecurringReferenceDates;
 
     @InjectMocks
     private ListPendingExpenseTransactionsCase listPendingExpenseTransactionsCase;

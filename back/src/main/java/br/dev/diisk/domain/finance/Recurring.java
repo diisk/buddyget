@@ -12,6 +12,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @MappedSuperclass
@@ -22,6 +23,7 @@ public abstract class Recurring extends Finance {
     protected DataRange period;
 
     @Getter(value = lombok.AccessLevel.NONE)
+    @Setter
     @Column(nullable = false)
     private Boolean active = true;
 
@@ -48,6 +50,10 @@ public abstract class Recurring extends Finance {
         if (period == null)
             throw new NullOrEmptyException(getClass(), "period");
 
+    }
+
+    public Boolean isActive() {
+        return active;
     }
 
     private void validate() {

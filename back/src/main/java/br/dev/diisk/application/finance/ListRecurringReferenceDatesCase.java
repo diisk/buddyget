@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ListRecurringReferenceDates {
+public class ListRecurringReferenceDatesCase {
 
     private final UtilService utilService;
 

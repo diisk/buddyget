@@ -8,7 +8,6 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import org.springframework.stereotype.Service;
 import br.dev.diisk.domain.shared.interfaces.IBaseEnum;
 
@@ -24,6 +23,11 @@ public class UtilService {
 
     public LocalDateTime getFirstDayMonthReference(LocalDateTime dateTime) {
         return LocalDateTime.of(dateTime.getYear(), dateTime.getMonthValue(), 1, 0, 0, 0);
+    }
+
+    public Boolean isReferenceDateEquals(LocalDateTime date1, LocalDateTime date2) {
+        return date1.getYear() == date2.getYear() && date1.getMonthValue() == date2.getMonthValue();
+
     }
 
     public LocalDateTime getLastDayMonthReference(LocalDateTime dateTime) {
