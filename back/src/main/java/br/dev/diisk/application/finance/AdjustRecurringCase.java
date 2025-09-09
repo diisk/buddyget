@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UpdateRecurringCase {
+public class AdjustRecurringCase {
 
     private final UtilService utilService;
     private final ExpenseTransactionRepository expenseTransactionRepository;
@@ -24,7 +24,8 @@ public class UpdateRecurringCase {
                 .findAllRecurringRelatedBy(List.of(recurring.getId()));
         List<LocalDateTime> referenceDates = listRecurringReferenceDatesCase.execute(recurring);
         Boolean isActive = referenceDates.stream().anyMatch(refDate -> relatedTransactions.stream()
-                .noneMatch(rt -> utilService.isReferenceDateEquals(refDate, rt.getRecurringReferenceDate())));
+                .noneMatch(rt -> rt.getPaymentDate() != null
+                        && utilService.isReferenceDateEquals(refDate, rt.getRecurringReferenceDate())));
         if (recurring.isActive() != isActive) {
             recurring.setActive(isActive);
             saveFunction.apply(recurring);

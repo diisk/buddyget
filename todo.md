@@ -8,6 +8,8 @@
 -ao pagar uma transacao de recorrencia ela será criada já paga (OK)
 -necessário um serviço para buscar todas as transacoes pagas de uma ou mais recorrencias (OK)
 -necessário um caso de uso que usa a recorrencia para contar quantas transacoes aquela recorrencia deve ter até a data final ou até a data atual caso não tenha data final (OK)
--após cada atualização das transações relacionadas a recorrencia, ou a própria recorrencia bater as informações de quantidade de transações pagas e transações totais daquela ocorrencia, se todas estiverem pagas alterar a flag da recorrencia para finalizada caso ela tenha data final
+-após cada atualização das transações relacionadas a recorrencia, ou a própria recorrencia bater as informações de quantidade de transações pagas e transações totais daquela ocorrencia, se todas estiverem pagas alterar a flag da recorrencia para finalizada caso ela tenha data final(OK)
+-Testar se a mudança de flag está funcionando(OK)
+- Replicar alterações para incomes
 
 

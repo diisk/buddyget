@@ -1,5 +1,6 @@
 package br.dev.diisk.application.finance.expense_transaction.cases;
 
+import br.dev.diisk.application.finance.expense_recurring.cases.AdjustExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_transaction.dtos.UpdateExpenseTransactionParams;
 import br.dev.diisk.application.monthly_summary.cases.UpdateMonthlySummaryCase;
 import br.dev.diisk.application.monthly_summary.dtos.UpdateMonthlySummaryParams;
@@ -8,6 +9,8 @@ import br.dev.diisk.domain.user.UserFixture;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.category.CategoryFixture;
 import br.dev.diisk.domain.category.CategoryTypeEnum;
+import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
+import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurringFixture;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransactionFixture;
 import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionRepository;
@@ -40,6 +43,8 @@ class UpdateExpenseTransactionCaseTest {
     private GetExpenseTransactionCase getExpenseTransactionCase;
     @Mock
     private UpdateMonthlySummaryCase updateMonthlySummaryCase;
+    @Mock
+    private AdjustExpenseRecurringCase adjustExpenseRecurringCase;
 
     @InjectMocks
     private UpdateExpenseTransactionCase updateExpenseTransactionCase;
@@ -89,5 +94,105 @@ class UpdateExpenseTransactionCaseTest {
         assertEquals(newValue, summaryParams.getNewValue());
         assertEquals(newPaymentDate, summaryParams.getNewDate());
         assertEquals(category, summaryParams.getCategory());
+    }
+
+    @Test
+    void updateExpenseTransaction_deveAtualizarEChamarAdjustExpenseRecurring_quandoDespesaPossuiRecorrencia() {
+        // Given: despesa com expense recurring associado
+        User user = UserFixture.umUsuarioComId(10L);
+        Category category = CategoryFixture.umaCategoriaComId(20L, CategoryTypeEnum.EXPENSE, user);
+        ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(100L, user);
+        ExpenseTransaction expenseTransaction = ExpenseTransactionFixture.umaTransacaoComExpenseRecurring(
+                30L, user, category, expenseRecurring, LocalDateTime.now());
+        Long expenseTransactionId = 30L;
+        
+        UpdateExpenseTransactionParams params = new UpdateExpenseTransactionParams();
+        params.setDescription("Nova descrição");
+        params.setValue(new BigDecimal("200.00"));
+        params.setPaymentDate(LocalDateTime.of(2024, 8, 1, 14, 0));
+        params.setDueDate(LocalDateTime.of(2024, 8, 5, 14, 0));
+
+        when(getExpenseTransactionCase.execute(user, expenseTransactionId)).thenReturn(expenseTransaction);
+
+        // When: executa o método alvo
+        ExpenseTransaction result = updateExpenseTransactionCase.execute(user, expenseTransactionId, params);
+
+        // Then: verifica se o AdjustExpenseRecurringCase foi chamado
+        verify(adjustExpenseRecurringCase).execute(expenseRecurring);
+        verify(expenseRepository).save(expenseTransaction);
+        verify(updateMonthlySummaryCase).execute(eq(user), any(UpdateMonthlySummaryParams.class));
+        assertEquals(expenseTransaction, result);
+    }
+
+    @Test
+    void updateExpenseTransaction_naoDeveChamarAdjustExpenseRecurring_quandoDespesaSemRecorrencia() {
+        // Given: despesa sem expense recurring
+        User user = UserFixture.umUsuarioComId(10L);
+        Category category = CategoryFixture.umaCategoriaComId(20L, CategoryTypeEnum.EXPENSE, user);
+        ExpenseTransaction expenseTransaction = ExpenseTransactionFixture.umaTransacaoComId(30L, user, category);
+        Long expenseTransactionId = 30L;
+        
+        UpdateExpenseTransactionParams params = new UpdateExpenseTransactionParams();
+        params.setDescription("Nova descrição");
+        params.setValue(new BigDecimal("200.00"));
+        params.setPaymentDate(LocalDateTime.of(2024, 8, 1, 14, 0));
+        params.setDueDate(LocalDateTime.of(2024, 8, 5, 14, 0));
+
+        when(getExpenseTransactionCase.execute(user, expenseTransactionId)).thenReturn(expenseTransaction);
+
+        // When: executa o método alvo
+        ExpenseTransaction result = updateExpenseTransactionCase.execute(user, expenseTransactionId, params);
+
+        // Then: verifica que o AdjustExpenseRecurringCase não foi chamado
+        verify(adjustExpenseRecurringCase, never()).execute(any());
+        verify(expenseRepository).save(expenseTransaction);
+        verify(updateMonthlySummaryCase).execute(eq(user), any(UpdateMonthlySummaryParams.class));
+        assertEquals(expenseTransaction, result);
+    }
+
+    @Test
+    void updateExpenseTransaction_devePassarParametrosCorretos_quandoAtualizarResumoMensal() {
+        // Given: cenário para validar todos os parâmetros do resumo mensal
+        User user = UserFixture.umUsuarioComId(10L);
+        Category category = CategoryFixture.umaCategoriaComId(20L, CategoryTypeEnum.EXPENSE, user);
+        ExpenseTransaction expenseTransaction = ExpenseTransactionFixture.umaTransacaoComId(30L, user, category);
+        Long expenseTransactionId = 30L;
+
+        BigDecimal valorAnterior = expenseTransaction.getValue(); // 100.00 da fixture
+        LocalDateTime dataAnterior = expenseTransaction.getPaymentDate(); // 2024-06-01 12:00 da fixture
+        
+        BigDecimal novoValor = new BigDecimal("250.75");
+        LocalDateTime novaData = LocalDateTime.of(2024, 9, 15, 16, 30);
+        LocalDateTime novaDataVencimento = LocalDateTime.of(2024, 9, 20, 16, 30);
+        String novaDescricao = "Despesa atualizada com novos valores";
+        
+        UpdateExpenseTransactionParams params = new UpdateExpenseTransactionParams();
+        params.setDescription(novaDescricao);
+        params.setValue(novoValor);
+        params.setPaymentDate(novaData);
+        params.setDueDate(novaDataVencimento);
+
+        when(getExpenseTransactionCase.execute(user, expenseTransactionId)).thenReturn(expenseTransaction);
+
+        // When: executa o método alvo
+        ExpenseTransaction result = updateExpenseTransactionCase.execute(user, expenseTransactionId, params);
+
+        // Then: captura e valida todos os parâmetros do resumo mensal
+        ArgumentCaptor<UpdateMonthlySummaryParams> captor = ArgumentCaptor.forClass(UpdateMonthlySummaryParams.class);
+        verify(updateMonthlySummaryCase).execute(eq(user), captor.capture());
+        
+        UpdateMonthlySummaryParams summaryParams = captor.getValue();
+        assertEquals(valorAnterior, summaryParams.getPreviousValue());
+        assertEquals(dataAnterior, summaryParams.getPreviousDate());
+        assertEquals(novoValor, summaryParams.getNewValue());
+        assertEquals(novaData, summaryParams.getNewDate());
+        assertEquals(category, summaryParams.getCategory());
+        
+        // Valida que a entidade foi atualizada corretamente
+        assertEquals(novaDescricao, expenseTransaction.getDescription());
+        assertEquals(novoValor, expenseTransaction.getValue());
+        assertEquals(novaData, expenseTransaction.getPaymentDate());
+        assertEquals(novaDataVencimento, expenseTransaction.getDueDate());
+        assertEquals(expenseTransaction, result);
     }
 }

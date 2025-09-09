@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
+import br.dev.diisk.application.finance.expense_recurring.cases.AdjustExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_transaction.dtos.UpdateExpenseTransactionParams;
 import br.dev.diisk.application.monthly_summary.cases.UpdateMonthlySummaryCase;
 import br.dev.diisk.application.monthly_summary.dtos.UpdateMonthlySummaryParams;
+import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionRepository;
 import br.dev.diisk.domain.user.User;
@@ -21,6 +23,7 @@ public class UpdateExpenseTransactionCase {
     private final IExpenseTransactionRepository expenseRepository;
     private final GetExpenseTransactionCase getExpenseTransactionCase;
     private final UpdateMonthlySummaryCase updateMonthlySummaryCase;
+    private final AdjustExpenseRecurringCase adjustExpenseRecurringCase;
 
     @Transactional
     public ExpenseTransaction execute(User user, Long expenseTransactionId, UpdateExpenseTransactionParams params) {
@@ -32,6 +35,11 @@ public class UpdateExpenseTransactionCase {
         expenseTransaction.update(params.getDescription(), params.getValue(), params.getPaymentDate(),
                 params.getDueDate());
         expenseRepository.save(expenseTransaction);
+
+        ExpenseRecurring expenseRecurring = expenseTransaction.getExpenseRecurring();
+
+        if (expenseRecurring != null)
+            adjustExpenseRecurringCase.execute(expenseRecurring);
 
         BigDecimal value = expenseTransaction.getValue();
         LocalDateTime paymentDate = expenseTransaction.getPaymentDate();

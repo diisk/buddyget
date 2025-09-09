@@ -2,6 +2,7 @@ package br.dev.diisk.application.finance.expense_transaction.cases;
 
 import br.dev.diisk.application.category.cases.GetCategoryCase;
 import br.dev.diisk.application.credit_card.cases.GetCreditCardCase;
+import br.dev.diisk.application.finance.expense_recurring.cases.AdjustExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_recurring.cases.GetExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_transaction.dtos.AddExpenseTransactionParams;
 import br.dev.diisk.application.goal.cases.GetGoalCase;
@@ -79,6 +80,8 @@ class AddExpenseTransactionCaseTest {
     @Mock
     private AddMonthlySummaryValueCase addMonthlySummaryValueCase;
     @Mock
+    private AdjustExpenseRecurringCase adjustExpenseRecurringCase;
+    @Mock
     private UtilService utilService;
 
     @InjectMocks
@@ -116,7 +119,7 @@ class AddExpenseTransactionCaseTest {
         when(getWishListItemCase.execute(user, wishItemId)).thenReturn(wishItem);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
         when(getGoalCase.execute(user, goalId)).thenReturn(goal);
-        
+
         // Mock do UtilService para período de vigência
         LocalDateTime currentDate = LocalDateTime.now();
         when(utilService.getFirstDayMonthReference(any())).thenReturn(currentDate.minusYears(1));
@@ -234,12 +237,13 @@ class AddExpenseTransactionCaseTest {
 
         // Quando/Então: deve lançar exceção pois categoria é obrigatória
         assertThrows(Exception.class, () -> addExpenseTransactionCase.execute(user, params));
-        
+
         // Verificar que getCategoryCase não foi chamado
         verifyNoInteractions(getCategoryCase);
     }
 
-    // Deve lançar exceção se expenseRecurringId for informado mas recurringReferenceDate for nulo
+    // Deve lançar exceção se expenseRecurringId for informado mas
+    // recurringReferenceDate for nulo
     @Test
     void addExpenseTransaction_deveLancarExcecao_quandoExpenseRecurringIdInformadoMasRecurringReferenceDateNulo() {
         // Dado
@@ -253,7 +257,7 @@ class AddExpenseTransactionCaseTest {
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -267,13 +271,14 @@ class AddExpenseTransactionCaseTest {
         when(params.getCreditCardId()).thenReturn(null);
 
         // Quando/Então: deve lançar exceção
-        BusinessException exception = assertThrows(BusinessException.class, 
-            () -> addExpenseTransactionCase.execute(user, params));
-        assertEquals("A data da referência da recorrencia deve ser informada se a despesa for recorrente.", 
-            exception.getMessage());
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> addExpenseTransactionCase.execute(user, params));
+        assertEquals("A data da referência da recorrencia deve ser informada se a despesa for recorrente.",
+                exception.getMessage());
     }
 
-    // Deve lançar exceção se expenseRecurringId for informado mas paymentDate for nulo
+    // Deve lançar exceção se expenseRecurringId for informado mas paymentDate for
+    // nulo
     @Test
     void addExpenseTransaction_deveLancarExcecao_quandoExpenseRecurringIdInformadoMasPaymentDateNulo() {
         // Dado
@@ -287,7 +292,7 @@ class AddExpenseTransactionCaseTest {
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -301,10 +306,10 @@ class AddExpenseTransactionCaseTest {
         when(params.getCreditCardId()).thenReturn(null);
 
         // Quando/Então: deve lançar exceção
-        BusinessException exception = assertThrows(BusinessException.class, 
-            () -> addExpenseTransactionCase.execute(user, params));
-        assertEquals("A data do pagamento deve ser informada se a despesa for recorrente.", 
-            exception.getMessage());
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> addExpenseTransactionCase.execute(user, params));
+        assertEquals("A data do pagamento deve ser informada se a despesa for recorrente.",
+                exception.getMessage());
     }
 
     // Deve lançar exceção se já existe transação no mês de referência
@@ -320,20 +325,20 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime recurringReferenceDate = LocalDateTime.of(2024, 6, 15, 10, 0);
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
-        
+
         // Simular transação existente no mesmo mês/ano
         ExpenseTransaction existingTransaction = mock(ExpenseTransaction.class);
         when(existingTransaction.getRecurringReferenceDate()).thenReturn(LocalDateTime.of(2024, 6, 20, 15, 30));
-        
+
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
         when(expenseRepository.findAllRecurringRelatedBy(List.of(expenseRecurringId)))
-            .thenReturn(List.of(existingTransaction));
-        
-        // Mock do UtilService para período de vigência  
+                .thenReturn(List.of(existingTransaction));
+
+        // Mock do UtilService para período de vigência
         when(utilService.getFirstDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
         when(utilService.getLastDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 12, 31, 23, 59, 59));
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -347,13 +352,14 @@ class AddExpenseTransactionCaseTest {
         when(params.getCreditCardId()).thenReturn(null);
 
         // Quando/Então: deve lançar exceção
-        BusinessException exception = assertThrows(BusinessException.class, 
-            () -> addExpenseTransactionCase.execute(user, params));
-        assertEquals("Já existe uma despesa vinculada a essa recorrência na referência informada.", 
-            exception.getMessage());
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> addExpenseTransactionCase.execute(user, params));
+        assertEquals("Já existe uma despesa vinculada a essa recorrência na referência informada.",
+                exception.getMessage());
     }
 
-    // Deve permitir criar transação recorrente quando não há conflito no mês de referência
+    // Deve permitir criar transação recorrente quando não há conflito no mês de
+    // referência
     @Test
     void addExpenseTransaction_devePermitirCriarTransacaoRecorrente_quandoNaoHaConflitoNoMesDeReferencia() {
         // Dado
@@ -366,20 +372,20 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime recurringReferenceDate = LocalDateTime.of(2024, 6, 15, 10, 0);
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
-        
+
         // Simular transação existente em mês/ano diferente
         ExpenseTransaction existingTransaction = mock(ExpenseTransaction.class);
         when(existingTransaction.getRecurringReferenceDate()).thenReturn(LocalDateTime.of(2024, 5, 20, 15, 30));
-        
+
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
         when(expenseRepository.findAllRecurringRelatedBy(List.of(expenseRecurringId)))
-            .thenReturn(List.of(existingTransaction));
-        
-        // Mock do UtilService para período de vigência  
+                .thenReturn(List.of(existingTransaction));
+
+        // Mock do UtilService para período de vigência
         when(utilService.getFirstDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
         when(utilService.getLastDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 12, 31, 23, 59, 59));
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -394,12 +400,13 @@ class AddExpenseTransactionCaseTest {
 
         // Quando/Então: não deve lançar exceção
         assertDoesNotThrow(() -> addExpenseTransactionCase.execute(user, params));
-        
+
         // Verificar que a transação foi salva
         verify(expenseRepository).save(any(ExpenseTransaction.class));
     }
 
-    // Deve chamar addMonthlySummaryValueCase com parâmetros corretos quando paymentDate não é nulo
+    // Deve chamar addMonthlySummaryValueCase com parâmetros corretos quando
+    // paymentDate não é nulo
     @Test
     void addExpenseTransaction_deveChamarAddMonthlySummaryValue_quandoPaymentDateNaoNulo() {
         // Dado
@@ -410,7 +417,7 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime paymentDate = LocalDateTime.of(2024, 6, 15, 10, 0);
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -426,10 +433,12 @@ class AddExpenseTransactionCaseTest {
         // Quando
         addExpenseTransactionCase.execute(user, params);
 
-        // Então - verificar que addMonthlySummaryValueCase foi chamado com parâmetros corretos
-        ArgumentCaptor<AddMonthlySummaryValueParams> captor = ArgumentCaptor.forClass(AddMonthlySummaryValueParams.class);
+        // Então - verificar que addMonthlySummaryValueCase foi chamado com parâmetros
+        // corretos
+        ArgumentCaptor<AddMonthlySummaryValueParams> captor = ArgumentCaptor
+                .forClass(AddMonthlySummaryValueParams.class);
         verify(addMonthlySummaryValueCase).execute(eq(user), captor.capture());
-        
+
         AddMonthlySummaryValueParams capturedParams = captor.getValue();
         assertEquals(6, capturedParams.getMonth()); // Junho
         assertEquals(2024, capturedParams.getYear());
@@ -449,7 +458,7 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime dueDate = paymentDate.plusDays(5);
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -483,7 +492,7 @@ class AddExpenseTransactionCaseTest {
         CreditCard creditCard = Fixture.umCartao(creditCardId, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getCreditCardCase.execute(user, creditCardId)).thenReturn(creditCard);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -517,7 +526,7 @@ class AddExpenseTransactionCaseTest {
         WishListItem wishItem = Fixture.umWishItem(wishItemId, user, category);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getWishListItemCase.execute(user, wishItemId)).thenReturn(wishItem);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -551,7 +560,7 @@ class AddExpenseTransactionCaseTest {
         Goal goal = Fixture.umaMeta(goalId, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getGoalCase.execute(user, goalId)).thenReturn(goal);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -584,16 +593,16 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime recurringReferenceDate = LocalDateTime.of(2024, 6, 15, 10, 0);
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
-        
+
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
         when(expenseRepository.findAllRecurringRelatedBy(List.of(expenseRecurringId)))
-            .thenReturn(List.of()); // Lista vazia - sem conflitos
-        
-        // Mock do UtilService para período de vigência  
+                .thenReturn(List.of()); // Lista vazia - sem conflitos
+
+        // Mock do UtilService para período de vigência
         when(utilService.getFirstDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
         when(utilService.getLastDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 12, 31, 23, 59, 59));
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -623,7 +632,7 @@ class AddExpenseTransactionCaseTest {
         Long categoryId = 1L;
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(""); // Descrição vazia
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -649,7 +658,7 @@ class AddExpenseTransactionCaseTest {
         Long categoryId = 1L;
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(null); // Descrição nula
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -675,7 +684,7 @@ class AddExpenseTransactionCaseTest {
         Long categoryId = 1L;
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -701,7 +710,7 @@ class AddExpenseTransactionCaseTest {
         Long categoryId = 1L;
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -727,7 +736,7 @@ class AddExpenseTransactionCaseTest {
         Long categoryId = 1L;
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -744,7 +753,8 @@ class AddExpenseTransactionCaseTest {
         assertThrows(Exception.class, () -> addExpenseTransactionCase.execute(user, params));
     }
 
-    // Deve lançar exceção quando recurringReferenceDate está antes do período de vigência
+    // Deve lançar exceção quando recurringReferenceDate está antes do período de
+    // vigência
     @Test
     void addExpenseTransaction_deveLancarExcecao_quandoRecurringReferenceDateAntesDoPeridoVigencia() {
         // Dado
@@ -757,15 +767,15 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime recurringReferenceDate = LocalDateTime.of(2024, 3, 15, 10, 0); // Antes do período
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
-        
+
         LocalDateTime startReference = LocalDateTime.of(2024, 4, 1, 0, 0);
         LocalDateTime endReference = LocalDateTime.of(2024, 8, 31, 23, 59, 59);
-        
+
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
         when(utilService.getFirstDayMonthReference(any())).thenReturn(startReference);
         when(utilService.getLastDayMonthReference(any())).thenReturn(endReference);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -779,13 +789,14 @@ class AddExpenseTransactionCaseTest {
         when(params.getCreditCardId()).thenReturn(null);
 
         // Quando/Então: deve lançar exceção
-        BusinessException exception = assertThrows(BusinessException.class, 
-            () -> addExpenseTransactionCase.execute(user, params));
-        assertEquals("A data da referência da recorrência deve estar entre o período de vigência da mesma.", 
-            exception.getMessage());
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> addExpenseTransactionCase.execute(user, params));
+        assertEquals("A data da referência da recorrência deve estar entre o período de vigência da mesma.",
+                exception.getMessage());
     }
 
-    // Deve lançar exceção quando recurringReferenceDate está depois do período de vigência
+    // Deve lançar exceção quando recurringReferenceDate está depois do período de
+    // vigência
     @Test
     void addExpenseTransaction_deveLancarExcecao_quandoRecurringReferenceDateDepoisDoPeridoVigencia() {
         // Dado
@@ -798,15 +809,15 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime recurringReferenceDate = LocalDateTime.of(2024, 10, 15, 10, 0); // Depois do período
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
-        
+
         LocalDateTime startReference = LocalDateTime.of(2024, 4, 1, 0, 0);
         LocalDateTime endReference = LocalDateTime.of(2024, 8, 31, 23, 59, 59);
-        
+
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
         when(utilService.getFirstDayMonthReference(any())).thenReturn(startReference);
         when(utilService.getLastDayMonthReference(any())).thenReturn(endReference);
-        
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -820,13 +831,14 @@ class AddExpenseTransactionCaseTest {
         when(params.getCreditCardId()).thenReturn(null);
 
         // Quando/Então: deve lançar exceção
-        BusinessException exception = assertThrows(BusinessException.class, 
-            () -> addExpenseTransactionCase.execute(user, params));
-        assertEquals("A data da referência da recorrência deve estar entre o período de vigência da mesma.", 
-            exception.getMessage());
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> addExpenseTransactionCase.execute(user, params));
+        assertEquals("A data da referência da recorrência deve estar entre o período de vigência da mesma.",
+                exception.getMessage());
     }
 
-    // Deve permitir criar transação recorrente quando recurringReferenceDate está dentro do período de vigência
+    // Deve permitir criar transação recorrente quando recurringReferenceDate está
+    // dentro do período de vigência
     @Test
     void addExpenseTransaction_devePermitirCriarTransacaoRecorrente_quandoRecurringReferenceDateDentroDoPeridoVigencia() {
         // Dado
@@ -839,17 +851,17 @@ class AddExpenseTransactionCaseTest {
         LocalDateTime recurringReferenceDate = LocalDateTime.of(2024, 6, 15, 10, 0); // Dentro do período
         Category category = CategoryFixture.umaCategoriaComId(categoryId, CategoryTypeEnum.EXPENSE, user);
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
-        
+
         LocalDateTime startReference = LocalDateTime.of(2024, 4, 1, 0, 0);
         LocalDateTime endReference = LocalDateTime.of(2024, 8, 31, 23, 59, 59);
-        
+
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
         when(utilService.getFirstDayMonthReference(any())).thenReturn(startReference);
         when(utilService.getLastDayMonthReference(any())).thenReturn(endReference);
         when(expenseRepository.findAllRecurringRelatedBy(List.of(expenseRecurringId)))
-            .thenReturn(List.of()); // Lista vazia - sem conflitos
-        
+                .thenReturn(List.of()); // Lista vazia - sem conflitos
+
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
         when(params.getCategoryId()).thenReturn(categoryId);
@@ -864,7 +876,7 @@ class AddExpenseTransactionCaseTest {
 
         // Quando/Então: não deve lançar exceção
         assertDoesNotThrow(() -> addExpenseTransactionCase.execute(user, params));
-        
+
         // Verificar que a transação foi salva
         verify(expenseRepository).save(any(ExpenseTransaction.class));
     }

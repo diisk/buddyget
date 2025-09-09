@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.category.cases.GetCategoryCase;
 import br.dev.diisk.application.credit_card.cases.GetCreditCardCase;
+import br.dev.diisk.application.finance.expense_recurring.cases.AdjustExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_recurring.cases.GetExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_transaction.dtos.AddExpenseTransactionParams;
 import br.dev.diisk.application.goal.cases.GetGoalCase;
@@ -38,6 +39,7 @@ public class AddExpenseTransactionCase {
     private final GetWishListItemCase getWishListItemCase;
     private final GetExpenseRecurringCase getExpenseRecurringCase;
     private final AddMonthlySummaryValueCase addMonthlySummaryValueCase;
+    private final AdjustExpenseRecurringCase adjustExpenseRecurringCase;
     private final UtilService utilService;
 
     @Transactional
@@ -123,6 +125,9 @@ public class AddExpenseTransactionCase {
             expenseTransaction.addGoal(goal);
 
         expenseRepository.save(expenseTransaction);
+
+        if (expenseRecurring != null)
+            adjustExpenseRecurringCase.execute(expenseRecurring);
 
         if (paymentDate != null)
             addMonthlySummaryValueCase.execute(user,
