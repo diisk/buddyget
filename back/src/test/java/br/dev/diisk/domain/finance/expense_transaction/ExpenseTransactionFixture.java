@@ -47,4 +47,15 @@ public class ExpenseTransactionFixture {
         
         return tx;
     }
+
+    public static ExpenseTransaction umaTransacaoComPaymentDate(Long id, User user, Category category, LocalDateTime paymentDate) {
+        ExpenseTransaction tx = new ExpenseTransaction(
+                "Descrição original",
+                category,
+                new BigDecimal("100.00"),
+                paymentDate,
+                user);
+        tx.setId(id);
+        return tx;
+    }
 }

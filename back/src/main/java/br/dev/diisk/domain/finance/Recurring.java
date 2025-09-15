@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import br.dev.diisk.domain.category.Category;
+import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.shared.value_objects.DataRange;
 import br.dev.diisk.domain.user.User;
@@ -44,6 +45,13 @@ public abstract class Recurring extends Finance {
 
     public LocalDateTime getEndDate() {
         return period.getEndDate();
+    }
+
+    public void defineEndDate(LocalDateTime endDate) {
+        if(this.period.getEndDate() != null)
+            throw new BusinessException(getClass(), "Essa recorrência já possui uma data de término.");
+        
+        this.period = new DataRange(getStartDate(), endDate);
     }
 
     private void validatePeriod(DataRange period) {

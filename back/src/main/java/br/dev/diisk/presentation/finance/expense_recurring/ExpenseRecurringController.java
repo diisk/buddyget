@@ -7,9 +7,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import br.dev.diisk.application.finance.expense_recurring.cases.AddExpenseRecurringCase;
+import br.dev.diisk.application.finance.expense_recurring.cases.EndExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_recurring.cases.ListExpenseRecurringsCase;
 import br.dev.diisk.application.finance.expense_recurring.cases.PayExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_recurring.dtos.AddExpenseRecurringParams;
+import br.dev.diisk.application.finance.expense_recurring.dtos.EndExpenseRecurringParams;
 import br.dev.diisk.application.finance.expense_recurring.dtos.PayExpenseRecurringParams;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
@@ -19,9 +21,9 @@ import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.PageResponse;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
 import br.dev.diisk.presentation.finance.expense_recurring.dtos.CreateExpenseRecurringRequest;
+import br.dev.diisk.presentation.finance.expense_recurring.dtos.EndExpenseRecurringRequest;
 import br.dev.diisk.presentation.finance.expense_recurring.dtos.ExpenseRecurringResponse;
 import br.dev.diisk.presentation.finance.expense_recurring.dtos.PayExpenseRecurringRequest;
-import br.dev.diisk.presentation.finance.expense_recurring.dtos.UpdateExpenseRecurringRequest;
 import br.dev.diisk.presentation.finance.expense_transaction.dtos.ExpenseResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class ExpenseRecurringController {
     private final ListExpenseRecurringsCase listExpenseRecurringsCase;
     private final AddExpenseRecurringCase addExpenseRecurringCase;
     private final PayExpenseRecurringCase payExpenseRecurringCase;
+    private final EndExpenseRecurringCase endExpenseRecurringCase;
 
     @GetMapping
     public ResponseEntity<SuccessResponse<PageResponse<ExpenseRecurringResponse>>> listExpensesRecurrings(
@@ -81,10 +84,14 @@ public class ExpenseRecurringController {
         return responseService.ok(response);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<SuccessResponse<ExpenseRecurringResponse>> updateExpenseRecurring(
-            @PathVariable Long id, @RequestBody @Valid UpdateExpenseRecurringRequest request) {
-        return responseService.ok(null);
+    @PatchMapping("/{id}/end")
+    public ResponseEntity<SuccessResponse<ExpenseRecurringResponse>> endExpenseRecurring(
+            @PathVariable Long id, @RequestBody @Valid EndExpenseRecurringRequest request, @AuthenticationPrincipal User user) {
+                EndExpenseRecurringParams params = new EndExpenseRecurringParams();
+                params.setEndDate(request.endDate());
+                ExpenseRecurring expenseRecurring = endExpenseRecurringCase.execute(user, params, id);
+                ExpenseRecurringResponse response = new ExpenseRecurringResponse(expenseRecurring);
+        return responseService.ok(response);
     }
 
     @DeleteMapping("/{id}")

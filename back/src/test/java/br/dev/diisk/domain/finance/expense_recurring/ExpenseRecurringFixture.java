@@ -44,4 +44,20 @@ public class ExpenseRecurringFixture {
         expenseRecurring.setId(id);
         return expenseRecurring;
     }
+
+    public static ExpenseRecurring umaExpenseRecurringComIdSemDataFim(Long id, User user) {
+        Category category = CategoryFixture.umaCategoriaComId(id + 1000, CategoryTypeEnum.EXPENSE, user);
+        DataRange period = new DataRange(
+                LocalDateTime.now().minusDays(30),
+                null);
+
+        ExpenseRecurring expenseRecurring = new ExpenseRecurring(
+                "Despesa Recorrente Teste",
+                period,
+                category,
+                new BigDecimal("100.00"),
+                user);
+        expenseRecurring.setId(id);
+        return expenseRecurring;
+    }
 }
