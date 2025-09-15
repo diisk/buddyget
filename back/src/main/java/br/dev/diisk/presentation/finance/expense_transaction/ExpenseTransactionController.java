@@ -113,7 +113,7 @@ public class ExpenseTransactionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse<Boolean>> deleteExpense(@AuthenticationPrincipal User user,
             @PathVariable Long id) {
-        deleteExpenseTransactionCase.execute(user, id);
+        deleteExpenseTransactionCase.execute(user, id, false);
         return responseService.ok(true);
     }
 }

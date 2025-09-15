@@ -22,13 +22,13 @@ public class DeleteExpenseTransactionCase {
     private final RemoveMonthlySummaryValueCase removeMonthlySummaryValueCase;
 
     @Transactional
-    public void execute(User user, Long expenseTransactionId) {
+    public void execute(User user, Long expenseTransactionId, Boolean force) {
         ExpenseTransaction expenseTransaction = expenseRepository
                 .findById(expenseTransactionId).orElse(null);
 
         if (expenseTransaction == null
                 || expenseTransaction.getUserId() != user.getId()
-                || expenseTransaction.getExpenseRecurring() != null)
+                || (expenseTransaction.getExpenseRecurring() != null && !force))
             return;
 
         expenseTransaction.delete();
