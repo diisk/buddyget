@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.category.CategoryFixture;
 import br.dev.diisk.domain.category.CategoryTypeEnum;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.user.UserFixture;
 
@@ -15,7 +15,7 @@ public class ExpenseRecurringFixture {
     public static ExpenseRecurring umaExpenseRecurringComId(Long id) {
         User user = UserFixture.umUsuarioComId(id + 2000);
         Category category = CategoryFixture.umaCategoriaComId(id + 1000, CategoryTypeEnum.EXPENSE, user);
-        DataRange period = new DataRange(
+        Period period = new Period(
                 LocalDateTime.now().minusDays(30),
                 LocalDateTime.now().plusDays(30));
 
@@ -31,7 +31,7 @@ public class ExpenseRecurringFixture {
 
     public static ExpenseRecurring umaExpenseRecurringComId(Long id, User user) {
         Category category = CategoryFixture.umaCategoriaComId(id + 1000, CategoryTypeEnum.EXPENSE, user);
-        DataRange period = new DataRange(
+        Period period = new Period(
                 LocalDateTime.now().minusDays(30),
                 LocalDateTime.now().plusDays(30));
 
@@ -47,7 +47,7 @@ public class ExpenseRecurringFixture {
 
     public static ExpenseRecurring umaExpenseRecurringComIdSemDataFim(Long id, User user) {
         Category category = CategoryFixture.umaCategoriaComId(id + 1000, CategoryTypeEnum.EXPENSE, user);
-        DataRange period = new DataRange(
+        Period period = new Period(
                 LocalDateTime.now().minusDays(30),
                 null);
 

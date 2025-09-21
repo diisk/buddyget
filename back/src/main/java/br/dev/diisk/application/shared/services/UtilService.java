@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 import br.dev.diisk.domain.shared.interfaces.IBaseEnum;
+import br.dev.diisk.domain.shared.value_objects.Period;
 
 @Service
 public class UtilService {
@@ -34,6 +35,12 @@ public class UtilService {
         return getFirstDayMonthReference(dateTime)
                 .plusMonths(1)
                 .minusSeconds(1);
+    }
+
+    public Period getPeriodReference(Period period) {
+        LocalDateTime start = getFirstDayMonthReference(period.getStartDate());
+        LocalDateTime end = period.getEndDate() != null ? getLastDayMonthReference(period.getEndDate()) : null;
+        return new Period(start, end);
     }
 
     public String getMonthName(LocalDateTime dateTime) {

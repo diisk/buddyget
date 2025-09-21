@@ -7,7 +7,7 @@ import br.dev.diisk.domain.finance.income_recurring.IIncomeRecurringRepository;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurring;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurringFixture;
 import br.dev.diisk.domain.finance.income_recurring.ListIncomeRecurringsFilter;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.shared.value_objects.DayOfMonth;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.user.UserFixture;
@@ -48,7 +48,7 @@ class ListIncomeRecurringsCaseTest {
         // Given - Preparar os dados de entrada e mocks
         User user = UserFixture.umUsuarioComId(1L);
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusDays(30));
+        Period period = new Period(LocalDateTime.now(), LocalDateTime.now().plusDays(30));
         DayOfMonth recurringDay = new DayOfMonth(1);
 
         IncomeRecurring incomeRecurring1 = IncomeRecurringFixture.umIncomeRecurringComId(1L, user, category,
@@ -110,7 +110,7 @@ class ListIncomeRecurringsCaseTest {
         // Given - Preparar os dados de entrada e mocks
         User user = UserFixture.umUsuarioComId(1L);
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusDays(30));
+        Period period = new Period(LocalDateTime.now(), LocalDateTime.now().plusDays(30));
         DayOfMonth recurringDay = new DayOfMonth(1);
 
         IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(1L, user, category,

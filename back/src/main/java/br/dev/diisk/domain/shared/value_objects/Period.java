@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Getter
 @NoArgsConstructor
-public class DataRange {
+public class Period {
 
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
     @Column(name = "end_date", nullable = true)
     private LocalDateTime endDate;
 
-    public DataRange(LocalDateTime startDate, LocalDateTime endDate) {
+    public Period(LocalDateTime startDate, LocalDateTime endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
         validate();
@@ -44,7 +44,7 @@ public class DataRange {
             return true;
         if (obj == null || getClass() != obj.getClass())
             return false;
-        DataRange dataRange = (DataRange) obj;
+        Period dataRange = (Period) obj;
         return startDate.equals(dataRange.startDate)
                 && (endDate != null ? endDate.equals(dataRange.endDate) : dataRange.endDate == null);
     }

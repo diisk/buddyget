@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ListExpenseTransactionsFilter {
+public class ListPaidExpenseTransactionsFilter {
 
         private LocalDateTime startDate;
         private LocalDateTime endDate;

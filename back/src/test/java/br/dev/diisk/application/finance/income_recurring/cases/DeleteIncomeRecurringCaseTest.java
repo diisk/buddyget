@@ -1,36 +1,30 @@
 package br.dev.diisk.application.finance.income_recurring.cases;
 
-import br.dev.diisk.domain.category.Category;
-import br.dev.diisk.domain.category.CategoryFixture;
-import br.dev.diisk.domain.category.CategoryTypeEnum;
+import br.dev.diisk.application.finance.income_transaction.cases.DeleteIncomeTransactionCase;
 import br.dev.diisk.domain.finance.income_recurring.IIncomeRecurringRepository;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurring;
-import br.dev.diisk.domain.finance.income_recurring.IncomeRecurringFixture;
 import br.dev.diisk.domain.finance.income_transaction.IIncomeTransactionRepository;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransaction;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransactionFixture;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
-import br.dev.diisk.domain.shared.value_objects.DayOfMonth;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.user.UserFixture;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
  * Testes unitários para DeleteIncomeRecurringCase.
+ * Segue o padrão Given-When-Then e cobre todos os cenários possíveis.
  */
 @ExtendWith(MockitoExtension.class)
 class DeleteIncomeRecurringCaseTest {
@@ -42,163 +36,162 @@ class DeleteIncomeRecurringCaseTest {
     private IIncomeTransactionRepository incomeTransactionRepository;
 
     @Mock
-    private ListIncomeRecurringTransactionsCase listIncomeRecurringTransactionsCase;
+    private DeleteIncomeTransactionCase deleteIncomeTransactionCase;
 
     @InjectMocks
     private DeleteIncomeRecurringCase deleteIncomeRecurringCase;
 
+    /**
+     * Deve deletar a receita recorrente e suas transações relacionadas quando todos os dados forem válidos.
+     */
     @Test
-    @DisplayName("Deve deletar receita recorrente e suas transações com sucesso quando dados válidos")
-    void deleteIncomeRecurring_deveDeletarComSucesso_quandoDadosValidos() {
-        // Given - Prepara os dados de entrada e mocks
-        Long userId = 10L;
-        Long incomeRecurringId = 1L;
+    void deleteIncomeRecurring_deveDeletarRecorrenteETransacoesRelacionadas_quandoTodosOsDadosForemValidos() {
+        // Given: usuário e receita recorrente válidos com transações relacionadas
+        Long userId = 1L;
+        Long incomeRecurringId = 10L;
         User user = UserFixture.umUsuarioComId(userId);
-        Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
-        DayOfMonth recurringDay = new DayOfMonth(1);
-        IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, user,
-                category, recurringDay, period);
+        
+        IncomeRecurring incomeRecurring = mock(IncomeRecurring.class);
+        when(incomeRecurring.getUserId()).thenReturn(userId);
 
-        IncomeTransaction transaction1 = IncomeTransactionFixture.umaIncomeTransactionComId(1L);
-        IncomeTransaction transaction2 = IncomeTransactionFixture.umaIncomeTransactionComId(2L);
-        List<IncomeTransaction> transactions = Arrays.asList(transaction1, transaction2);
+        IncomeTransaction transaction1 = IncomeTransactionFixture.umaIncomeTransactionComId(20L);
+        IncomeTransaction transaction2 = IncomeTransactionFixture.umaIncomeTransactionComId(21L);
+        List<IncomeTransaction> relatedTransactions = Arrays.asList(transaction1, transaction2);
 
         when(incomeRecurringRepository.findById(incomeRecurringId)).thenReturn(Optional.of(incomeRecurring));
-        when(listIncomeRecurringTransactionsCase.execute(user, incomeRecurringId)).thenReturn(transactions);
+        when(incomeTransactionRepository.findAllRecurringRelatedBy(Arrays.asList(incomeRecurringId)))
+                .thenReturn(relatedTransactions);
 
-        // When - Executa o método a ser testado
+        // When: executa o caso de uso
         deleteIncomeRecurringCase.execute(user, incomeRecurringId);
 
-        // Then - Verifica os resultados usando assertions
-        // Comentário: Verifica se a receita recorrente foi marcada como deletada
-        assertTrue(incomeRecurring.isDeleted());
-
-        // Comentário: Verifica se todas as transações foram marcadas como deletadas
-        assertTrue(transaction1.isDeleted());
-        assertTrue(transaction2.isDeleted());
-
-        // Comentário: Verifica se os métodos dos repositórios foram chamados corretamente
+        // Then: verifica que a receita recorrente foi marcada como deletada e salva
         verify(incomeRecurringRepository).findById(incomeRecurringId);
-        verify(listIncomeRecurringTransactionsCase).execute(user, incomeRecurringId);
-        verify(incomeTransactionRepository).save(transactions);
+        verify(incomeRecurring).delete();
         verify(incomeRecurringRepository).save(incomeRecurring);
+        
+        // Verifica que as transações relacionadas foram deletadas
+        verify(incomeTransactionRepository).findAllRecurringRelatedBy(Arrays.asList(incomeRecurringId));
+        verify(deleteIncomeTransactionCase).execute(user, 20L, true);
+        verify(deleteIncomeTransactionCase).execute(user, 21L, true);
     }
 
+    /**
+     * Deve deletar a receita recorrente sem transações relacionadas quando não existirem transações.
+     */
     @Test
-    @DisplayName("Deve deletar receita recorrente sem transações quando não há transações associadas")
-    void deleteIncomeRecurring_deveDeletarSemTransacoes_quandoNaoHaTransacoesAssociadas() {
-        // Given - Prepara o cenário onde não há transações associadas
-        Long userId = 10L;
-        Long incomeRecurringId = 1L;
+    void deleteIncomeRecurring_deveDeletarApenasRecorrente_quandoNaoExistiremTransacoesRelacionadas() {
+        // Given: usuário e receita recorrente válidos sem transações relacionadas
+        Long userId = 1L;
+        Long incomeRecurringId = 10L;
         User user = UserFixture.umUsuarioComId(userId);
-        Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
-        DayOfMonth recurringDay = new DayOfMonth(1);
-        IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, user,
-                category, recurringDay, period);
-
-        List<IncomeTransaction> emptyTransactions = Arrays.asList();
+        
+        IncomeRecurring incomeRecurring = mock(IncomeRecurring.class);
+        when(incomeRecurring.getUserId()).thenReturn(userId);
 
         when(incomeRecurringRepository.findById(incomeRecurringId)).thenReturn(Optional.of(incomeRecurring));
-        when(listIncomeRecurringTransactionsCase.execute(user, incomeRecurringId)).thenReturn(emptyTransactions);
+        when(incomeTransactionRepository.findAllRecurringRelatedBy(Arrays.asList(incomeRecurringId)))
+                .thenReturn(Collections.emptyList());
 
-        // When - Executa o método a ser testado
+        // When: executa o caso de uso
         deleteIncomeRecurringCase.execute(user, incomeRecurringId);
 
-        // Then - Verifica os resultados usando assertions
-        // Comentário: Verifica se a receita recorrente foi marcada como deletada
-        assertTrue(incomeRecurring.isDeleted());
-
-        // Comentário: Verifica se os métodos foram chamados corretamente
+        // Then: verifica que apenas a receita recorrente foi marcada como deletada e salva
         verify(incomeRecurringRepository).findById(incomeRecurringId);
-        verify(listIncomeRecurringTransactionsCase).execute(user, incomeRecurringId);
-        verify(incomeTransactionRepository).save(emptyTransactions);
+        verify(incomeRecurring).delete();
         verify(incomeRecurringRepository).save(incomeRecurring);
+        
+        // Verifica que nenhuma transação foi deletada
+        verify(incomeTransactionRepository).findAllRecurringRelatedBy(Arrays.asList(incomeRecurringId));
+        verify(deleteIncomeTransactionCase, never()).execute(any(User.class), any(Long.class), any(Boolean.class));
     }
 
+    /**
+     * Não deve fazer nada quando a receita recorrente não for encontrada.
+     */
     @Test
-    @DisplayName("Deve retornar sem fazer nada quando receita recorrente não for encontrada")
-    void deleteIncomeRecurring_deveRetornarSemFazerNada_quandoReceitaRecorrenteNaoEncontrada() {
-        // Given - Prepara o cenário onde a receita recorrente não existe
-        Long userId = 10L;
+    void deleteIncomeRecurring_naoDeveFazerNada_quandoRecorrenteNaoForEncontrada() {
+        // Given: ID de receita recorrente que não existe
+        Long userId = 1L;
         Long incomeRecurringId = 999L;
         User user = UserFixture.umUsuarioComId(userId);
 
         when(incomeRecurringRepository.findById(incomeRecurringId)).thenReturn(Optional.empty());
 
-        // When - Executa o método a ser testado
+        // When: executa o caso de uso
         deleteIncomeRecurringCase.execute(user, incomeRecurringId);
 
-        // Then - Verifica os resultados usando assertions
-        // Comentário: Verifica se apenas o método de busca foi chamado
+        // Then: verifica que nenhuma ação foi executada
         verify(incomeRecurringRepository).findById(incomeRecurringId);
-        verifyNoInteractions(listIncomeRecurringTransactionsCase);
-        verifyNoInteractions(incomeTransactionRepository);
         verify(incomeRecurringRepository, never()).save(any(IncomeRecurring.class));
+        verify(incomeTransactionRepository, never()).findAllRecurringRelatedBy(any());
+        verify(deleteIncomeTransactionCase, never()).execute(any(User.class), any(Long.class), any(Boolean.class));
     }
 
+    /**
+     * Não deve fazer nada quando a receita recorrente não pertencer ao usuário.
+     */
     @Test
-    @DisplayName("Deve retornar sem fazer nada quando receita recorrente não pertence ao usuário")
-    void deleteIncomeRecurring_deveRetornarSemFazerNada_quandoReceitaRecorrenteNaoPertenceAoUsuario() {
-        // Given - Prepara o cenário onde a receita recorrente pertence a outro usuário
-        Long userId = 10L;
-        Long outroUserId = 99L;
-        Long incomeRecurringId = 1L;
+    void deleteIncomeRecurring_naoDeveFazerNada_quandoRecorrenteNaoPertenceAoUsuario() {
+        // Given: usuário e receita recorrente de outro usuário
+        Long userId = 1L;
+        Long outroUserId = 2L;
+        Long incomeRecurringId = 10L;
         User user = UserFixture.umUsuarioComId(userId);
-        User outroUser = UserFixture.umUsuarioComId(outroUserId);
-        Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, outroUser);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
-        DayOfMonth recurringDay = new DayOfMonth(1);
-        IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, outroUser,
-                category, recurringDay, period);
+        
+        IncomeRecurring incomeRecurring = mock(IncomeRecurring.class);
+        when(incomeRecurring.getUserId()).thenReturn(outroUserId);
 
         when(incomeRecurringRepository.findById(incomeRecurringId)).thenReturn(Optional.of(incomeRecurring));
 
-        // When - Executa o método a ser testado
+        // When: executa o caso de uso
         deleteIncomeRecurringCase.execute(user, incomeRecurringId);
 
-        // Then - Verifica os resultados usando assertions
-        // Comentário: Verifica se apenas o método de busca foi chamado quando usuário não tem acesso
+        // Then: verifica que nenhuma ação foi executada
         verify(incomeRecurringRepository).findById(incomeRecurringId);
-        verifyNoInteractions(listIncomeRecurringTransactionsCase);
-        verifyNoInteractions(incomeTransactionRepository);
         verify(incomeRecurringRepository, never()).save(any(IncomeRecurring.class));
+        verify(incomeTransactionRepository, never()).findAllRecurringRelatedBy(any());
+        verify(deleteIncomeTransactionCase, never()).execute(any(User.class), any(Long.class), any(Boolean.class));
     }
 
+    /**
+     * Deve tratar corretamente quando o parâmetro user for null.
+     */
     @Test
-    @DisplayName("Deve deletar uma única transação quando receita recorrente tem apenas uma transação")
-    void deleteIncomeRecurring_deveDeletarUmaTransacao_quandoReceitaTemApenasumaTransacao() {
-        // Given - Prepara o cenário com apenas uma transação
-        Long userId = 10L;
-        Long incomeRecurringId = 1L;
-        User user = UserFixture.umUsuarioComId(userId);
-        Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
-        DayOfMonth recurringDay = new DayOfMonth(1);
-        IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, user,
-                category, recurringDay, period);
+    void deleteIncomeRecurring_naoDeveFazerNada_quandoUserForNull() {
+        // Given: user null e ID válido
+        Long incomeRecurringId = 10L;
+        User user = null;
 
-        IncomeTransaction singleTransaction = IncomeTransactionFixture.umaIncomeTransactionComId(1L);
-        List<IncomeTransaction> transactions = Arrays.asList(singleTransaction);
-
-        when(incomeRecurringRepository.findById(incomeRecurringId)).thenReturn(Optional.of(incomeRecurring));
-        when(listIncomeRecurringTransactionsCase.execute(user, incomeRecurringId)).thenReturn(transactions);
-
-        // When - Executa o método a ser testado
+        // When: executa o caso de uso
         deleteIncomeRecurringCase.execute(user, incomeRecurringId);
 
-        // Then - Verifica os resultados usando assertions
-        // Comentário: Verifica se a receita recorrente foi marcada como deletada
-        assertTrue(incomeRecurring.isDeleted());
-
-        // Comentário: Verifica se a única transação foi marcada como deletada
-        assertTrue(singleTransaction.isDeleted());
-
-        // Comentário: Verifica se os métodos dos repositórios foram chamados corretamente
+        // Then: verifica que nenhuma ação foi executada para evitar NullPointerException
         verify(incomeRecurringRepository).findById(incomeRecurringId);
-        verify(listIncomeRecurringTransactionsCase).execute(user, incomeRecurringId);
-        verify(incomeTransactionRepository).save(transactions);
-        verify(incomeRecurringRepository).save(incomeRecurring);
+        verify(incomeRecurringRepository, never()).save(any(IncomeRecurring.class));
+        verify(incomeTransactionRepository, never()).findAllRecurringRelatedBy(any());
+        verify(deleteIncomeTransactionCase, never()).execute(any(User.class), any(Long.class), any(Boolean.class));
+    }
+
+    /**
+     * Deve tratar corretamente quando o parâmetro incomeRecurringId for null.
+     */
+    @Test
+    void deleteIncomeRecurring_naoDeveFazerNada_quandoIncomeRecurringIdForNull() {
+        // Given: user válido e ID null
+        Long userId = 1L;
+        Long incomeRecurringId = null;
+        User user = UserFixture.umUsuarioComId(userId);
+
+        when(incomeRecurringRepository.findById(incomeRecurringId)).thenReturn(Optional.empty());
+
+        // When: executa o caso de uso
+        deleteIncomeRecurringCase.execute(user, incomeRecurringId);
+
+        // Then: verifica que nenhuma ação foi executada
+        verify(incomeRecurringRepository).findById(incomeRecurringId);
+        verify(incomeRecurringRepository, never()).save(any(IncomeRecurring.class));
+        verify(incomeTransactionRepository, never()).findAllRecurringRelatedBy(any());
+        verify(deleteIncomeTransactionCase, never()).execute(any(User.class), any(Long.class), any(Boolean.class));
     }
 }

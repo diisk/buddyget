@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.dev.diisk.domain.finance.income_transaction.IIncomeTransactionRepository;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransaction;
-import br.dev.diisk.domain.finance.income_transaction.ListIncomeTransactionsFilter;
+import br.dev.diisk.domain.finance.income_transaction.ListPaidIncomeTransactionsFilter;
 import br.dev.diisk.domain.shared.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.shared.validations.DateLesserOrEqualNowValidation;
 import br.dev.diisk.domain.shared.validations.StartDateHigherOrEqualEndDateValidation;
@@ -19,12 +19,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ListIncomeTransactionsCase {
+public class ListPaidIncomeTransactionsCase {
 
     private final IIncomeTransactionRepository incomeRepository;
 
     @Transactional
-    public Page<IncomeTransaction> execute(User user, ListIncomeTransactionsFilter filter, Pageable pageable) {
+    public Page<IncomeTransaction> execute(User user, ListPaidIncomeTransactionsFilter filter, Pageable pageable) {
 
         if (filter.getEndDate() == null)
             filter.setEndDate(LocalDateTime.now());
@@ -41,6 +41,6 @@ public class ListIncomeTransactionsCase {
 
         validations.forEach(validation -> validation.validate(getClass()));
 
-        return incomeRepository.findAllBy(user.getId(), filter, pageable);
+        return incomeRepository.findAllPaidBy(user.getId(), filter, pageable);
     }
 }

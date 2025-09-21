@@ -11,6 +11,7 @@ import br.dev.diisk.application.shared.services.UtilService;
 import br.dev.diisk.domain.credit_card.CreditCard;
 import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
+import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.wish_list.WishListItem;
 import jakarta.transaction.Transactional;
@@ -28,13 +29,13 @@ public class PayExpenseRecurringCase {
     public ExpenseTransaction execute(User user, Long id, PayExpenseRecurringParams params) {
 
         if (params.getPaymentDate() == null)
-            throw new NullPointerException("A data de pagamento é obrigatória");
+            throw new NullOrEmptyException("A data de pagamento é obrigatória", getClass());
 
         if (params.getReferenceDate() == null)
-            throw new NullPointerException("A data de referência é obrigatória");
+            throw new NullOrEmptyException("A data de referência é obrigatória", getClass());
 
         if (id == null)
-            throw new NullPointerException("O id da despesa recorrente é obrigatório");
+            throw new NullOrEmptyException("O id da despesa recorrente é obrigatório", getClass());
 
         ExpenseRecurring expenseRecurring = getExpenseRecurringCase.execute(user, id);
         CreditCard creditCard = expenseRecurring.getCreditCard();

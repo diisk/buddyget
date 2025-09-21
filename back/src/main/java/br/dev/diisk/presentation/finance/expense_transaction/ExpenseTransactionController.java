@@ -19,7 +19,7 @@ import br.dev.diisk.application.finance.expense_transaction.dtos.PendingExpenseT
 import br.dev.diisk.application.finance.expense_transaction.dtos.UpdateExpenseTransactionParams;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
-import br.dev.diisk.domain.finance.expense_transaction.ListExpenseTransactionsFilter;
+import br.dev.diisk.domain.finance.expense_transaction.ListPaidExpenseTransactionsFilter;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.PageResponse;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
@@ -41,20 +41,6 @@ public class ExpenseTransactionController {
     private final DeleteExpenseTransactionCase deleteExpenseTransactionCase;
     private final ListPendingExpenseTransactionsCase listPendingExpenseTransactionsCase;
 
-    @GetMapping("")
-    public ResponseEntity<SuccessResponse<List<ExpenseResponse>>> listPendingExpenses(
-            @RequestParam(required = false) LocalDateTime startDate,
-            @RequestParam(required = false) LocalDateTime endDate,
-            @RequestParam(required = false) String searchString,
-            @AuthenticationPrincipal User user) {
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
-        filter.setStartDate(startDate);
-        filter.setEndDate(endDate);
-        filter.setSearchString(searchString);
-
-        return responseService.ok(null);
-    }
-
     @GetMapping("/paids")
     public ResponseEntity<SuccessResponse<PageResponse<ExpenseResponse>>> listPaidExpenses(
             @RequestParam(required = false) LocalDateTime startDate,
@@ -62,7 +48,7 @@ public class ExpenseTransactionController {
             @RequestParam(required = false) String searchString,
             Pageable pageable,
             @AuthenticationPrincipal User user) {
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(startDate);
         filter.setEndDate(endDate);
         filter.setSearchString(searchString);

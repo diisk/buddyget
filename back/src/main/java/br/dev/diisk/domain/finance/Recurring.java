@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -21,14 +21,14 @@ import lombok.Setter;
 public abstract class Recurring extends Finance {
 
     @Embedded
-    protected DataRange period;
+    protected Period period;
 
     @Getter(value = lombok.AccessLevel.NONE)
     @Setter
     @Column(nullable = false)
     private Boolean active = true;
 
-    public Recurring(String description, Category category, BigDecimal value, DataRange period,
+    public Recurring(String description, Category category, BigDecimal value, Period period,
             User user) {
         super(description, category, value, user);
         this.period = period;
@@ -51,10 +51,10 @@ public abstract class Recurring extends Finance {
         if(this.period.getEndDate() != null)
             throw new BusinessException(getClass(), "Essa recorrência já possui uma data de término.");
         
-        this.period = new DataRange(getStartDate(), endDate);
+        this.period = new Period(getStartDate(), endDate);
     }
 
-    private void validatePeriod(DataRange period) {
+    private void validatePeriod(Period period) {
         if (period == null)
             throw new NullOrEmptyException(getClass(), "period");
 

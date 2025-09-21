@@ -46,7 +46,7 @@ class UpdateIncomeTransactionCaseTest {
             Category categoria) {
         IncomeTransaction tx = mock(IncomeTransaction.class);
         when(tx.getValue()).thenReturn(valor);
-        when(tx.getReceiptDate()).thenReturn(data);
+        when(tx.getPaymentDate()).thenReturn(data);
         when(tx.getCategory()).thenReturn(categoria);
         return tx;
     }
@@ -79,12 +79,12 @@ class UpdateIncomeTransactionCaseTest {
         UpdateIncomeTransactionParams params = mock(UpdateIncomeTransactionParams.class);
         when(params.getDescription()).thenReturn("Nova descrição");
         when(params.getValue()).thenReturn(new BigDecimal("200.00"));
-        when(params.getReceiptDate()).thenReturn(LocalDateTime.of(2024, 2, 1, 0, 0));
+        when(params.getPaymentDate()).thenReturn(LocalDateTime.of(2024, 2, 1, 0, 0));
         when(getIncomeTransactionCase.execute(user, txId)).thenReturn(tx);
         // Simula update: após update, getValue/getReceiptDate retornam novos valores
         doAnswer(invocation -> {
             when(tx.getValue()).thenReturn(new BigDecimal("200.00"));
-            when(tx.getReceiptDate()).thenReturn(LocalDateTime.of(2024, 2, 1, 0, 0));
+            when(tx.getPaymentDate()).thenReturn(LocalDateTime.of(2024, 2, 1, 0, 0));
             return null;
         }).when(tx).update(anyString(), any(BigDecimal.class), any(LocalDateTime.class));
 

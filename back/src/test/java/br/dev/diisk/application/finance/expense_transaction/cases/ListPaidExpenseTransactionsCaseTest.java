@@ -2,7 +2,7 @@ package br.dev.diisk.application.finance.expense_transaction.cases;
 
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionRepository;
-import br.dev.diisk.domain.finance.expense_transaction.ListExpenseTransactionsFilter;
+import br.dev.diisk.domain.finance.expense_transaction.ListPaidExpenseTransactionsFilter;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.user.UserFixture;
@@ -45,7 +45,7 @@ class ListPaidExpenseTransactionsCaseTest {
         LocalDateTime startDate = LocalDateTime.now().minusDays(30);
         LocalDateTime endDate = LocalDateTime.now().minusDays(1);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(startDate);
         filter.setEndDate(endDate);
         filter.setSearchString("teste");
@@ -53,7 +53,7 @@ class ListPaidExpenseTransactionsCaseTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<ExpenseTransaction> expectedPage = new PageImpl<>(Collections.emptyList());
         
-        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable)))
+        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable)))
                 .thenReturn(expectedPage);
 
         // When
@@ -61,7 +61,7 @@ class ListPaidExpenseTransactionsCaseTest {
 
         // Then
         assertEquals(expectedPage, result);
-        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable));
+        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable));
         
         // Verificar que as datas originais foram mantidas
         assertEquals(startDate, filter.getStartDate());
@@ -75,14 +75,14 @@ class ListPaidExpenseTransactionsCaseTest {
         User user = UserFixture.umUsuarioComId(1L);
         LocalDateTime startDate = LocalDateTime.now().minusDays(30);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(startDate);
         filter.setEndDate(null);
         
         Pageable pageable = PageRequest.of(0, 10);
         Page<ExpenseTransaction> expectedPage = new PageImpl<>(Collections.emptyList());
         
-        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable)))
+        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable)))
                 .thenReturn(expectedPage);
 
         LocalDateTime beforeExecution = LocalDateTime.now();
@@ -98,7 +98,7 @@ class ListPaidExpenseTransactionsCaseTest {
         assertTrue(filter.getEndDate().isAfter(beforeExecution.minusSeconds(1)));
         assertTrue(filter.getEndDate().isBefore(afterExecution.plusSeconds(1)));
         assertEquals(startDate, filter.getStartDate());
-        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable));
+        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable));
     }
 
     // Teste: Deve definir startDate como primeiro dia do mês da endDate quando não informada
@@ -108,14 +108,14 @@ class ListPaidExpenseTransactionsCaseTest {
         User user = UserFixture.umUsuarioComId(1L);
         LocalDateTime endDate = LocalDateTime.now().minusDays(15);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(null);
         filter.setEndDate(endDate);
         
         Pageable pageable = PageRequest.of(0, 10);
         Page<ExpenseTransaction> expectedPage = new PageImpl<>(Collections.emptyList());
         
-        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable)))
+        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable)))
                 .thenReturn(expectedPage);
 
         // When
@@ -126,7 +126,7 @@ class ListPaidExpenseTransactionsCaseTest {
         assertNotNull(filter.getStartDate());
         assertEquals(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), 1, 0, 0), filter.getStartDate());
         assertEquals(endDate, filter.getEndDate());
-        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable));
+        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable));
     }
 
     // Teste: Deve definir ambas as datas quando ambas não informadas
@@ -135,14 +135,14 @@ class ListPaidExpenseTransactionsCaseTest {
         // Given
         User user = UserFixture.umUsuarioComId(1L);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(null);
         filter.setEndDate(null);
         
         Pageable pageable = PageRequest.of(0, 10);
         Page<ExpenseTransaction> expectedPage = new PageImpl<>(Collections.emptyList());
         
-        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable)))
+        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable)))
                 .thenReturn(expectedPage);
 
         LocalDateTime beforeExecution = LocalDateTime.now();
@@ -168,7 +168,7 @@ class ListPaidExpenseTransactionsCaseTest {
         // Verificar que startDate é menor que agora (evita falhas de validação)
         assertTrue(filter.getStartDate().isBefore(LocalDateTime.now()));
         
-        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable));
+        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable));
     }
 
     // Teste: Deve lançar exceção quando startDate é maior ou igual ao momento atual
@@ -179,7 +179,7 @@ class ListPaidExpenseTransactionsCaseTest {
         LocalDateTime futureDate = LocalDateTime.now().plusDays(1);
         LocalDateTime endDate = LocalDateTime.now().plusDays(2);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(futureDate);
         filter.setEndDate(endDate);
         
@@ -202,14 +202,14 @@ class ListPaidExpenseTransactionsCaseTest {
         LocalDateTime pastStartDate = LocalDateTime.now().minusDays(7);
         LocalDateTime pastEndDate = LocalDateTime.now().minusDays(1);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(pastStartDate);
         filter.setEndDate(pastEndDate);
         
         Pageable pageable = PageRequest.of(0, 10);
         Page<ExpenseTransaction> expectedPage = new PageImpl<>(Collections.emptyList());
         
-        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable)))
+        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable)))
                 .thenReturn(expectedPage);
 
         // When
@@ -219,7 +219,7 @@ class ListPaidExpenseTransactionsCaseTest {
         assertEquals(expectedPage, result);
         assertEquals(pastStartDate, filter.getStartDate());
         assertEquals(pastEndDate, filter.getEndDate());
-        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable));
+        verify(expenseRepository).findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable));
     }
 
     // Teste: Deve lançar exceção quando startDate é maior que endDate
@@ -230,7 +230,7 @@ class ListPaidExpenseTransactionsCaseTest {
         LocalDateTime startDate = LocalDateTime.now().minusDays(5); // Depois
         LocalDateTime endDate = LocalDateTime.now().minusDays(10);  // Antes
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(startDate);
         filter.setEndDate(endDate);
         
@@ -253,7 +253,7 @@ class ListPaidExpenseTransactionsCaseTest {
         User user = UserFixture.umUsuarioComId(1L);
         LocalDateTime sameDate = LocalDateTime.now().minusDays(5);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(sameDate);
         filter.setEndDate(sameDate);
         
@@ -277,7 +277,7 @@ class ListPaidExpenseTransactionsCaseTest {
         LocalDateTime startDate = LocalDateTime.now().minusDays(30);
         LocalDateTime endDate = LocalDateTime.now().minusDays(1);
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(startDate);
         filter.setEndDate(endDate);
         filter.setSearchString("busca teste");
@@ -285,7 +285,7 @@ class ListPaidExpenseTransactionsCaseTest {
         Pageable pageable = PageRequest.of(2, 15);
         Page<ExpenseTransaction> expectedPage = new PageImpl<>(Collections.emptyList());
         
-        when(expenseRepository.findAllPaidBy(eq(123L), any(ListExpenseTransactionsFilter.class), eq(pageable)))
+        when(expenseRepository.findAllPaidBy(eq(123L), any(ListPaidExpenseTransactionsFilter.class), eq(pageable)))
                 .thenReturn(expectedPage);
 
         // When
@@ -295,10 +295,10 @@ class ListPaidExpenseTransactionsCaseTest {
         assertEquals(expectedPage, result);
         
         // Capturar e verificar o filtro passado para o repositório
-        ArgumentCaptor<ListExpenseTransactionsFilter> filterCaptor = ArgumentCaptor.forClass(ListExpenseTransactionsFilter.class);
+        ArgumentCaptor<ListPaidExpenseTransactionsFilter> filterCaptor = ArgumentCaptor.forClass(ListPaidExpenseTransactionsFilter.class);
         verify(expenseRepository).findAllPaidBy(eq(123L), filterCaptor.capture(), eq(pageable));
         
-        ListExpenseTransactionsFilter capturedFilter = filterCaptor.getValue();
+        ListPaidExpenseTransactionsFilter capturedFilter = filterCaptor.getValue();
         assertEquals(startDate, capturedFilter.getStartDate());
         assertEquals(endDate, capturedFilter.getEndDate());
         assertEquals("busca teste", capturedFilter.getSearchString());
@@ -311,7 +311,7 @@ class ListPaidExpenseTransactionsCaseTest {
         User user = UserFixture.umUsuarioComId(1L);
         String searchString = "texto de busca específico";
         
-        ListExpenseTransactionsFilter filter = new ListExpenseTransactionsFilter();
+        ListPaidExpenseTransactionsFilter filter = new ListPaidExpenseTransactionsFilter();
         filter.setStartDate(null);
         filter.setEndDate(null);
         filter.setSearchString(searchString);
@@ -319,7 +319,7 @@ class ListPaidExpenseTransactionsCaseTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<ExpenseTransaction> expectedPage = new PageImpl<>(Collections.emptyList());
         
-        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListExpenseTransactionsFilter.class), eq(pageable)))
+        when(expenseRepository.findAllPaidBy(eq(user.getId()), any(ListPaidExpenseTransactionsFilter.class), eq(pageable)))
                 .thenReturn(expectedPage);
 
         // When
@@ -329,10 +329,10 @@ class ListPaidExpenseTransactionsCaseTest {
         assertEquals(expectedPage, result);
         assertEquals(searchString, filter.getSearchString());
         
-        ArgumentCaptor<ListExpenseTransactionsFilter> filterCaptor = ArgumentCaptor.forClass(ListExpenseTransactionsFilter.class);
+        ArgumentCaptor<ListPaidExpenseTransactionsFilter> filterCaptor = ArgumentCaptor.forClass(ListPaidExpenseTransactionsFilter.class);
         verify(expenseRepository).findAllPaidBy(eq(user.getId()), filterCaptor.capture(), eq(pageable));
         
-        ListExpenseTransactionsFilter capturedFilter = filterCaptor.getValue();
+        ListPaidExpenseTransactionsFilter capturedFilter = filterCaptor.getValue();
         assertEquals(searchString, capturedFilter.getSearchString());
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionRepository;
-import br.dev.diisk.domain.finance.expense_transaction.ListExpenseTransactionsFilter;
+import br.dev.diisk.domain.finance.expense_transaction.ListPaidExpenseTransactionsFilter;
 import br.dev.diisk.infra.shared.BaseRepository;
 
 @Repository
@@ -20,7 +20,7 @@ public class ExpenseTransactionRepository extends BaseRepository<ExpenseTransact
     }
 
     @Override
-    public Page<ExpenseTransaction> findAllPaidBy(Long userId, ListExpenseTransactionsFilter filter,
+    public Page<ExpenseTransaction> findAllPaidBy(Long userId, ListPaidExpenseTransactionsFilter filter,
             Pageable pageable) {
         return jpa.findAllPaidBy(userId, filter.getStartDate(), filter.getEndDate(), filter.getSearchString(),
                 pageable);

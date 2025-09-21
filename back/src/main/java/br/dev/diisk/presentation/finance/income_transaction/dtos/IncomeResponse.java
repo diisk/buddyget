@@ -11,7 +11,7 @@ public record IncomeResponse(
                 Long id,
                 IncomeRecurringResponse incomeRecurring,
                 GoalResponse goal,
-                String receiptDate,
+                String paymentDate,
                 BigDecimal value,
                 String description,
                 CategoryResponse category,
@@ -26,8 +26,8 @@ public record IncomeResponse(
                                                 : null,
                                 incomeTransaction.getGoal() != null ? new GoalResponse(incomeTransaction.getGoal())
                                                 : null,
-                                incomeTransaction.getReceiptDate() != null
-                                                ? incomeTransaction.getReceiptDate().toString()
+                                incomeTransaction.getPaymentDate() != null
+                                                ? incomeTransaction.getPaymentDate().toString()
                                                 : null,
                                 incomeTransaction.getValue(),
                                 incomeTransaction.getDescription(),

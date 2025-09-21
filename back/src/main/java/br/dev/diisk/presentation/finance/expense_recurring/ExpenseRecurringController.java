@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import br.dev.diisk.application.finance.expense_recurring.cases.AddExpenseRecurringCase;
+import br.dev.diisk.application.finance.expense_recurring.cases.DeleteExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_recurring.cases.EndExpenseRecurringCase;
 import br.dev.diisk.application.finance.expense_recurring.cases.ListExpenseRecurringsCase;
 import br.dev.diisk.application.finance.expense_recurring.cases.PayExpenseRecurringCase;
@@ -38,6 +39,7 @@ public class ExpenseRecurringController {
     private final AddExpenseRecurringCase addExpenseRecurringCase;
     private final PayExpenseRecurringCase payExpenseRecurringCase;
     private final EndExpenseRecurringCase endExpenseRecurringCase;
+    private final DeleteExpenseRecurringCase deleteExpenseRecurringCase;
 
     @GetMapping
     public ResponseEntity<SuccessResponse<PageResponse<ExpenseRecurringResponse>>> listExpensesRecurrings(
@@ -86,16 +88,19 @@ public class ExpenseRecurringController {
 
     @PatchMapping("/{id}/end")
     public ResponseEntity<SuccessResponse<ExpenseRecurringResponse>> endExpenseRecurring(
-            @PathVariable Long id, @RequestBody @Valid EndExpenseRecurringRequest request, @AuthenticationPrincipal User user) {
-                EndExpenseRecurringParams params = new EndExpenseRecurringParams();
-                params.setEndDate(request.endDate());
-                ExpenseRecurring expenseRecurring = endExpenseRecurringCase.execute(user, params, id);
-                ExpenseRecurringResponse response = new ExpenseRecurringResponse(expenseRecurring);
+            @PathVariable Long id, @RequestBody @Valid EndExpenseRecurringRequest request,
+            @AuthenticationPrincipal User user) {
+        EndExpenseRecurringParams params = new EndExpenseRecurringParams();
+        params.setEndDate(request.endDate());
+        ExpenseRecurring expenseRecurring = endExpenseRecurringCase.execute(user, params, id);
+        ExpenseRecurringResponse response = new ExpenseRecurringResponse(expenseRecurring);
         return responseService.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessResponse<Boolean>> deleteExpenseRecurring(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<Boolean>> deleteExpenseRecurring(@PathVariable Long id,
+            @AuthenticationPrincipal User user) {
+        deleteExpenseRecurringCase.execute(user, id);
         return responseService.ok(true);
     }
 }

@@ -23,6 +23,8 @@ import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionRepository;
 import br.dev.diisk.domain.goal.Goal;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
+import br.dev.diisk.domain.shared.validations.DateOutOfRangeValidation;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.wish_list.WishListItem;
 import jakarta.transaction.Transactional;
@@ -78,17 +80,9 @@ public class AddExpenseTransactionCase {
                 throw new BusinessException(getClass(),
                         "A data do pagamento deve ser informada se a despesa for recorrente.");
 
-            LocalDateTime startReference = utilService
-                    .getFirstDayMonthReference(expenseRecurring.getPeriod().getStartDate());
+            Period recurringPeriod = utilService.getPeriodReference(expenseRecurring.getPeriod());
 
-            LocalDateTime endReference = expenseRecurring.getPeriod().getEndDate() != null
-                    ? utilService.getLastDayMonthReference(expenseRecurring.getPeriod().getEndDate())
-                    : null;
-
-            if (recurringReferenceDate.isBefore(startReference)
-                    || (endReference != null && recurringReferenceDate.isAfter(endReference)))
-                throw new BusinessException(getClass(),
-                        "A data da referência da recorrência deve estar entre o período de vigência da mesma.");
+            new DateOutOfRangeValidation(recurringReferenceDate, recurringPeriod).validate(getClass());
 
             List<ExpenseTransaction> relatedTransactions = expenseRepository
                     .findAllRecurringRelatedBy(List.of(expenseRecurring.getId()));

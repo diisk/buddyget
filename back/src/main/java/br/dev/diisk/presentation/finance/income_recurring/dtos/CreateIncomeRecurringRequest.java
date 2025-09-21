@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record CreateIncomeRecurringRequest(
-        String description,
-        LocalDateTime startDate,
-        BigDecimal value,
-        LocalDateTime endDate,
-        Long categoryId) {
+                String description,
+                LocalDateTime startDate,
+                BigDecimal value,
+                LocalDateTime endDate,
+                Long categoryId) {
 }

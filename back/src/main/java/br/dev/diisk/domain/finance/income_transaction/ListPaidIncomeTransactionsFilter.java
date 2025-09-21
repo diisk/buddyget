@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ListIncomeTransactionsFilter {
+public class ListPaidIncomeTransactionsFilter {
 
         private LocalDateTime startDate;
         private LocalDateTime endDate;

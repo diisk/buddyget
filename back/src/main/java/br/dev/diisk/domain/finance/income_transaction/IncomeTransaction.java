@@ -34,10 +34,6 @@ public class IncomeTransaction extends Transaction {
         validate();
     }
 
-    public LocalDateTime getReceiptDate() {
-        return this.date;
-    }
-
     public void addIncomeRecurring(IncomeRecurring incomeRecurring, LocalDateTime recurringDate) {
         if (this.incomeRecurring != null)
             throw new BusinessException(getClass(), "A receita recorrente já foi definida");
@@ -53,12 +49,12 @@ public class IncomeTransaction extends Transaction {
     }
 
     public String getStatus() {
-        return getReceiptDate() != null ? TransactionStatusEnum.RECEIVED.getDescription()
+        return getPaymentDate() != null ? TransactionStatusEnum.RECEIVED.getDescription()
                 : TransactionStatusEnum.PENDING.getDescription();
     }
 
-    public void update(String description, BigDecimal value, LocalDateTime receiptDate) {
-        super.update(description, value, receiptDate);
+    public void update(String description, BigDecimal value, LocalDateTime paymentDate) {
+        super.update(description, value, paymentDate);
     }
 
     private void validateIncomeRecurring(IncomeRecurring incomeRecurring) {

@@ -7,7 +7,7 @@ import br.dev.diisk.domain.finance.income_recurring.IIncomeRecurringRepository;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurring;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurringFixture;
 import br.dev.diisk.domain.shared.exceptions.DatabaseValueNotFoundException;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.shared.value_objects.DayOfMonth;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.user.UserFixture;
@@ -44,7 +44,7 @@ class GetIncomeRecurringCaseTest {
         Long incomeRecurringId = 1L;
         User user = UserFixture.umUsuarioComId(userId);
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
+        Period period = new Period(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
         DayOfMonth recurringDay = new DayOfMonth(1);
         IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, user,
                 category, recurringDay, period);
@@ -93,7 +93,7 @@ class GetIncomeRecurringCaseTest {
         User user = UserFixture.umUsuarioComId(userId);
         User outroUser = UserFixture.umUsuarioComId(outroUserId);
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, outroUser);
-        DataRange period = new DataRange(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
+        Period period = new Period(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
         DayOfMonth recurringDay = new DayOfMonth(1);
         IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, outroUser,
                 category, recurringDay, period);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.dev.diisk.application.finance.income_transaction.cases.DeleteIncomeTransactionCase;
 import br.dev.diisk.domain.finance.income_recurring.IIncomeRecurringRepository;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurring;
 import br.dev.diisk.domain.finance.income_transaction.IIncomeTransactionRepository;
@@ -18,7 +19,7 @@ public class DeleteIncomeRecurringCase {
 
     private final IIncomeRecurringRepository incomeRecurringRepository;
     private final IIncomeTransactionRepository incomeTransactionRepository;
-    private final ListIncomeRecurringTransactionsCase listIncomeRecurringTransactionsCase;
+    private final DeleteIncomeTransactionCase deleteIncomeTransactionCase;
 
     @Transactional
     public void execute(User user, Long incomeRecurringId) {
@@ -27,13 +28,14 @@ public class DeleteIncomeRecurringCase {
         if (incomeRecurring == null || !incomeRecurring.getUserId().equals(user.getId()))
             return;
 
-        List<IncomeTransaction> transactions = listIncomeRecurringTransactionsCase.execute(user, incomeRecurringId);
         incomeRecurring.delete();
 
-        for (IncomeTransaction transaction : transactions)
-            transaction.delete();
+        List<IncomeTransaction> relatedTransactions = incomeTransactionRepository
+                .findAllRecurringRelatedBy(List.of(incomeRecurringId));
 
-        incomeTransactionRepository.save(transactions);
+        for (IncomeTransaction transaction : relatedTransactions)
+            deleteIncomeTransactionCase.execute(user, transaction.getId(), true);
+
         incomeRecurringRepository.save(incomeRecurring);
     }
 }

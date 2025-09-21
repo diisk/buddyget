@@ -12,7 +12,6 @@ import br.dev.diisk.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,8 +21,7 @@ import lombok.NoArgsConstructor;
 public abstract class Transaction extends Finance {
 
     @Column(nullable = true)
-    @Getter(value = AccessLevel.NONE)
-    protected LocalDateTime date;
+    protected LocalDateTime paymentDate;
 
     @Column(nullable = true)
     protected LocalDateTime recurringReferenceDate;
@@ -33,14 +31,14 @@ public abstract class Transaction extends Finance {
 
     public Transaction(String description, Category category, BigDecimal value, LocalDateTime date, User user) {
         super(description, category, value, user);
-        this.date = date;
+        this.paymentDate = date;
         validate();
     }
 
     protected void update(String description, BigDecimal value, LocalDateTime date) {
         super.update(description, value);
         validateDate(date);
-        this.date = date;
+        this.paymentDate = date;
     }
 
     public void addRecurringDate(LocalDateTime recurringReferenceDate) {
@@ -66,7 +64,7 @@ public abstract class Transaction extends Finance {
     }
 
     private void validate() {
-        validateDate(this.date);
+        validateDate(this.paymentDate);
         validateGoal(this.goal);
     }
 

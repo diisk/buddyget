@@ -1,7 +1,5 @@
 package br.dev.diisk.domain.finance.income_transaction;
-
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,10 +8,10 @@ import br.dev.diisk.domain.shared.interfaces.IBaseRepository;
 
 public interface IIncomeTransactionRepository extends IBaseRepository<IncomeTransaction> {
 
-    Page<IncomeTransaction> findAllBy(Long userId, ListIncomeTransactionsFilter filter, Pageable pageable);
+    Page<IncomeTransaction> findAllPaidBy(Long userId, ListPaidIncomeTransactionsFilter filter, Pageable pageable);
 
-    Set<IncomeTransaction> findByRecurring(Long userId, Long incomeRecurringId);
+    List<IncomeTransaction> findAllPendingBy(Long userId);
 
-    Boolean existsByRecurring(Long incomeRecurringId, LocalDateTime startDate, LocalDateTime endDate);
+    List<IncomeTransaction> findAllRecurringRelatedBy(List<Long> incomeRecurringIds);
 
 }

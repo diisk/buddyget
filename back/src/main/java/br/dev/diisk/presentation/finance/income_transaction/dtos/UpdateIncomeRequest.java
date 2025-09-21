@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 
 public record UpdateIncomeRequest(
-                LocalDateTime receiptDate,
+                LocalDateTime paymentDate,
                 String description,
                 BigDecimal value) {
 

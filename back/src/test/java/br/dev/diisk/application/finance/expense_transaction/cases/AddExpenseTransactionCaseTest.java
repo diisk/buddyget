@@ -22,6 +22,7 @@ import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionReposi
 import br.dev.diisk.domain.goal.Goal;
 import br.dev.diisk.domain.goal.GoalFixture;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.user.UserFixture;
 import br.dev.diisk.domain.wish_list.WishListItem;
@@ -121,9 +122,9 @@ class AddExpenseTransactionCaseTest {
         when(getGoalCase.execute(user, goalId)).thenReturn(goal);
 
         // Mock do UtilService para período de vigência
-        LocalDateTime currentDate = LocalDateTime.now();
-        when(utilService.getFirstDayMonthReference(any())).thenReturn(currentDate.minusYears(1));
-        when(utilService.getLastDayMonthReference(any())).thenReturn(currentDate.plusYears(1));
+        Period mockPeriod = new Period(recurringReferenceDate.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0), 
+                                      recurringReferenceDate.withDayOfMonth(1).plusMonths(1).minusSeconds(1));
+        when(utilService.getPeriodReference(any())).thenReturn(mockPeriod);
 
         // Quando
         addExpenseTransactionCase.execute(user, params);
@@ -336,8 +337,9 @@ class AddExpenseTransactionCaseTest {
                 .thenReturn(List.of(existingTransaction));
 
         // Mock do UtilService para período de vigência
-        when(utilService.getFirstDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
-        when(utilService.getLastDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 12, 31, 23, 59, 59));
+        Period mockPeriod = new Period(LocalDateTime.of(2024, 1, 1, 0, 0, 0), 
+                                      LocalDateTime.of(2024, 12, 31, 23, 59, 59));
+        when(utilService.getPeriodReference(any())).thenReturn(mockPeriod);
 
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
@@ -383,8 +385,9 @@ class AddExpenseTransactionCaseTest {
                 .thenReturn(List.of(existingTransaction));
 
         // Mock do UtilService para período de vigência
-        when(utilService.getFirstDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
-        when(utilService.getLastDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 12, 31, 23, 59, 59));
+        Period mockPeriod = new Period(LocalDateTime.of(2024, 1, 1, 0, 0, 0), 
+                                      LocalDateTime.of(2024, 12, 31, 23, 59, 59));
+        when(utilService.getPeriodReference(any())).thenReturn(mockPeriod);
 
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
@@ -600,8 +603,9 @@ class AddExpenseTransactionCaseTest {
                 .thenReturn(List.of()); // Lista vazia - sem conflitos
 
         // Mock do UtilService para período de vigência
-        when(utilService.getFirstDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 1, 1, 0, 0));
-        when(utilService.getLastDayMonthReference(any())).thenReturn(LocalDateTime.of(2024, 12, 31, 23, 59, 59));
+        Period mockPeriod = new Period(LocalDateTime.of(2024, 1, 1, 0, 0, 0), 
+                                      LocalDateTime.of(2024, 12, 31, 23, 59, 59));
+        when(utilService.getPeriodReference(any())).thenReturn(mockPeriod);
 
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
@@ -773,8 +777,10 @@ class AddExpenseTransactionCaseTest {
 
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
-        when(utilService.getFirstDayMonthReference(any())).thenReturn(startReference);
-        when(utilService.getLastDayMonthReference(any())).thenReturn(endReference);
+        
+        // Mock do UtilService para período de vigência
+        Period mockPeriod = new Period(startReference, endReference);
+        when(utilService.getPeriodReference(any())).thenReturn(mockPeriod);
 
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
@@ -791,7 +797,7 @@ class AddExpenseTransactionCaseTest {
         // Quando/Então: deve lançar exceção
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> addExpenseTransactionCase.execute(user, params));
-        assertEquals("A data da referência da recorrência deve estar entre o período de vigência da mesma.",
+        assertEquals("A data de referência deve estar dentro do período.",
                 exception.getMessage());
     }
 
@@ -815,8 +821,10 @@ class AddExpenseTransactionCaseTest {
 
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
-        when(utilService.getFirstDayMonthReference(any())).thenReturn(startReference);
-        when(utilService.getLastDayMonthReference(any())).thenReturn(endReference);
+        
+        // Mock do UtilService para período de vigência
+        Period mockPeriod = new Period(startReference, endReference);
+        when(utilService.getPeriodReference(any())).thenReturn(mockPeriod);
 
         AddExpenseTransactionParams params = mock(AddExpenseTransactionParams.class);
         when(params.getDescription()).thenReturn(description);
@@ -833,7 +841,7 @@ class AddExpenseTransactionCaseTest {
         // Quando/Então: deve lançar exceção
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> addExpenseTransactionCase.execute(user, params));
-        assertEquals("A data da referência da recorrência deve estar entre o período de vigência da mesma.",
+        assertEquals("A data de referência deve estar dentro do período.",
                 exception.getMessage());
     }
 
@@ -857,8 +865,11 @@ class AddExpenseTransactionCaseTest {
 
         when(getCategoryCase.execute(user, categoryId)).thenReturn(category);
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
-        when(utilService.getFirstDayMonthReference(any())).thenReturn(startReference);
-        when(utilService.getLastDayMonthReference(any())).thenReturn(endReference);
+        
+        // Mock do UtilService para período de vigência
+        Period mockPeriod = new Period(startReference, endReference);
+        when(utilService.getPeriodReference(any())).thenReturn(mockPeriod);
+        
         when(expenseRepository.findAllRecurringRelatedBy(List.of(expenseRecurringId)))
                 .thenReturn(List.of()); // Lista vazia - sem conflitos
 

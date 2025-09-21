@@ -5,7 +5,7 @@ import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.category.CategoryFixture;
 import br.dev.diisk.domain.category.CategoryTypeEnum;
 import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.user.UserFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +41,7 @@ class ListRecurringReferenceDatesTest {
     private ExpenseRecurring criarExpenseRecurringComPeriodo(LocalDateTime startDate, LocalDateTime endDate) {
         User user = UserFixture.umUsuarioComId(1L);
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.EXPENSE, user);
-        DataRange period = new DataRange(startDate, endDate);
+        Period period = new Period(startDate, endDate);
         
         ExpenseRecurring expenseRecurring = new ExpenseRecurring(
                 "Despesa Recorrente Teste",
@@ -59,7 +59,7 @@ class ListRecurringReferenceDatesTest {
     private ExpenseRecurring criarExpenseRecurringComPeriodoAberto(LocalDateTime startDate) {
         User user = UserFixture.umUsuarioComId(1L);
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.EXPENSE, user);
-        DataRange period = new DataRange(startDate, null);
+        Period period = new Period(startDate, null);
         
         ExpenseRecurring expenseRecurring = new ExpenseRecurring(
                 "Despesa Recorrente Teste",

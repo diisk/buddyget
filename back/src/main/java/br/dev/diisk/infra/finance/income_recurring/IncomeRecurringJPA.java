@@ -1,6 +1,6 @@
 package br.dev.diisk.infra.finance.income_recurring;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +36,6 @@ public interface IncomeRecurringJPA extends JpaRepository<IncomeRecurring, Long>
             AND r.deleted = false
             ORDER BY r.createdAt DESC
             """)
-    Set<IncomeRecurring> findAllActive();
+    List<IncomeRecurring> findAllByUser_IdAndActiveTrueAndDeletedFalse(Long userId);
 
 }

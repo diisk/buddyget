@@ -16,7 +16,7 @@ public class AddIncomeTransactionParams {
     private String description;
     private BigDecimal value;
     private Long categoryId;
-    private LocalDateTime receiptDate;
+    private LocalDateTime paymentDate;
     private Long goalId;
     private Long incomeRecurringId;
     private LocalDateTime recurringReferenceDate;

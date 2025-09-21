@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
 import br.dev.diisk.domain.finance.expense_transaction.IExpenseTransactionRepository;
-import br.dev.diisk.domain.finance.expense_transaction.ListExpenseTransactionsFilter;
+import br.dev.diisk.domain.finance.expense_transaction.ListPaidExpenseTransactionsFilter;
 import br.dev.diisk.domain.shared.interfaces.IValidationStrategy;
 import br.dev.diisk.domain.shared.validations.DateLesserOrEqualNowValidation;
 import br.dev.diisk.domain.shared.validations.StartDateHigherOrEqualEndDateValidation;
@@ -24,7 +24,7 @@ public class ListPaidExpenseTransactionsCase {
     private final IExpenseTransactionRepository expenseRepository;
 
     @Transactional
-    public Page<ExpenseTransaction> execute(User user, ListExpenseTransactionsFilter filter, Pageable pageable) {
+    public Page<ExpenseTransaction> execute(User user, ListPaidExpenseTransactionsFilter filter, Pageable pageable) {
 
         if (filter.getEndDate() == null)
             filter.setEndDate(LocalDateTime.now());

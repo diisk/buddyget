@@ -11,7 +11,7 @@ public interface IExpenseTransactionRepository extends IBaseRepository<ExpenseTr
 
     List<ExpenseTransaction> findAllPendingBy(Long userId);
 
-    Page<ExpenseTransaction> findAllPaidBy(Long userId, ListExpenseTransactionsFilter filter, Pageable pageable);
+    Page<ExpenseTransaction> findAllPaidBy(Long userId, ListPaidExpenseTransactionsFilter filter, Pageable pageable);
 
     List<ExpenseTransaction> findAllRecurringRelatedBy(List<Long> expenseRecurringIds);
 

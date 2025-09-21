@@ -62,6 +62,19 @@ public class IncomeTransactionFixture {
         return incomeTransaction;
     }
     
+    public static IncomeTransaction umaTransacaoComPaymentDate(Long id, User user, Category category, LocalDateTime paymentDate) {
+        IncomeTransaction incomeTransaction = new IncomeTransaction(
+                "Receita Teste",
+                category,
+                new BigDecimal("1000.00"),
+                paymentDate,
+                user
+        );
+        incomeTransaction.setId(id);
+        setCreatedAt(incomeTransaction, LocalDateTime.now());
+        return incomeTransaction;
+    }
+
     private static void setCreatedAt(IncomeTransaction transaction, LocalDateTime createdAt) {
         try {
             // Navegar pela hierarquia: IncomeTransaction -> Transaction -> GenericTransaction -> UserRastrableEntity -> RastreableEntity

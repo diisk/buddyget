@@ -6,6 +6,6 @@ import java.time.LocalDateTime;
 public record CreateIncomeRequest(
         String description,
         BigDecimal value,
-        LocalDateTime receiptDate,
+        LocalDateTime paymentDate,
         Long categoryId) {
 }

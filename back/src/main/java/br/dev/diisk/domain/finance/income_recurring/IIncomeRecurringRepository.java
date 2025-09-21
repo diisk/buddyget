@@ -1,6 +1,6 @@
 package br.dev.diisk.domain.finance.income_recurring;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,5 +11,5 @@ public interface IIncomeRecurringRepository extends IBaseRepository<IncomeRecurr
 
     Page<IncomeRecurring> findAllBy(Long userId, ListIncomeRecurringsFilter filter, Pageable pageable);
 
-    Set<IncomeRecurring> findAllActive();
+    List<IncomeRecurring> findAllActiveBy(Long userId);
 }

@@ -11,7 +11,7 @@ import br.dev.diisk.domain.credit_card.CreditCardIfExistsNotBelongUserValidation
 import br.dev.diisk.domain.finance.Recurring;
 import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.interfaces.IValidationStrategy;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.shared.value_objects.DayOfMonth;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.wish_list.WishListItem;
@@ -53,7 +53,7 @@ public class ExpenseRecurring extends Recurring {
     })
     protected DayOfMonth paymentDay;
 
-    public ExpenseRecurring(String description, DataRange period, Category category,
+    public ExpenseRecurring(String description, Period period, Category category,
             BigDecimal value, User user) {
         super(description, category, value, period, user);
         validate();

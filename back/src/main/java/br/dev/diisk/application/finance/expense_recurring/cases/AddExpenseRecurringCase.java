@@ -13,7 +13,7 @@ import br.dev.diisk.domain.category.Category;
 import br.dev.diisk.domain.credit_card.CreditCard;
 import br.dev.diisk.domain.finance.expense_recurring.IExpenseRecurringRepository;
 import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
-import br.dev.diisk.domain.shared.value_objects.DataRange;
+import br.dev.diisk.domain.shared.value_objects.Period;
 import br.dev.diisk.domain.shared.value_objects.DayOfMonth;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.wish_list.WishListItem;
@@ -48,7 +48,7 @@ public class AddExpenseRecurringCase {
         }
 
         ExpenseRecurring expenseRecurring = new ExpenseRecurring(description,
-                new DataRange(startDate, endDate), category,
+                new Period(startDate, endDate), category,
                 value, user);
 
         if (wishItemId != null) {

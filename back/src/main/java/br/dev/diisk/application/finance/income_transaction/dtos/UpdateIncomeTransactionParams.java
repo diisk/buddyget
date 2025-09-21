@@ -15,5 +15,5 @@ import lombok.Setter;
 public class UpdateIncomeTransactionParams {
     private String description;
     private BigDecimal value;
-    private LocalDateTime receiptDate;
+    private LocalDateTime paymentDate;
 }

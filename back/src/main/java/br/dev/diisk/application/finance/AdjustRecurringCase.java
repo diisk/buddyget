@@ -7,8 +7,7 @@ import java.util.function.Function;
 import org.springframework.stereotype.Service;
 import br.dev.diisk.application.shared.services.UtilService;
 import br.dev.diisk.domain.finance.Recurring;
-import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
-import br.dev.diisk.infra.finance.expense_transaction.ExpenseTransactionRepository;
+import br.dev.diisk.domain.finance.Transaction;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -16,12 +15,10 @@ import lombok.RequiredArgsConstructor;
 public class AdjustRecurringCase {
 
     private final UtilService utilService;
-    private final ExpenseTransactionRepository expenseTransactionRepository;
     private final ListRecurringReferenceDatesCase listRecurringReferenceDatesCase;
 
-    public void execute(Recurring recurring, Function<Recurring, Void> saveFunction) {
-        List<ExpenseTransaction> relatedTransactions = expenseTransactionRepository
-                .findAllRecurringRelatedBy(List.of(recurring.getId()));
+    public void execute(Recurring recurring, List<Transaction> relatedTransactions,
+            Function<Recurring, Void> saveFunction) {
         List<LocalDateTime> referenceDates = listRecurringReferenceDatesCase.execute(recurring);
         Boolean isActive = referenceDates.stream().anyMatch(refDate -> relatedTransactions.stream()
                 .noneMatch(rt -> rt.getPaymentDate() != null

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import br.dev.diisk.application.finance.income_transaction.cases.AddIncomeTransactionCase;
 import br.dev.diisk.application.finance.income_transaction.cases.DeleteIncomeTransactionCase;
-import br.dev.diisk.application.finance.income_transaction.cases.ListIncomeTransactionsCase;
+import br.dev.diisk.application.finance.income_transaction.cases.ListPaidIncomeTransactionsCase;
 import br.dev.diisk.application.finance.income_transaction.cases.UpdateIncomeTransactionCase;
 import br.dev.diisk.application.finance.income_transaction.dtos.AddIncomeTransactionParams;
 import br.dev.diisk.application.finance.income_transaction.dtos.UpdateIncomeTransactionParams;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransaction;
-import br.dev.diisk.domain.finance.income_transaction.ListIncomeTransactionsFilter;
+import br.dev.diisk.domain.finance.income_transaction.ListPaidIncomeTransactionsFilter;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.infra.shared.dtos.PageResponse;
 import br.dev.diisk.infra.shared.dtos.SuccessResponse;
@@ -33,18 +33,18 @@ public class IncomeTransactionController {
 
     private final IResponseService responseService;
     private final AddIncomeTransactionCase addIncomeTransactionCase;
-    private final ListIncomeTransactionsCase listIncomeTransactionsCase;
+    private final ListPaidIncomeTransactionsCase listIncomeTransactionsCase;
     private final UpdateIncomeTransactionCase updateIncomeTransactionCase;
     private final DeleteIncomeTransactionCase deleteIncomeTransactionCase;
 
-    @GetMapping
-    public ResponseEntity<SuccessResponse<PageResponse<IncomeResponse>>> listIncomes(
+    @GetMapping("/paids")
+    public ResponseEntity<SuccessResponse<PageResponse<IncomeResponse>>> listPaidIncomes(
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
             @RequestParam(required = false) String searchString,
             Pageable pageable,
             @AuthenticationPrincipal User user) {
-        ListIncomeTransactionsFilter filter = new ListIncomeTransactionsFilter();
+        ListPaidIncomeTransactionsFilter filter = new ListPaidIncomeTransactionsFilter();
         filter.setStartDate(startDate);
         filter.setEndDate(endDate);
         filter.setSearchString(searchString);
@@ -54,11 +54,12 @@ public class IncomeTransactionController {
         return responseService.ok(pageResponse);
     }
 
-    // @GetMapping("/{id}")
-    // public ResponseEntity<SuccessResponse<IncomeResponse>>
-    // getIncome(@PathVariable Long id) {
-    // return responseService.ok(null);
-    // }
+    @GetMapping("/pendings")
+    public ResponseEntity<SuccessResponse<PageResponse<IncomeResponse>>> listPedingIncomes(
+            @AuthenticationPrincipal User user) {
+        
+        return responseService.ok(null);
+    }
 
     @PostMapping
     public ResponseEntity<SuccessResponse<IncomeResponse>> createIncome(
@@ -68,7 +69,7 @@ public class IncomeTransactionController {
         params.setDescription(request.description());
         params.setCategoryId(request.categoryId());
         params.setValue(request.value());
-        params.setReceiptDate(request.receiptDate());
+        params.setPaymentDate(request.paymentDate());
 
         IncomeTransaction incomeTransaction = addIncomeTransactionCase.execute(user, params);
         IncomeResponse response = new IncomeResponse(incomeTransaction);
@@ -83,7 +84,7 @@ public class IncomeTransactionController {
         UpdateIncomeTransactionParams params = new UpdateIncomeTransactionParams();
         params.setDescription(request.description());
         params.setValue(request.value());
-        params.setReceiptDate(request.receiptDate());
+        params.setPaymentDate(request.paymentDate());
 
         IncomeTransaction incomeTransaction = updateIncomeTransactionCase.execute(user, id, params);
         IncomeResponse response = new IncomeResponse(incomeTransaction);
@@ -93,7 +94,7 @@ public class IncomeTransactionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse<Boolean>> deleteIncome(@AuthenticationPrincipal User user,
             @PathVariable Long id) {
-        deleteIncomeTransactionCase.execute(user, id);
+        deleteIncomeTransactionCase.execute(user, id, false);
         return responseService.ok(true);
     }
 }

@@ -22,24 +22,24 @@ public class DeleteIncomeTransactionCase {
     private final RemoveMonthlySummaryValueCase removeMonthlySummaryValueCase;
 
     @Transactional
-    public void execute(User user, Long incomeTransactionId) {
+    public void execute(User user, Long incomeTransactionId, Boolean force) {
         IncomeTransaction incomeTransaction = incomeRepository
                 .findById(incomeTransactionId).orElse(null);
 
         if (incomeTransaction == null
                 || incomeTransaction.getUserId() != user.getId()
-                || incomeTransaction.getIncomeRecurring() != null)
+                || (incomeTransaction.getIncomeRecurring() != null && !force))
             return;
 
         incomeTransaction.delete();
         incomeRepository.save(incomeTransaction);
 
-        LocalDateTime receiptDate = incomeTransaction.getReceiptDate();
-        if (receiptDate != null) {
+        LocalDateTime paymentDate = incomeTransaction.getPaymentDate();
+        if (paymentDate != null) {
             Category category = incomeTransaction.getCategory();
             BigDecimal value = incomeTransaction.getValue();
             removeMonthlySummaryValueCase.execute(user,
-                    new RemoveMonthlySummaryValueParams(receiptDate.getMonthValue(), receiptDate.getYear(),
+                    new RemoveMonthlySummaryValueParams(paymentDate.getMonthValue(), paymentDate.getYear(),
                             value, category));
         }
 

@@ -57,7 +57,7 @@ public class ExpenseTransaction extends Transaction {
     }
 
     public LocalDateTime getPaymentDate() {
-        return this.date;
+        return this.paymentDate;
     }
 
     public void update(String description, BigDecimal value, LocalDateTime paymentDate, LocalDateTime dueDate) {
