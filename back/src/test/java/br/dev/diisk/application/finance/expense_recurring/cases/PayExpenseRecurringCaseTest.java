@@ -32,6 +32,9 @@ import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 
+import br.dev.diisk.domain.shared.exceptions.BusinessException;
+import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
+
 /**
  * Testes unitários para o caso de uso PayExpenseRecurringCase.
  */
@@ -253,54 +256,121 @@ class PayExpenseRecurringCaseTest {
         assertEquals(expectedDueDate, capturedParams.getDueDate());
     }
 
-    // Teste para exceção: deve lançar NullPointerException quando paymentDate for
+    // Teste para exceção: deve lançar NullOrEmptyException quando paymentDate for
     // null
     @Test
-    void payExpenseRecurring_deveLancarNullPointerException_quandoPaymentDateNulo() {
+    void payExpenseRecurring_deveLancarNullOrEmptyException_quandoPaymentDateNulo() {
         // Given
         User user = UserFixture.umUsuarioComId(1L);
         PayExpenseRecurringParams params = new PayExpenseRecurringParams(
                 null, LocalDateTime.now());
 
         // When & Then
-        NullPointerException ex = assertThrows(NullPointerException.class,
+        NullOrEmptyException ex = assertThrows(NullOrEmptyException.class,
                 () -> payExpenseRecurringCase.execute(user, 1L, params));
         assertEquals("A data de pagamento é obrigatória", ex.getMessage());
         verifyNoInteractions(getExpenseRecurringCase);
         verifyNoInteractions(addExpenseTransactionCase);
     }
 
-    // Teste para exceção: deve lançar NullPointerException quando referenceDate for
+    // Teste para exceção: deve lançar NullOrEmptyException quando referenceDate for
     // null
     @Test
-    void payExpenseRecurring_deveLancarNullPointerException_quandoReferenceDateNulo() {
+    void payExpenseRecurring_deveLancarNullOrEmptyException_quandoReferenceDateNulo() {
         // Given
         User user = UserFixture.umUsuarioComId(1L);
         PayExpenseRecurringParams params = new PayExpenseRecurringParams(
                 LocalDateTime.now(), null);
 
         // When & Then
-        NullPointerException ex = assertThrows(NullPointerException.class,
+        NullOrEmptyException ex = assertThrows(NullOrEmptyException.class,
                 () -> payExpenseRecurringCase.execute(user, 1L, params));
         assertEquals("A data de referência é obrigatória", ex.getMessage());
         verifyNoInteractions(getExpenseRecurringCase);
         verifyNoInteractions(addExpenseTransactionCase);
     }
 
-    // Teste para exceção: deve lançar NullPointerException quando
+    // Teste para exceção: deve lançar NullOrEmptyException quando
     // expenseRecurringId for null
     @Test
-    void payExpenseRecurring_deveLancarNullPointerException_quandoExpenseRecurringIdNulo() {
+    void payExpenseRecurring_deveLancarNullOrEmptyException_quandoExpenseRecurringIdNulo() {
         // Given
         User user = UserFixture.umUsuarioComId(1L);
         PayExpenseRecurringParams params = new PayExpenseRecurringParams(
                 LocalDateTime.now(), LocalDateTime.now());
 
         // When & Then
-        NullPointerException ex = assertThrows(NullPointerException.class,
+        NullOrEmptyException ex = assertThrows(NullOrEmptyException.class,
                 () -> payExpenseRecurringCase.execute(user, null, params));
         assertEquals("O id da despesa recorrente é obrigatório", ex.getMessage());
         verifyNoInteractions(getExpenseRecurringCase);
+        verifyNoInteractions(addExpenseTransactionCase);
+    }
+
+    // Teste para exceção: deve lançar BusinessException quando paymentDate for no futuro
+    @Test
+    void payExpenseRecurring_deveLancarBusinessException_quandoPaymentDateNoFuturo() {
+        // Given
+        Long expenseRecurringId = 1L;
+        LocalDateTime paymentDateFuturo = LocalDateTime.now().plusDays(1);
+        LocalDateTime referenceDate = LocalDateTime.now();
+
+        User user = UserFixture.umUsuarioComId(1L);
+        ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId);
+        PayExpenseRecurringParams params = new PayExpenseRecurringParams(paymentDateFuturo, referenceDate);
+
+        when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
+
+        // When & Then
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> payExpenseRecurringCase.execute(user, expenseRecurringId, params));
+        assertEquals("A data de pagamento não pode ser maior que a data atual", ex.getMessage());
+        verify(getExpenseRecurringCase).execute(user, expenseRecurringId);
+        verifyNoInteractions(addExpenseTransactionCase);
+    }
+
+    // Teste para exceção: deve lançar BusinessException quando referenceDate for posterior à endDate da despesa recorrente
+    @Test
+    void payExpenseRecurring_deveLancarBusinessException_quandoReferenceDatePosteriorAoEndDate() {
+        // Given
+        Long expenseRecurringId = 1L;
+        LocalDateTime paymentDate = LocalDateTime.now();
+        // Usando uma data bem no futuro para garantir que seja posterior ao endDate da fixture
+        LocalDateTime referenceDate = LocalDateTime.now().plusDays(60);
+
+        User user = UserFixture.umUsuarioComId(1L);
+        ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComId(expenseRecurringId, user);
+        PayExpenseRecurringParams params = new PayExpenseRecurringParams(paymentDate, referenceDate);
+
+        when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
+
+        // When & Then
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> payExpenseRecurringCase.execute(user, expenseRecurringId, params));
+        assertEquals("A data de referência não pode ser maior que a data de término da despesa recorrente.", ex.getMessage());
+        verify(getExpenseRecurringCase).execute(user, expenseRecurringId);
+        verifyNoInteractions(addExpenseTransactionCase);
+    }
+
+    // Teste para exceção: deve lançar BusinessException quando referenceDate for no futuro e não há endDate
+    @Test
+    void payExpenseRecurring_deveLancarBusinessException_quandoReferenceDateFuturoSemEndDate() {
+        // Given
+        Long expenseRecurringId = 1L;
+        LocalDateTime paymentDate = LocalDateTime.now();
+        LocalDateTime referenceDate = LocalDateTime.now().plusDays(1);
+
+        User user = UserFixture.umUsuarioComId(1L);
+        ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComIdSemDataFim(expenseRecurringId, user);
+        PayExpenseRecurringParams params = new PayExpenseRecurringParams(paymentDate, referenceDate);
+
+        when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
+
+        // When & Then
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> payExpenseRecurringCase.execute(user, expenseRecurringId, params));
+        assertEquals("A data de referência não pode ser maior que a data atual para despesas recorrentes sem data término.", ex.getMessage());
+        verify(getExpenseRecurringCase).execute(user, expenseRecurringId);
         verifyNoInteractions(addExpenseTransactionCase);
     }
 }

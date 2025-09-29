@@ -11,6 +11,8 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.math.BigDecimal;
+import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -162,10 +164,21 @@ class EndExpenseRecurringCaseTest {
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.EXPENSE, user);
         Long expenseRecurringId = 100L;
         LocalDateTime endDate = LocalDateTime.of(2024, 6, 15, 0, 0);
-        LocalDateTime paymentDatePosterior = LocalDateTime.of(2024, 6, 20, 0, 0);
+        LocalDateTime recurringReferenceDatePosterior = LocalDateTime.of(2024, 6, 20, 0, 0);
         
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComIdSemDataFim(expenseRecurringId, user);
-        ExpenseTransaction transacaoPaga = ExpenseTransactionFixture.umaTransacaoComPaymentDate(1L, user, category, paymentDatePosterior);
+        
+        // Criar transação com recurringReferenceDate
+        ExpenseTransaction transacaoPaga = new ExpenseTransaction("Teste", category, new BigDecimal("100.00"), LocalDateTime.now(), user);
+        transacaoPaga.setId(1L);
+        try {
+            Field recurringReferenceDateField = transacaoPaga.getClass().getSuperclass().getDeclaredField("recurringReferenceDate");
+            recurringReferenceDateField.setAccessible(true);
+            recurringReferenceDateField.set(transacaoPaga, recurringReferenceDatePosterior);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao configurar recurringReferenceDate na fixture", e);
+        }
+        
         EndExpenseRecurringParams params = new EndExpenseRecurringParams(endDate);
         
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);
@@ -192,10 +205,21 @@ class EndExpenseRecurringCaseTest {
         Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.EXPENSE, user);
         Long expenseRecurringId = 100L;
         LocalDateTime endDate = LocalDateTime.of(2024, 6, 25, 0, 0);
-        LocalDateTime paymentDateAnterior = LocalDateTime.of(2024, 6, 15, 0, 0);
+        LocalDateTime recurringReferenceDateAnterior = LocalDateTime.of(2024, 6, 15, 0, 0);
         
         ExpenseRecurring expenseRecurring = ExpenseRecurringFixture.umaExpenseRecurringComIdSemDataFim(expenseRecurringId, user);
-        ExpenseTransaction transacaoPaga = ExpenseTransactionFixture.umaTransacaoComPaymentDate(1L, user, category, paymentDateAnterior);
+        
+        // Criar transação com recurringReferenceDate anterior à data de fim
+        ExpenseTransaction transacaoPaga = new ExpenseTransaction("Teste", category, new BigDecimal("100.00"), LocalDateTime.now(), user);
+        transacaoPaga.setId(1L);
+        try {
+            Field recurringReferenceDateField = transacaoPaga.getClass().getSuperclass().getDeclaredField("recurringReferenceDate");
+            recurringReferenceDateField.setAccessible(true);
+            recurringReferenceDateField.set(transacaoPaga, recurringReferenceDateAnterior);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao configurar recurringReferenceDate na fixture", e);
+        }
+        
         EndExpenseRecurringParams params = new EndExpenseRecurringParams(endDate);
         
         when(getExpenseRecurringCase.execute(user, expenseRecurringId)).thenReturn(expenseRecurring);

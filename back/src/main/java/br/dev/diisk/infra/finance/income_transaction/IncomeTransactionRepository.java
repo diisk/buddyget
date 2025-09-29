@@ -30,12 +30,12 @@ public class IncomeTransactionRepository extends BaseRepository<IncomeTransactio
 
     @Override
     public List<IncomeTransaction> findAllRecurringRelatedBy(List<Long> expenseRecurringIds) {
-        return jpa.findAllByExpenseRecurring_IdInAndDeletedFalse(expenseRecurringIds);
+        return jpa.findAllByIncomeRecurring_IdInAndDeletedFalse(expenseRecurringIds);
     }
 
     @Override
     public List<IncomeTransaction> findAllPendingBy(Long userId) {
-        return jpa.findAllByUser_IdAndDateIsNullAndDeletedFalse(userId);
+        return jpa.findAllByUser_IdAndPaymentDateIsNullAndDeletedFalse(userId);
     }
 
 }

@@ -1,6 +1,7 @@
 package br.dev.diisk.presentation.finance.income_transaction;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import br.dev.diisk.application.finance.income_transaction.cases.AddIncomeTransactionCase;
 import br.dev.diisk.application.finance.income_transaction.cases.DeleteIncomeTransactionCase;
 import br.dev.diisk.application.finance.income_transaction.cases.ListPaidIncomeTransactionsCase;
+import br.dev.diisk.application.finance.income_transaction.cases.ListPendingIncomeTransactionsCase;
 import br.dev.diisk.application.finance.income_transaction.cases.UpdateIncomeTransactionCase;
 import br.dev.diisk.application.finance.income_transaction.dtos.AddIncomeTransactionParams;
+import br.dev.diisk.application.finance.income_transaction.dtos.PendingIncomeTransactionDTO;
 import br.dev.diisk.application.finance.income_transaction.dtos.UpdateIncomeTransactionParams;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransaction;
@@ -33,7 +36,8 @@ public class IncomeTransactionController {
 
     private final IResponseService responseService;
     private final AddIncomeTransactionCase addIncomeTransactionCase;
-    private final ListPaidIncomeTransactionsCase listIncomeTransactionsCase;
+    private final ListPaidIncomeTransactionsCase listPaidIncomeTransactionsCase;
+    private final ListPendingIncomeTransactionsCase listPendingIncomeTransactionsCase;
     private final UpdateIncomeTransactionCase updateIncomeTransactionCase;
     private final DeleteIncomeTransactionCase deleteIncomeTransactionCase;
 
@@ -48,17 +52,18 @@ public class IncomeTransactionController {
         filter.setStartDate(startDate);
         filter.setEndDate(endDate);
         filter.setSearchString(searchString);
-        Page<IncomeTransaction> incomeTransactions = listIncomeTransactionsCase.execute(user, filter, pageable);
+        Page<IncomeTransaction> incomeTransactions = listPaidIncomeTransactionsCase.execute(user, filter, pageable);
         PageResponse<IncomeResponse> pageResponse = responseService.getPageResponse(user, incomeTransactions,
                 IncomeResponse::new);
         return responseService.ok(pageResponse);
     }
 
     @GetMapping("/pendings")
-    public ResponseEntity<SuccessResponse<PageResponse<IncomeResponse>>> listPedingIncomes(
+    public ResponseEntity<SuccessResponse<List<IncomeResponse>>> listPedingIncomes(
             @AuthenticationPrincipal User user) {
-        
-        return responseService.ok(null);
+        List<PendingIncomeTransactionDTO> pendings = listPendingIncomeTransactionsCase.execute(user);
+        List<IncomeResponse> response = pendings.stream().map(IncomeResponse::new).toList();
+        return responseService.ok(response);
     }
 
     @PostMapping

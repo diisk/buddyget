@@ -1,5 +1,7 @@
 package br.dev.diisk.application.finance.income_recurring.cases;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 import br.dev.diisk.application.finance.income_recurring.dtos.PayIncomeRecurringParams;
@@ -8,6 +10,7 @@ import br.dev.diisk.application.finance.income_transaction.dtos.AddIncomeTransac
 import br.dev.diisk.application.shared.services.UtilService;
 import br.dev.diisk.domain.finance.income_recurring.IncomeRecurring;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransaction;
+import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.user.User;
 import jakarta.transaction.Transactional;
@@ -35,9 +38,23 @@ public class PayIncomeRecurringCase {
 
         IncomeRecurring incomeRecurring = getIncomeRecurringCase.execute(user, id);
 
+        LocalDateTime now = LocalDateTime.now();
+        Boolean hasEndDate = incomeRecurring.getEndDate() != null;
+        if (params.getPaymentDate().isAfter(now))
+            throw new BusinessException(getClass(), "A data de pagamento não pode ser maior que a data atual");
+
+        if (hasEndDate && params.getReferenceDate().isAfter(incomeRecurring.getEndDate()))
+            throw new BusinessException(getClass(),
+                    "A data de referência não pode ser maior que a data de término da receita recorrente.");
+
+        if (!hasEndDate && params.getReferenceDate().isAfter(now))
+            throw new BusinessException(getClass(),
+                    "A data de referência não pode ser maior que a data atual para receitas recorrentes sem data término.");
+
         AddIncomeTransactionParams transactionParams = new AddIncomeTransactionParams();
 
         transactionParams.setCategoryId(incomeRecurring.getCategoryId());
+        transactionParams.setPaymentDate(params.getPaymentDate());
         transactionParams.setDescription(incomeRecurring.getDescription());
         transactionParams.setValue(incomeRecurring.getValue());
         transactionParams.setGoalId(incomeRecurring.getGoal() != null ? incomeRecurring.getGoal().getId() : null);

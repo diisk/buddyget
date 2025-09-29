@@ -28,7 +28,7 @@ public class ExpenseTransactionRepository extends BaseRepository<ExpenseTransact
 
     @Override
     public List<ExpenseTransaction> findAllPendingBy(Long userId) {
-        return jpa.findAllByUser_IdAndDateIsNullAndDeletedFalse(userId);
+        return jpa.findAllByUser_IdAndPaymentDateIsNullAndDeletedFalse(userId);
     }
 
     @Override

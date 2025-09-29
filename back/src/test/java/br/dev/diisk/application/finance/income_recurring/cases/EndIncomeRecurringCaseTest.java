@@ -23,6 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.math.BigDecimal;
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -99,11 +101,19 @@ class EndIncomeRecurringCaseTest {
         LocalDateTime endDate = LocalDateTime.of(2024, 6, 15, 0, 0);
         EndIncomeRecurringParams params = new EndIncomeRecurringParams(endDate);
         
-        // Mock de transação paga APÓS a data de término
-        List<IncomeTransaction> transactions = List.of(
-                IncomeTransactionFixture.umaTransacaoComPaymentDate(1L, user, category, 
-                        LocalDateTime.of(2024, 6, 20, 0, 0)) // Data posterior ao término
-        );
+        // Mock de transação com recurringReferenceDate APÓS a data de término
+        LocalDateTime recurringReferenceDatePosterior = LocalDateTime.of(2024, 6, 20, 0, 0);
+        IncomeTransaction transacaoPaga = new IncomeTransaction("Receita Teste", category, new BigDecimal("1000.00"), LocalDateTime.now(), user);
+        transacaoPaga.setId(1L);
+        try {
+            Field recurringReferenceDateField = transacaoPaga.getClass().getSuperclass().getDeclaredField("recurringReferenceDate");
+            recurringReferenceDateField.setAccessible(true);
+            recurringReferenceDateField.set(transacaoPaga, recurringReferenceDatePosterior);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao configurar recurringReferenceDate na fixture", e);
+        }
+        
+        List<IncomeTransaction> transactions = List.of(transacaoPaga);
 
         when(getIncomeRecurringCase.execute(user, incomeRecurringId)).thenReturn(incomeRecurring);
         when(incomeTransactionRepository.findAllRecurringRelatedBy(List.of(incomeRecurringId)))
@@ -135,7 +145,7 @@ class EndIncomeRecurringCaseTest {
         LocalDateTime endDate = LocalDateTime.of(2024, 6, 15, 0, 0);
         EndIncomeRecurringParams params = new EndIncomeRecurringParams(endDate);
         
-        // Mock de transação não paga (paymentDate = null)
+        // Mock de transação não paga (recurringReferenceDate = null)
         List<IncomeTransaction> transactions = List.of(
                 IncomeTransactionFixture.umaTransacaoComPaymentDate(1L, user, category, null)
         );
@@ -212,13 +222,32 @@ class EndIncomeRecurringCaseTest {
         EndIncomeRecurringParams params = new EndIncomeRecurringParams(endDate);
         
         // Mock com múltiplas transações válidas (todas antes ou na data de término)
-        List<IncomeTransaction> transactions = List.of(
-                IncomeTransactionFixture.umaTransacaoComPaymentDate(1L, user, category, 
-                        LocalDateTime.of(2024, 5, 10, 0, 0)), // Antes
-                IncomeTransactionFixture.umaTransacaoComPaymentDate(2L, user, category, 
-                        LocalDateTime.of(2024, 6, 15, 0, 0)), // Exato na data
-                IncomeTransactionFixture.umaTransacaoComPaymentDate(3L, user, category, null) // Não paga
-        );
+        LocalDateTime recurringReferenceDateAntes = LocalDateTime.of(2024, 5, 10, 0, 0);
+        LocalDateTime recurringReferenceDateExata = LocalDateTime.of(2024, 6, 15, 0, 0);
+        
+        IncomeTransaction transacao1 = new IncomeTransaction("Receita 1", category, new BigDecimal("1000.00"), LocalDateTime.now(), user);
+        transacao1.setId(1L);
+        try {
+            Field recurringReferenceDateField = transacao1.getClass().getSuperclass().getDeclaredField("recurringReferenceDate");
+            recurringReferenceDateField.setAccessible(true);
+            recurringReferenceDateField.set(transacao1, recurringReferenceDateAntes);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao configurar recurringReferenceDate na fixture", e);
+        }
+        
+        IncomeTransaction transacao2 = new IncomeTransaction("Receita 2", category, new BigDecimal("1000.00"), LocalDateTime.now(), user);
+        transacao2.setId(2L);
+        try {
+            Field recurringReferenceDateField = transacao2.getClass().getSuperclass().getDeclaredField("recurringReferenceDate");
+            recurringReferenceDateField.setAccessible(true);
+            recurringReferenceDateField.set(transacao2, recurringReferenceDateExata);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao configurar recurringReferenceDate na fixture", e);
+        }
+        
+        IncomeTransaction transacao3 = IncomeTransactionFixture.umaTransacaoComPaymentDate(3L, user, category, null); // Não paga
+        
+        List<IncomeTransaction> transactions = List.of(transacao1, transacao2, transacao3);
 
         when(getIncomeRecurringCase.execute(user, incomeRecurringId)).thenReturn(incomeRecurring);
         when(incomeTransactionRepository.findAllRecurringRelatedBy(List.of(incomeRecurringId)))

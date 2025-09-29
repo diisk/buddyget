@@ -27,11 +27,14 @@ public class EndIncomeRecurringCase {
     @Transactional
     public IncomeRecurring execute(User user, EndIncomeRecurringParams params, Long incomeRecurringId) {
         IncomeRecurring incomeRecurring = getIncomeRecurringCase.execute(user, incomeRecurringId);
+
         List<IncomeTransaction> paidTransactions = incomeTransactionRepository
                 .findAllRecurringRelatedBy(List.of(incomeRecurringId));
 
+        
+
         for (IncomeTransaction transaction : paidTransactions) {
-            if (transaction.getPaymentDate() != null && transaction.getPaymentDate().isAfter(params.getEndDate()))
+            if (transaction.getRecurringReferenceDate() != null && transaction.getRecurringReferenceDate().isAfter(params.getEndDate()))
                 throw new BusinessException(getClass(),
                         "Não é possível definir uma data de término anterior a uma despesa já paga.");
 

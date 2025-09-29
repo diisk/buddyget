@@ -11,7 +11,8 @@ public record IncomeRecurringResponse(
         String description,
         CategoryResponse category,
         String startDate,
-        String endDate) {
+        String endDate,
+        boolean active) {
     public IncomeRecurringResponse(IncomeRecurring incomeRecurring) {
         this(
                 incomeRecurring.getId(),
@@ -19,6 +20,7 @@ public record IncomeRecurringResponse(
                 incomeRecurring.getDescription(),
                 new CategoryResponse(incomeRecurring.getCategory()),
                 incomeRecurring.getStartDate().toString(),
-                incomeRecurring.getEndDate() != null ? incomeRecurring.getEndDate().toString() : null);
+                incomeRecurring.getEndDate() != null ? incomeRecurring.getEndDate().toString() : null,
+                incomeRecurring.isActive());
     }
 }

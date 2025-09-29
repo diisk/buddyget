@@ -2,6 +2,7 @@ package br.dev.diisk.presentation.finance.income_transaction.dtos;
 
 import java.math.BigDecimal;
 
+import br.dev.diisk.application.finance.income_transaction.dtos.PendingIncomeTransactionDTO;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransaction;
 import br.dev.diisk.presentation.category.dtos.CategoryResponse;
 import br.dev.diisk.presentation.finance.income_recurring.dtos.IncomeRecurringResponse;
@@ -37,5 +38,26 @@ public record IncomeResponse(
                                                 ? incomeTransaction.getRecurringReferenceDate().toString()
                                                 : null,
                                 incomeTransaction.getCreatedAt().toString());
+        }
+
+        public IncomeResponse(PendingIncomeTransactionDTO dto) {
+                this(
+                                dto.id(),
+                                dto.incomeRecurring() != null
+                                                ? new IncomeRecurringResponse(dto.incomeRecurring())
+                                                : null,
+                                dto.goal() != null ? new GoalResponse(dto.goal())
+                                                : null,
+                                dto.paymentDate() != null
+                                                ? dto.paymentDate().toString()
+                                                : null,
+                                dto.value(),
+                                dto.description(),
+                                new CategoryResponse(dto.category()),
+                                dto.status(),
+                                dto.recurringReferenceDate() != null
+                                                ? dto.recurringReferenceDate().toString()
+                                                : null,
+                                dto.createdAt().toString());
         }
 }

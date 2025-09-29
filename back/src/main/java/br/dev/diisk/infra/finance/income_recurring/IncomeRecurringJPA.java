@@ -30,12 +30,6 @@ public interface IncomeRecurringJPA extends JpaRepository<IncomeRecurring, Long>
             """)
     Page<IncomeRecurring> findAllBy(Long userId, String searchString, Pageable pageable);
 
-    @Query("""
-            SELECT r FROM IncomeRecurring r
-            WHERE (r.period.endDate IS NULL OR r.period.endDate > CURRENT_DATE)
-            AND r.deleted = false
-            ORDER BY r.createdAt DESC
-            """)
     List<IncomeRecurring> findAllByUser_IdAndActiveTrueAndDeletedFalse(Long userId);
 
 }

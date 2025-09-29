@@ -63,7 +63,7 @@ public class ListPendingIncomeTransactionsCase {
             pendingTransactions.addAll(newTransactions);
         }
 
-        pendingTransactions.sort((a, b) -> a.recurringReferenceDate().compareTo(b.recurringReferenceDate()));
+        pendingTransactions.sort((a, b) -> a.createdAt().compareTo(b.createdAt()));
         return pendingTransactions;
     }
 }

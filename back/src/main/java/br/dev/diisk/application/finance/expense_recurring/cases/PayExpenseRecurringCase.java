@@ -11,6 +11,7 @@ import br.dev.diisk.application.shared.services.UtilService;
 import br.dev.diisk.domain.credit_card.CreditCard;
 import br.dev.diisk.domain.finance.expense_recurring.ExpenseRecurring;
 import br.dev.diisk.domain.finance.expense_transaction.ExpenseTransaction;
+import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.user.User;
 import br.dev.diisk.domain.wish_list.WishListItem;
@@ -38,6 +39,20 @@ public class PayExpenseRecurringCase {
             throw new NullOrEmptyException("O id da despesa recorrente é obrigatório", getClass());
 
         ExpenseRecurring expenseRecurring = getExpenseRecurringCase.execute(user, id);
+
+        LocalDateTime now = LocalDateTime.now();
+        Boolean hasEndDate = expenseRecurring.getEndDate() != null;
+        if (params.getPaymentDate().isAfter(now))
+            throw new BusinessException(getClass(), "A data de pagamento não pode ser maior que a data atual");
+
+        if (hasEndDate && params.getReferenceDate().isAfter(expenseRecurring.getEndDate()))
+            throw new BusinessException(getClass(),
+                    "A data de referência não pode ser maior que a data de término da despesa recorrente.");
+
+        if (!hasEndDate && params.getReferenceDate().isAfter(now))
+            throw new BusinessException(getClass(),
+                    "A data de referência não pode ser maior que a data atual para despesas recorrentes sem data término.");
+
         CreditCard creditCard = expenseRecurring.getCreditCard();
         WishListItem wishItem = expenseRecurring.getWishItem();
         LocalDateTime dueDate = null;

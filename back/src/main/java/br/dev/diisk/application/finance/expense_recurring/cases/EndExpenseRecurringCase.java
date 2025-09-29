@@ -31,7 +31,8 @@ public class EndExpenseRecurringCase {
                 .findAllRecurringRelatedBy(List.of(expenseRecurringId));
 
         for (ExpenseTransaction transaction : paidTransactions) {
-            if (transaction.getPaymentDate() != null && transaction.getPaymentDate().isAfter(params.getEndDate()))
+            if (transaction.getRecurringReferenceDate() != null
+                    && transaction.getRecurringReferenceDate().isAfter(params.getEndDate()))
                 throw new BusinessException(getClass(),
                         "Não é possível definir uma data de término anterior a uma despesa já paga.");
 

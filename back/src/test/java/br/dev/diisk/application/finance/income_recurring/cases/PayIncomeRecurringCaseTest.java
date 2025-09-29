@@ -13,6 +13,7 @@ import br.dev.diisk.domain.finance.income_transaction.IncomeTransaction;
 import br.dev.diisk.domain.finance.income_transaction.IncomeTransactionFixture;
 import br.dev.diisk.domain.goal.Goal;
 import br.dev.diisk.domain.goal.GoalFixture;
+import br.dev.diisk.domain.shared.exceptions.BusinessException;
 import br.dev.diisk.domain.shared.exceptions.NullOrEmptyException;
 import br.dev.diisk.domain.shared.value_objects.DayOfMonth;
 import br.dev.diisk.domain.shared.value_objects.Period;
@@ -190,5 +191,94 @@ class PayIncomeRecurringCaseTest {
         assertEquals("O id da receita recorrente é obrigatório", ex.getMessage());
         assertTrue(ex.getDetails().isEmpty()); // Verifica que os details estão vazios
         verifyNoInteractions(getIncomeRecurringCase, addIncomeTransactionCase, utilService);
+    }
+
+    // Teste para exceção: deve lançar BusinessException quando paymentDate for no futuro
+    @Test
+    @DisplayName("Deve lançar BusinessException quando data de pagamento for no futuro")
+    void payIncomeRecurring_deveLancarBusinessException_quandoPaymentDateNoFuturo() {
+        // Given - Prepara os dados de entrada
+        Long userId = 1L;
+        Long incomeRecurringId = 10L;
+        LocalDateTime paymentDateFuturo = LocalDateTime.now().plusDays(1);
+        LocalDateTime referenceDate = LocalDateTime.now();
+
+        User user = UserFixture.umUsuarioComId(userId);
+        Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
+        Period period = new Period(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
+        DayOfMonth recurringDay = new DayOfMonth(1);
+        IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, user, category, recurringDay, period);
+        PayIncomeRecurringParams params = new PayIncomeRecurringParams(paymentDateFuturo, referenceDate);
+
+        when(getIncomeRecurringCase.execute(user, incomeRecurringId)).thenReturn(incomeRecurring);
+
+        // When & Then - Executa o método e verifica a exceção
+        BusinessException ex = assertThrows(BusinessException.class, () ->
+                payIncomeRecurringCase.execute(user, incomeRecurringId, params)
+        );
+
+        assertEquals("A data de pagamento não pode ser maior que a data atual", ex.getMessage());
+        verify(getIncomeRecurringCase).execute(user, incomeRecurringId);
+        verifyNoInteractions(addIncomeTransactionCase, utilService);
+    }
+
+    // Teste para exceção: deve lançar BusinessException quando referenceDate for posterior à endDate da receita recorrente
+    @Test
+    @DisplayName("Deve lançar BusinessException quando data de referência for posterior à data de término")
+    void payIncomeRecurring_deveLancarBusinessException_quandoReferenceDatePosteriorAoEndDate() {
+        // Given - Prepara os dados de entrada
+        Long userId = 1L;
+        Long incomeRecurringId = 10L;
+        LocalDateTime paymentDate = LocalDateTime.now();
+        // Usando uma data bem no futuro para garantir que seja posterior ao endDate da fixture
+        LocalDateTime referenceDate = LocalDateTime.now().plusDays(60);
+
+        User user = UserFixture.umUsuarioComId(userId);
+        Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
+        Period period = new Period(LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
+        DayOfMonth recurringDay = new DayOfMonth(1);
+        IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, user, category, recurringDay, period);
+        PayIncomeRecurringParams params = new PayIncomeRecurringParams(paymentDate, referenceDate);
+
+        when(getIncomeRecurringCase.execute(user, incomeRecurringId)).thenReturn(incomeRecurring);
+
+        // When & Then - Executa o método e verifica a exceção
+        BusinessException ex = assertThrows(BusinessException.class, () ->
+                payIncomeRecurringCase.execute(user, incomeRecurringId, params)
+        );
+
+        assertEquals("A data de referência não pode ser maior que a data de término da receita recorrente.", ex.getMessage());
+        verify(getIncomeRecurringCase).execute(user, incomeRecurringId);
+        verifyNoInteractions(addIncomeTransactionCase, utilService);
+    }
+
+    // Teste para exceção: deve lançar BusinessException quando referenceDate for no futuro e não há endDate
+    @Test
+    @DisplayName("Deve lançar BusinessException quando data de referência for no futuro e não há data de término")
+    void payIncomeRecurring_deveLancarBusinessException_quandoReferenceDateFuturoSemEndDate() {
+        // Given - Prepara os dados de entrada
+        Long userId = 1L;
+        Long incomeRecurringId = 10L;
+        LocalDateTime paymentDate = LocalDateTime.now();
+        LocalDateTime referenceDate = LocalDateTime.now().plusDays(1);
+
+        User user = UserFixture.umUsuarioComId(userId);
+        Category category = CategoryFixture.umaCategoriaComId(1L, CategoryTypeEnum.INCOME, user);
+        Period period = new Period(LocalDateTime.now(), null);
+        DayOfMonth recurringDay = new DayOfMonth(1);
+        IncomeRecurring incomeRecurring = IncomeRecurringFixture.umIncomeRecurringComId(incomeRecurringId, user, category, recurringDay, period);
+
+        PayIncomeRecurringParams params = new PayIncomeRecurringParams(paymentDate, referenceDate);
+
+        when(getIncomeRecurringCase.execute(user, incomeRecurringId)).thenReturn(incomeRecurring);
+
+        // When & Then - Executa o método e verifica a exceção
+        BusinessException ex = assertThrows(BusinessException.class, () ->
+                payIncomeRecurringCase.execute(user, incomeRecurringId, params)
+        );
+
+        assertEquals("A data de referência não pode ser maior que a data atual para receitas recorrentes sem data término.", ex.getMessage());
+        verify(getIncomeRecurringCase).execute(user, incomeRecurringId);
+        verifyNoInteractions(addIncomeTransactionCase, utilService);
     }
 }
