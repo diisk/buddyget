@@ -22,6 +22,16 @@ public record CreditCardResponse(
                 creditCard.getColorString());
     }
 
+    public CreditCardResponse(CreditCard creditCard) {
+        this(
+                creditCard.getId(),
+                creditCard.getName(),
+                getBillDueDateString(creditCard, null),
+                getBillClosingDateString(creditCard, null),
+                creditCard.getCardLimit(),
+                creditCard.getColorString());
+    }
+
     private static String getBillDueDateString(CreditCard creditCard, LocalDateTime referenceDate) {
         LocalDateTime dueDate = creditCard.getBillDueDate(referenceDate);
         return dueDate != null ? dueDate.toLocalDate().toString() : null;

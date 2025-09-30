@@ -16,9 +16,11 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "credit_cards")
 public class CreditCard extends UserRastrableEntity {
 
@@ -93,6 +95,14 @@ public class CreditCard extends UserRastrableEntity {
 
         if (color == null)
             throw new NullOrEmptyException(getClass(), "color");
+
+        if (billClosingDay.getValue() == billDueDay.getValue()) {
+            throw new BusinessException(getClass(),
+                    "O dia de fechamento da fatura não pode ser igual ao dia de vencimento.",
+                    Map.of("billClosingDay", billClosingDay.getValue().toString(),
+                            "billDueDay", billDueDay.getValue().toString()));
+
+        }
 
     }
 

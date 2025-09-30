@@ -1,7 +1,6 @@
 package br.dev.diisk.infra.credit_card;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +16,7 @@ public class CreditCardRepository extends BaseRepository<CreditCardJPA, CreditCa
     }
 
     @Override
-    public Optional<CreditCard> findBy(Long userId, String name) {
+    public CreditCard findBy(Long userId, String name) {
         return jpa.findByUser_IdAndNameAndDeletedFalse(userId, name);
     }
 
