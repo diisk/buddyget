@@ -143,7 +143,7 @@ As transações recorrentes se baseiam no modelo de transação básica e fornec
 - IncomeTransaction
 
 #### Endpoints
-- `POST /api/credit-cards` - Criar cartão de crédito
+- `POST /api/credit-cards` - Criar cartão de crédito - OK
 - `GET /api/credit-cards` - Listar cartões de crédito
 - `PUT /api/credit-cards/{id}` - Atualizar cartão de crédito
 - `DELETE /api/credit-cards/{id}` - Excluir cartão de crédito
