@@ -144,7 +144,7 @@ As transações recorrentes se baseiam no modelo de transação básica e fornec
 
 #### Endpoints
 - `POST /api/credit-cards` - Criar cartão de crédito - OK
-- `GET /api/credit-cards` - Listar cartões de crédito
+- `GET /api/credit-cards` - Listar cartões de crédito - OK
 - `PUT /api/credit-cards/{id}` - Atualizar cartão de crédito
 - `DELETE /api/credit-cards/{id}` - Excluir cartão de crédito
 - `GET /api/credit-cards/{id}/bills` - Listar faturas de cartão de crédito

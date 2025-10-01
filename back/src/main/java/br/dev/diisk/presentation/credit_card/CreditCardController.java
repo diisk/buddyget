@@ -1,11 +1,14 @@
 package br.dev.diisk.presentation.credit_card;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import br.dev.diisk.application.credit_card.cases.AddCreditCardCase;
+import br.dev.diisk.application.credit_card.cases.ListCreditCardsCase;
 import br.dev.diisk.application.credit_card.dtos.AddCreditCardParams;
 import br.dev.diisk.application.shared.services.IResponseService;
 import br.dev.diisk.domain.credit_card.CreditCard;
@@ -25,12 +28,18 @@ public class CreditCardController {
 
     private final IResponseService responseService;
     private final AddCreditCardCase addCreditCardCase;
+    private final ListCreditCardsCase listCreditCardsCase;
 
     @GetMapping
-    public ResponseEntity<SuccessResponse<PageResponse<CreditCardResponse>>> listCreditCards(
+    public ResponseEntity<SuccessResponse<List<CreditCardResponse>>> listCreditCards(
+            @AuthenticationPrincipal User user,
             @RequestParam(required = false) String searchString,
             Pageable pageable) {
-        return responseService.ok(null);
+        List<CreditCard> creditCards = listCreditCardsCase.execute(user);
+        List<CreditCardResponse> response = creditCards.stream()
+                .map(CreditCardResponse::new)
+                .toList();
+        return responseService.ok(response);
     }
 
     @PostMapping
